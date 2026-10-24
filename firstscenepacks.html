@@ -4,6 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#080808">
   <title>KRAIILEFX — Scenepacks</title>
 
   <style>
@@ -209,7 +210,6 @@
           const card = document.createElement("a");
           card.className = "card";
 
-          // Each scenepack opens its own detail page.
           if (pack.id === "Brax") {
             card.href = "./braxscenepack.html";
           } else if (pack.id === "SharpStick") {
@@ -239,9 +239,7 @@
               cover.appendChild(placeholder);
             };
 
-            img.src =
-              "./" + pack.cover.replace(/^\.?\//, "");
-
+            img.src = "./" + pack.cover.replace(/^\.?\//, "");
             cover.appendChild(img);
           } else {
             cover.innerHTML =
