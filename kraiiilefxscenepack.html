@@ -89,6 +89,7 @@
 
     .placeholder {
       height: 100%;
+      min-height: 250px;
       display: flex;
       justify-content: center;
       align-items: center;
@@ -273,101 +274,82 @@
     <a href="scenepacks.html">ALL SCENEPACKS ↗</a>
   </footer>
 
-<script>
-async function loadPack() {
-  const params = new URLSearchParams(window.location.search);
-  const packId = params.get("id") || "SharpStick";
+  <script>
+    async function loadPack() {
+      const params = new URLSearchParams(window.location.search);
+      const packId = params.get("id") || "SharpStick";
 
-  const title = document.getElementById("packTitle");
-  const description = document.getElementById("packDescription");
-  const character = document.getElementById("packCharacter");
-  const quality = document.getElementById("packQuality");
-  const fps = document.getElementById("packFps");
-  const cover = document.getElementById("cover");
-  const download = document.getElementById("downloadButton");
-  const error = document.getElementById("errorMessage");
+      const title = document.getElementById("title");
+      const description = document.getElementById("description");
+      const character = document.getElementById("character");
+      const production = document.getElementById("production");
+      const resolution = document.getElementById("resolution");
+      const fps = document.getElementById("fps");
+      const cover = document.getElementById("cover");
+      const download = document.getElementById("download");
 
-  try {
-    const response = await fetch("./data/scenepacks.json");
+      try {
+        const response = await fetch("./data/scenepacks.json");
 
-    if (!response.ok) {
-      throw new Error("JSON file could not be loaded: " + response.status);
-    }
+        if (!response.ok) {
+          throw new Error("Could not fetch JSON: " + response.status);
+        }
 
-    const packs = await response.json();
+        const packs = await response.json();
 
-    if (!Array.isArray(packs)) {
-      throw new Error("The JSON file must contain an array.");
-    }
+        if (!Array.isArray(packs)) {
+          throw new Error("JSON must be an array.");
+        }
 
-    const normalize = value =>
-      String(value || "").toLowerCase().replace(/[^a-z0-9]/g, "");
+        const normalize = value =>
+          String(value || "").toLowerCase().replace(/[^a-z0-9]/g, "");
 
-    const pack = packs.find(item =>
-      normalize(item.id) === normalize(packId)
-    ) || packs.find(item =>
-      normalize(item.name) === normalize(packId) ||
-      normalize(item.production) === normalize(packId)
-    );
+        const pack = packs.find(item =>
+          normalize(item.id) === normalize(packId)
+        );
 
-    if (!pack) {
-      title.textContent = "Scenepack Not Found";
-      description.textContent = "Please return to the scenepacks page.";
-      if (error) error.style.display = "block";
-      return;
-    }
-
-    title.textContent = pack.name || pack.production || "Scenepack";
-    document.title = title.textContent + " — KRAIILEFX";
-
-    description.textContent =
-      pack.instructions || "Scenepack by KRAIILEFX.";
-
-    character.textContent = pack.character || "—";
-    quality.textContent = pack.resolution || "—";
-    fps.textContent = pack.fps || "—";
-
-    if (cover) {
-      const img = document.createElement("img");
-      img.alt = (pack.name || "Scenepack") + " cover";
-      img.src = pack.cover || "./assets/covers/sharpstick.gif";
-      img.style.width = "100%";
-      img.style.height = "100%";
-      img.style.objectFit = "cover";
-
-      img.onerror = function () {
-        if (this.dataset.fallbackTried) {
-          cover.innerHTML =
-            '<div class="cover-placeholder">KRAIILEFX</div>';
+        if (!pack) {
+          title.textContent = "Scenepack Not Found";
+          description.textContent = "Please return to the scenepacks page.";
           return;
         }
 
-        this.dataset.fallbackTried = "true";
-        this.src = "./assets/covers/sharpstick.gif";
-      };
+        title.textContent = pack.name || pack.production || "Scenepack";
+        document.title = title.textContent + " — KRAIILEFX";
+        description.textContent =
+          pack.instructions || "Scenepack by KRAIILEFX.";
 
-      cover.replaceChildren(img);
+        character.textContent = pack.character || "—";
+        production.textContent = pack.production || "—";
+        resolution.textContent = pack.resolution || "—";
+        fps.textContent = pack.fps || "—";
+
+        const img = document.createElement("img");
+        img.alt = (pack.name || "Scenepack") + " cover";
+        img.src = pack.cover || "./assets/covers/sharpstick.gif";
+
+        img.onerror = function () {
+          cover.innerHTML = '<div class="placeholder">COVER NOT FOUND</div>';
+        };
+
+        cover.replaceChildren(img);
+
+        if (pack.mega) {
+          download.href = pack.mega;
+          download.target = "_blank";
+          download.rel = "noopener noreferrer";
+        } else {
+          download.href = pack.instagram || "https://www.instagram.com/kraiilefx/";
+        }
+      } catch (error) {
+        console.error("Scenepack loading error:", error);
+        title.textContent = "Unable to Load Scenepack";
+        description.textContent =
+          "Could not load scenepacks.json. Please check the file and try again.";
+      }
     }
 
-    if (download && pack.mega) {
-      download.href = pack.mega;
-      download.textContent = "Download Scenepack";
-      download.target = "_blank";
-      download.rel = "noopener noreferrer";
-    }
-
-    if (error) error.style.display = "none";
-
-  } catch (err) {
-    console.error("Scenepack loading error:", err);
-
-    title.textContent = "Unable to Load Scenepack";
-    description.textContent =
-      "Could not load scenepacks.json. Please check the file and try again.";
-
-    if (error) error.style.display = "block";
-  }
-}
-
-loadPack();
-</script>
+    loadPack();
+  </script>
+</body>
+</html>
