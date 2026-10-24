@@ -340,9 +340,9 @@
           const card = document.createElement("a");
           card.className = "pack-card";
           card.style.animationDelay = (index * 0.08) + "s";
-          card.href = "./kraiiilefxscenepack.html?id=" +
-            encodeURIComponent(pack.id || "");
-
+         card.href = pack.id === "SharpStick"
+  ? "./kraiiilefxscenepack.html?id=SharpStick"
+  : "./braxscenepack.html";
           const cover = document.createElement("div");
           cover.className = "cover";
 
