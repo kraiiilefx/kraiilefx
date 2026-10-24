@@ -2,17 +2,18 @@
 [
   {
     "id": "sharpstick",
-    "name": "Sharpstick Scenepack",
-    "production": "Movie",
-    "character": "Sharpstick",
+    "name": "sharp stick",
+    "production": "Sharp Stick",
+    "character": "josh",
     "resolution": "1080p",
     "fps": "24 FPS",
     "cover": "assets/covers/sharpstick.jpg",
-    "instructions": "Follow @kraiiilefx on Instagram to get the download password.",
+    "instructions": "follow @kraiiilefx on instagram to get the download password.",
     "instagram": "https://www.instagram.com/kraiiilefx/",
     "mega": "https://mega.nz/folder/3vIhgb7L",
     "date": "2026-10-24"
   }
 ]
+
 
 
