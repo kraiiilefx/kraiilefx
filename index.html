@@ -1,80 +1,397 @@
 
-<script>
-  const grid = document.getElementById("packGrid");
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>KRAIILEFX — Scenepacks</title>
+  <meta name="description" content="Scenepacks by KRAIILEFX.">
 
-  async function loadScenepacks() {
-    try {
-      const response = await fetch("./data/scenepacks.json?update=" + Date.now());
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
 
-      if (!response.ok) {
-        throw new Error("JSON could not be loaded: " + response.status);
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      background: #080808;
+      color: #f5f5f5;
+      font-family: Arial, Helvetica, sans-serif;
+      min-height: 100vh;
+      animation: pageEnter .7s ease-out both;
+    }
+
+    @keyframes pageEnter {
+      from { opacity: 0; transform: translateY(12px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 20px;
+      padding: 25px 7%;
+      border-bottom: 1px solid #222;
+    }
+
+    .logo {
+      font-size: 23px;
+      font-weight: 900;
+      letter-spacing: 2px;
+    }
+
+    nav {
+      display: flex;
+      gap: 24px;
+      flex-wrap: wrap;
+    }
+
+    nav a {
+      font-size: 11px;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: #aaa;
+      transition: color .2s;
+    }
+
+    nav a:hover {
+      color: white;
+    }
+
+    .hero {
+      padding: 100px 7% 75px;
+      text-align: center;
+    }
+
+    .eyebrow {
+      color: #888;
+      font-size: 11px;
+      letter-spacing: 4px;
+      margin-bottom: 22px;
+    }
+
+    h1 {
+      font-size: clamp(38px, 8vw, 86px);
+      font-weight: 900;
+      letter-spacing: -3px;
+      line-height: 1.05;
+    }
+
+    .hero p {
+      max-width: 500px;
+      margin: 22px auto 0;
+      color: #999;
+      font-size: 14px;
+      line-height: 1.8;
+    }
+
+    .section {
+      padding: 30px 7% 90px;
+      max-width: 1500px;
+      margin: auto;
+    }
+
+    .section-heading {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 28px;
+    }
+
+    .section-heading h2 {
+      font-size: 15px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+    }
+
+    .section-heading span {
+      color: #777;
+      font-size: 11px;
+      letter-spacing: 1px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 22px;
+    }
+
+    .pack-card {
+      display: block;
+      min-width: 0;
+      animation: cardEnter .6s ease-out both;
+    }
+
+    @keyframes cardEnter {
+      from { opacity: 0; transform: translateY(15px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .cover {
+      width: 100%;
+      aspect-ratio: 4 / 5;
+      overflow: hidden;
+      background: #151515;
+      border: 1px solid #252525;
+    }
+
+    .cover img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform .45s, opacity .45s;
+    }
+
+    .pack-card:hover .cover img {
+      transform: scale(1.04);
+      opacity: .85;
+    }
+
+    .cover-placeholder {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #666;
+      font-size: 12px;
+      letter-spacing: 3px;
+    }
+
+    .pack-info {
+      padding-top: 15px;
+    }
+
+    .pack-title {
+      font-size: 15px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+
+    .pack-meta {
+      color: #777;
+      font-size: 11px;
+      letter-spacing: 1px;
+      margin-top: 8px;
+    }
+
+    .empty-message {
+      color: #888;
+      font-size: 13px;
+      line-height: 1.8;
+      padding: 25px 0;
+    }
+
+    footer {
+      border-top: 1px solid #222;
+      padding: 28px 7%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 15px;
+      color: #777;
+      font-size: 11px;
+      letter-spacing: 1px;
+    }
+
+    footer a {
+      color: #ddd;
+    }
+
+    @media (max-width: 750px) {
+      .topbar {
+        padding: 22px 5%;
       }
 
-      const data = await response.json();
-      const packs = Array.isArray(data)
-        ? data
-        : (data.scenepacks || data.packs || []);
-
-      if (packs.length === 0) {
-        grid.innerHTML =
-          '<p class="empty-message">No scenepacks available yet.</p>';
-        return;
+      .logo {
+        font-size: 19px;
       }
 
-      grid.innerHTML = "";
+      nav {
+        gap: 12px;
+        justify-content: flex-end;
+      }
 
-      packs.forEach((pack) => {
-        const card = document.createElement("a");
-        card.className = "pack-card";
-        card.href =
-          "./kraiiilefxscenepack.html?id=" +
-          encodeURIComponent(pack.id || "");
+      nav a {
+        font-size: 10px;
+      }
 
-        const cover = document.createElement("div");
-        cover.className = "cover";
+      .hero {
+        padding: 75px 6% 55px;
+      }
 
-        if (pack.cover) {
-          const img = document.createElement("img");
+      .section {
+        padding: 25px 5% 65px;
+      }
 
-          img.src = "./" + pack.cover.replace(/^\.?\//, "");
-          img.alt = (pack.name || pack.title || pack.production || "Scenepack") + " cover";
-          img.loading = "lazy";
+      .grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 18px 12px;
+      }
 
-          img.onerror = () => {
-            cover.innerHTML =
-              '<div class="cover-placeholder">KRAIILEFX</div>';
-          };
+      .pack-title {
+        font-size: 12px;
+      }
+    }
 
-          cover.appendChild(img);
-        } else {
-          cover.innerHTML =
-            '<div class="cover-placeholder">KRAIILEFX</div>';
+    @media (max-width: 420px) {
+      .topbar {
+        flex-direction: column;
+        align-items: center;
+      }
+
+      nav {
+        justify-content: center;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        animation: none !important;
+        transition: none !important;
+      }
+    }
+  </style>
+</head>
+
+<body id="top">
+  <header class="topbar">
+    <a class="logo" href="./index.html">KRAIILEFX.</a>
+
+    <nav>
+      <a href="./index.html">Home</a>
+      <a href="./scenepacks.html">Scenepacks</a>
+      <a href="./about.html">About</a>
+      <a href="https://www.instagram.com/kraiilefx/"
+         target="_blank" rel="noopener noreferrer">Instagram</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="eyebrow">SCENEPACKS BY KRAIILEFX</div>
+      <h1>YOUR NEXT<br>EDIT STARTS HERE.</h1>
+      <p>
+        A collection of scenepacks for your edits.
+        Explore the latest uploads and find your next inspiration.
+      </p>
+    </section>
+
+    <section class="section">
+      <div class="section-heading">
+        <h2>Latest Scenepacks</h2>
+        <span>THE COLLECTION</span>
+      </div>
+
+      <div class="grid" id="packGrid">
+        <p class="empty-message">Loading scenepacks...</p>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <span>© KRAIILEFX</span>
+    <a href="#top">BACK TO TOP ↑</a>
+  </footer>
+
+  <script>
+    const grid = document.getElementById("packGrid");
+
+    async function loadScenepacks() {
+      try {
+        const response = await fetch("./data/scenepacks.json");
+
+        if (!response.ok) {
+          throw new Error("JSON request failed: " + response.status);
         }
 
-        const info = document.createElement("div");
-        info.className = "pack-info";
+        const data = await response.json();
+        const packs = Array.isArray(data)
+          ? data
+          : (data.scenepacks || data.packs || []);
 
-        const title = document.createElement("div");
-        title.className = "pack-title";
-        title.textContent =
-          pack.name || pack.title || pack.production || "Untitled Scenepack";
+        grid.replaceChildren();
 
-        const meta = document.createElement("div");
-        meta.className = "pack-meta";
-        meta.textContent = pack.character || pack.production || "SCENEPACK";
+        if (!packs.length) {
+          grid.innerHTML =
+            '<p class="empty-message">No scenepacks available yet.</p>';
+          return;
+        }
 
-        info.appendChild(title);
-        info.appendChild(meta);
-        card.appendChild(cover);
-        card.appendChild(info);
-        grid.appendChild(card);
-      });
-    } catch (error) {
-      grid.innerHTML =
-        '<p class="empty-message">Could not load scenepacks. Please check data/scenepacks.json.</p>';
-      console.error("Scenepack loading error:", error);
+        packs.forEach((pack, index) => {
+          const card = document.createElement("a");
+          card.className = "pack-card";
+          card.style.animationDelay = (index * 0.08) + "s";
+          card.href = "./kraiiilefxscenepack.html?id=" +
+            encodeURIComponent(pack.id || "");
+
+          const cover = document.createElement("div");
+          cover.className = "cover";
+
+          const img = document.createElement("img");
+          img.alt = (pack.name || pack.title || pack.production || "Scenepack")
+            + " cover";
+          img.loading = "lazy";
+
+          const coverPath = pack.cover || "";
+
+          if (coverPath) {
+            img.src = "./" + coverPath.replace(/^\.?\//, "");
+
+            img.onerror = () => {
+              cover.innerHTML =
+                '<div class="cover-placeholder">KRAIILEFX</div>';
+            };
+
+            cover.appendChild(img);
+          } else {
+            cover.innerHTML =
+              '<div class="cover-placeholder">KRAIILEFX</div>';
+          }
+
+          const info = document.createElement("div");
+          info.className = "pack-info";
+
+          const title = document.createElement("div");
+          title.className = "pack-title";
+          title.textContent =
+            pack.name || pack.title || pack.production || "Untitled Scenepack";
+
+          const meta = document.createElement("div");
+          meta.className = "pack-meta";
+          meta.textContent =
+            pack.character || pack.production || "SCENEPACK";
+
+          info.append(title, meta);
+          card.append(cover, info);
+          grid.appendChild(card);
+        });
+      } catch (error) {
+        console.error("Scenepack loading error:", error);
+        grid.innerHTML =
+          '<p class="empty-message">Could not load scenepacks. Please try again later.</p>';
+      }
     }
-  }
 
-  loadScenepacks();
-</script>
+    loadScenepacks();
+  </script>
+</body>
+</html>
