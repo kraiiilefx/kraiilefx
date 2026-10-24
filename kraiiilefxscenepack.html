@@ -7,52 +7,255 @@
 <title>Sharp Stick — KRAIILEFX</title>
 
 <style>
-*{box-sizing:border-box;margin:0;padding:0}
-body{background:#080808;color:#f5f5f5;font-family:Arial,sans-serif;min-height:100vh;display:flex;flex-direction:column}
-a{color:inherit;text-decoration:none;transition:opacity .2s}
-a:hover{opacity:.7}
-header{display:flex;justify-content:space-between;align-items:center;padding:25px 7%;border-bottom:1px solid #222;gap:20px}
-.logo{font-size:22px;font-weight:900;letter-spacing:2px}
-nav{display:flex;flex-wrap:wrap;gap:22px}
-nav a,.back{font-size:11px;color:#aaa;letter-spacing:1.5px;text-transform:uppercase}
-main{flex:1;width:100%;max-width:1150px;margin:auto;padding:40px 7% 80px}
-.back{display:inline-block;margin-bottom:30px}
-.detail{display:grid;grid-template-columns:.9fr 1.1fr;gap:50px;align-items:start}
-.cover{aspect-ratio:4/5;background:#151515;border:1px solid #252525;overflow:hidden}
-.cover img{display:block;width:100%;height:100%;object-fit:cover}
-.placeholder{min-height:300px;height:100%;display:flex;justify-content:center;align-items:center;color:#777;letter-spacing:4px}
-.eyebrow{color:#888;font-size:11px;letter-spacing:3px;margin-bottom:18px}
-h1{font-size:clamp(38px,5vw,60px);line-height:1.05;letter-spacing:-1.5px}
-.subtitle{color:#999;font-size:14px;line-height:1.8;margin-top:15px}
-.line{height:1px;background:#292929;margin:28px 0}
-.details{display:grid;grid-template-columns:1fr 1fr;gap:24px 18px}
-.label{color:#777;font-size:10px;letter-spacing:2px;margin-bottom:8px;text-transform:uppercase}
-.value{font-size:13px}
-.notice{margin-top:30px;padding:18px;border:1px solid #292929;color:#aaa;font-size:12px;line-height:1.9}
-.notice strong{display:block;color:#fff;margin-bottom:5px;letter-spacing:1px}
-.actions{display:grid;gap:12px;margin-top:25px}
-.button{display:block;padding:17px;text-align:center;background:#f5f5f5;color:#080808;border:1px solid #f5f5f5;font-size:11px;font-weight:bold;letter-spacing:2px;text-transform:uppercase}
-.button.secondary{background:transparent;color:#f5f5f5;border-color:#333}
-footer{display:flex;justify-content:space-between;padding:25px 7%;border-top:1px solid #222;color:#777;font-size:10px;letter-spacing:1px}
-@media(max-width:760px){
-header{flex-direction:column;padding:22px 5%}
-nav{justify-content:center;gap:15px}
-main{padding:30px 5% 60px}
-.detail{grid-template-columns:1fr;gap:30px}
-.cover{max-width:500px;width:100%;margin:auto}
-footer{padding:22px 5%}
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  background: #080808 !important;
+  color: #f5f5f5 !important;
+  font-family: Arial, sans-serif;
+  min-height: 100%;
+}
+
+body {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 25px 7%;
+  border-bottom: 1px solid #222;
+  gap: 20px;
+}
+
+.logo {
+  color: #fff !important;
+  font-size: 22px;
+  font-weight: 900;
+  letter-spacing: 2px;
+}
+
+nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 22px;
+}
+
+nav a, .back {
+  color: #bbb !important;
+  font-size: 11px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+}
+
+main {
+  flex: 1;
+  width: 100%;
+  max-width: 1150px;
+  margin: 0 auto;
+  padding: 40px 7% 80px;
+}
+
+.back {
+  display: inline-block;
+  margin-bottom: 30px;
+}
+
+.detail {
+  display: grid;
+  grid-template-columns: .9fr 1.1fr;
+  gap: 50px;
+  align-items: start;
+}
+
+.cover {
+  width: 100%;
+  aspect-ratio: 4 / 5;
+  background: #151515;
+  border: 1px solid #252525;
+  overflow: hidden;
+}
+
+.cover img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.content {
+  display: block !important;
+  min-width: 0;
+  color: #f5f5f5 !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+.content * {
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+.eyebrow {
+  color: #aaa !important;
+  font-size: 11px;
+  letter-spacing: 3px;
+  margin-bottom: 18px;
+}
+
+h1 {
+  display: block !important;
+  color: #fff !important;
+  font-size: clamp(38px, 5vw, 60px);
+  line-height: 1.05;
+  letter-spacing: -1.5px;
+  font-weight: 800;
+}
+
+.subtitle {
+  display: block !important;
+  color: #ccc !important;
+  font-size: 14px;
+  line-height: 1.8;
+  margin-top: 15px;
+}
+
+.line {
+  height: 1px;
+  background: #292929;
+  margin: 28px 0;
+}
+
+.details {
+  display: grid !important;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px 18px;
+}
+
+.label {
+  color: #999 !important;
+  font-size: 10px;
+  letter-spacing: 2px;
+  margin-bottom: 8px;
+  text-transform: uppercase;
+}
+
+.value {
+  color: #fff !important;
+  font-size: 13px;
+}
+
+.notice {
+  display: block !important;
+  margin-top: 30px;
+  padding: 18px;
+  border: 1px solid #444;
+  color: #ddd !important;
+  font-size: 12px;
+  line-height: 1.9;
+}
+
+.notice strong {
+  display: block;
+  color: #fff !important;
+  margin-bottom: 5px;
+  letter-spacing: 1px;
+}
+
+.actions {
+  display: grid !important;
+  gap: 12px;
+  margin-top: 25px;
+}
+
+.button {
+  display: block !important;
+  padding: 17px;
+  text-align: center;
+  background: #f5f5f5 !important;
+  color: #080808 !important;
+  border: 1px solid #f5f5f5;
+  font-size: 11px;
+  font-weight: bold;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+.button.secondary {
+  background: transparent !important;
+  color: #fff !important;
+  border-color: #444;
+}
+
+footer {
+  display: flex;
+  justify-content: space-between;
+  padding: 25px 7%;
+  border-top: 1px solid #222;
+  color: #aaa !important;
+  font-size: 10px;
+  letter-spacing: 1px;
+}
+
+footer a {
+  color: #ddd !important;
+}
+
+@media (max-width: 760px) {
+  header {
+    flex-direction: column;
+    padding: 22px 5%;
+  }
+
+  nav {
+    justify-content: center;
+    gap: 15px;
+  }
+
+  main {
+    padding: 30px 5% 60px;
+  }
+
+  .detail {
+    grid-template-columns: 1fr;
+    gap: 30px;
+  }
+
+  .cover {
+    max-width: 500px;
+    margin: auto;
+  }
+
+  footer {
+    padding: 22px 5%;
+  }
 }
 </style>
 </head>
 
 <body>
+
 <header>
   <a class="logo" href="./index.html">KRAIILEFX.</a>
+
   <nav>
     <a href="./index.html">Home</a>
     <a href="./scenepacks.html">Scenepacks</a>
     <a href="./about.html">About</a>
-    <a href="https://www.instagram.com/kraiilefx/" target="_blank" rel="noopener noreferrer">Instagram</a>
+    <a href="https://www.instagram.com/kraiilefx/"
+       target="_blank" rel="noopener noreferrer">Instagram</a>
   </nav>
 </header>
 
@@ -60,17 +263,18 @@ footer{padding:22px 5%}
   <a class="back" href="./scenepacks.html">← All Scenepacks</a>
 
   <section class="detail">
+
     <div class="cover">
       <img
         src="https://kraiiilefx.github.io/kraiilefx/assets/covers/indir.gif"
         alt="Sharp Stick scenepack cover"
-        onerror="this.style.display='none';document.getElementById('placeholder').style.display='flex';"
       >
-      <div class="placeholder" id="placeholder" style="display:none;">KRAIILEFX</div>
     </div>
 
     <div class="content">
+
       <div class="eyebrow">SCENEPACK</div>
+
       <h1>Sharp Stick</h1>
 
       <p class="subtitle">
@@ -80,22 +284,27 @@ footer{padding:22px 5%}
       <div class="line"></div>
 
       <div class="details">
+
         <div>
           <div class="label">Character</div>
           <div class="value">Josh</div>
         </div>
+
         <div>
           <div class="label">Production</div>
           <div class="value">Sharp Stick</div>
         </div>
+
         <div>
           <div class="label">Resolution</div>
           <div class="value">1080p</div>
         </div>
+
         <div>
           <div class="label">Frame Rate</div>
           <div class="value">24 FPS</div>
         </div>
+
       </div>
 
       <div class="notice">
@@ -104,9 +313,21 @@ footer{padding:22px 5%}
       </div>
 
       <div class="actions">
-        <a class="button" href="https://mega.nz/folder/3vIhgb7L" target="_blank" rel="noopener noreferrer">Download Scenepack</a>
-        <a class="button secondary" href="https://www.instagram.com/kraiilefx/" target="_blank" rel="noopener noreferrer">Follow on Instagram</a>
+        <a
+          class="button"
+          href="https://mega.nz/folder/3vIhgb7L"
+          target="_blank"
+          rel="noopener noreferrer"
+        >Download Scenepack</a>
+
+        <a
+          class="button secondary"
+          href="https://www.instagram.com/kraiilefx/"
+          target="_blank"
+          rel="noopener noreferrer"
+        >Follow on Instagram</a>
       </div>
+
     </div>
   </section>
 </main>
@@ -115,5 +336,6 @@ footer{padding:22px 5%}
   <span>© KRAIILEFX</span>
   <a href="./scenepacks.html">ALL SCENEPACKS ↗</a>
 </footer>
+
 </body>
 </html>
