@@ -1,16 +1,16 @@
 
 [
   {
-    "id": "ornek-paket",
-    "name": "Example Scenepack",
+    "id": "sharpstick",
+    "name": "Sharpstick Scenepack",
     "production": "Movie",
-    "character": "Character Name",
+    "character": "Sharpstick",
     "resolution": "1080p",
     "fps": "24 FPS",
-"cover": "assets/covers/sharpstick.jpg",
-    "instructions": "Follow @kraiiilefx on Instagram to access the download.",
+    "cover": "assets/covers/sharpstick.jpg",
+    "instructions": "Follow @kraiiilefx on Instagram to get the download password.",
     "instagram": "https://www.instagram.com/kraiiilefx/",
-    "mega": "",
+    "mega": "https://mega.nz/folder/3vIhgb7L",
     "date": "2026-10-24"
   }
 ]
