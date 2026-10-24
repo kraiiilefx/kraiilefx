@@ -7,6 +7,61 @@
   <meta name="theme-color" content="#080808">
   <meta name="description" content="KRAIILEFX — scenepacks and creative works.">
   <title>KRAIILEFX — Scenepacks & Edits</title>
+  
+/* Main page entrance animation */
+@keyframes pageEnter {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+body {
+  animation: pageEnter 0.9s ease-out both;
+}
+
+/* Smooth hover on cards and images */
+a,
+button {
+  -webkit-tap-highlight-color: transparent;
+}
+
+a {
+  transition: opacity 0.3s ease, color 0.3s ease;
+}
+
+a:hover {
+  opacity: 0.8;
+}
+
+/* Click feedback */
+a:active,
+button:active {
+  transform: scale(0.98);
+}
+
+/* Card entrance */
+.grid > * {
+  animation: pageEnter 0.7s ease-out both;
+}
+
+/* Respect reduced motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  body,
+  .grid > * {
+    animation: none;
+  }
+
+  a,
+  button {
+    transition: none;
+  }
+}
+
   <style>
     * {
       box-sizing: border-box;
