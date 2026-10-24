@@ -368,8 +368,7 @@ link.href = "kraiiilefxscenepack.html?id=" + encodeURIComponent(pack.id);       
     typeFilter.addEventListener("change", render);
     characterFilter.addEventListener("change", render);
 
-    fetch("data/scenepacks.json")
-      .then(response => {
+fetch("./data/scenepacks.json")      .then(response => {
         if (!response.ok) {
           throw new Error("Archive not available");
         }
