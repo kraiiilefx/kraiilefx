@@ -274,61 +274,79 @@
   </footer>
 
   <script>
-    async function init() {
-      const params = new URLSearchParams(location.search);
-      const id = params.get("id") || "SharpStick";
+    
+<script>
+async function loadPack() {
+  const params = new URLSearchParams(window.location.search);
+  const packId = params.get("id") || "SharpStick";
 
-      try {
-        const response = await fetch("data/scenepacks.json");
-        if (!response.ok) throw new Error("Could not load data");
+  const title = document.getElementById("packTitle");
+  const description = document.getElementById("packDescription");
+  const character = document.getElementById("packCharacter");
+  const quality = document.getElementById("packQuality");
+  const fps = document.getElementById("packFps");
+  const cover = document.getElementById("cover");
+  const download = document.getElementById("downloadButton");
+  const error = document.getElementById("errorMessage");
 
-        const packs = await response.json();
-        const pack = packs.find(p =>
-          String(p.id || "").toLowerCase() === id.toLowerCase()
-        );
+  try {
+    const response = await fetch("data/scenepacks.json");
 
-        if (!pack) {
-          document.getElementById("title").textContent = "Scenepack Not Found";
-          document.getElementById("description").textContent =
-            "Please return to the scenepacks page and select a scenepack.";
-          return;
-        }
-
-        const name = pack.name || pack.title || pack.production || "Scenepack";
-
-        document.title = name + " — KRAIILEFX";
-        document.getElementById("title").textContent = name;
-        document.getElementById("description").textContent =
-          pack.description || "Download the " + name + " scenepack.";
-        document.getElementById("character").textContent = pack.character || "—";
-        document.getElementById("production").textContent = pack.production || "—";
-        document.getElementById("resolution").textContent = pack.resolution || "1080p";
-        document.getElementById("fps").textContent = pack.fps || "24 FPS";
-
-        const cover = document.getElementById("cover");
-        if (pack.cover) {
-          const img = document.createElement("img");
-          img.src = pack.cover;
-          img.alt = name + " cover";
-          img.onerror = () => {
-            cover.innerHTML = '<div class="placeholder">KRAIILEFX</div>';
-          };
-          cover.replaceChildren(img);
-        }
-
-        const downloadUrl = pack.mega || pack.download || pack.link;
-        if (downloadUrl) {
-          document.getElementById("download").href = downloadUrl;
-        }
-      } catch (error) {
-        document.getElementById("title").textContent = "Unable to Load Scenepack";
-        document.getElementById("description").textContent =
-          "Please refresh the page and try again.";
-        console.error(error);
-      }
+    if (!response.ok) {
+      throw new Error("Scenepack data could not be loaded.");
     }
 
-    init();
-  </script>
-</body>
-</html>
+    const packs = await response.json();
+
+    const pack = packs.find(item =>
+      String(item.id).toLowerCase() === packId.toLowerCase()
+    );
+
+    if (!pack) {
+      title.textContent = "Scenepack Not Found";
+      description.textContent = "Please return to the scenepacks page.";
+      if (error) error.style.display = "block";
+      return;
+    }
+
+    // Use the actual field names from scenepacks.json
+    title.textContent = pack.name || pack.production || "Scenepack";
+    document.title = (pack.name || "Scenepack") + " — KRAIILEFX";
+
+    description.textContent =
+      pack.instructions || "Scenepack by KRAIILEFX.";
+
+    character.textContent = pack.character || "—";
+    quality.textContent = pack.resolution || "1080p";
+    fps.textContent = pack.fps || "24 FPS";
+
+    // Load the cover image
+    if (pack.cover) {
+      const img = document.createElement("img");
+      img.src = pack.cover;
+      img.alt = (pack.name || "Scenepack") + " cover";
+
+      img.onerror = () => {
+        cover.innerHTML =
+          '<div class="cover-placeholder">KRAIILEFX</div>';
+      };
+
+      cover.replaceChildren(img);
+    }
+
+    // Use the existing MEGA link
+    if (pack.mega) {
+      download.href = pack.mega;
+      download.textContent = "Download Scenepack";
+    }
+
+  } catch (err) {
+    console.error(err);
+    title.textContent = "Unable to Load Scenepack";
+    description.textContent =
+      "Please refresh the page and try again.";
+  }
+}
+
+loadPack();
+</script>
