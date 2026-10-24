@@ -7,6 +7,59 @@
   <meta name="theme-color" content="#080808">
   <title>Sharp Stick Scenepack — KRAIILEFX</title>
 
+/* Cinematic page entrance */
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes coverReveal {
+  from {
+    opacity: 0;
+    transform: translateY(18px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+header {
+  animation: fadeUp 0.8s ease-out both;
+}
+
+.back {
+  animation: fadeUp 0.7s ease-out 0.15s both;
+}
+
+.cover {
+  animation: coverReveal 1s cubic-bezier(0.2, 0.7, 0.3, 1) 0.2s both;
+}
+
+.content {
+  animation: fadeUp 0.9s ease-out 0.35s both;
+}
+
+footer {
+  animation: fadeUp 0.8s ease-out 0.5s both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  header,
+  .back,
+  .cover,
+  .content,
+  footer {
+    animation: none;
+  }
+}
+
   <style>
     * {
       box-sizing: border-box;
