@@ -5,66 +5,17 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="theme-color" content="#080808">
-  <title>Sharp Stick Scenepack — KRAIILEFX</title>
-
-/* Cinematic page entrance */
-@keyframes fadeUp {
-  from {
-    opacity: 0;
-    transform: translateY(24px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-@keyframes coverReveal {
-  from {
-    opacity: 0;
-    transform: translateY(18px) scale(0.97);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
-}
-
-header {
-  animation: fadeUp 0.8s ease-out both;
-}
-
-.back {
-  animation: fadeUp 0.7s ease-out 0.15s both;
-}
-
-.cover {
-  animation: coverReveal 1s cubic-bezier(0.2, 0.7, 0.3, 1) 0.2s both;
-}
-
-.content {
-  animation: fadeUp 0.9s ease-out 0.35s both;
-}
-
-footer {
-  animation: fadeUp 0.8s ease-out 0.5s both;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  header,
-  .back,
-  .cover,
-  .content,
-  footer {
-    animation: none;
-  }
-}
+  <title>Scenepack — KRAIILEFX</title>
 
   <style>
     * {
-      box-sizing: border-box;
       margin: 0;
       padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
     }
 
     body {
@@ -72,13 +23,15 @@ footer {
       color: #f5f5f5;
       font-family: Arial, Helvetica, sans-serif;
       min-height: 100vh;
-      animation: pageFade 0.8s ease-out both;
+      display: flex;
+      flex-direction: column;
+      animation: fadeUp 0.7s ease-out both;
     }
 
-    @keyframes pageFade {
+    @keyframes fadeUp {
       from {
         opacity: 0;
-        transform: translateY(8px);
+        transform: translateY(18px);
       }
       to {
         opacity: 1;
@@ -86,72 +39,90 @@ footer {
       }
     }
 
+    @keyframes coverReveal {
+      from {
+        opacity: 0;
+        transform: translateY(18px) scale(0.97);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
     a {
       color: inherit;
       text-decoration: none;
+      -webkit-tap-highlight-color: transparent;
+      transition: opacity 0.25s ease, color 0.25s ease;
+    }
+
+    a:hover {
+      opacity: 0.72;
     }
 
     header {
       display: flex;
-      justify-content: space-between;
       align-items: center;
-      padding: 26px 6%;
-      border-bottom: 1px solid #252525;
+      justify-content: space-between;
+      gap: 20px;
+      padding: 25px 7%;
+      border-bottom: 1px solid #222;
+      animation: fadeUp 0.8s ease-out both;
     }
 
     .logo {
-      font-size: 19px;
+      font-size: 22px;
       font-weight: 900;
-      letter-spacing: 3px;
+      letter-spacing: 2px;
+      white-space: nowrap;
     }
 
     nav {
       display: flex;
-      gap: 25px;
+      flex-wrap: wrap;
+      gap: 23px;
     }
 
     nav a {
-      color: #aaa;
       font-size: 11px;
-      letter-spacing: 1px;
-      transition: color 0.25s ease;
-    }
-
-    nav a:hover {
-      color: #fff;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: #aaa;
     }
 
     main {
-      max-width: 1050px;
-      margin: auto;
-      padding: 65px 7%;
+      width: 100%;
+      max-width: 1150px;
+      margin: 0 auto;
+      padding: 45px 7% 90px;
+      flex: 1;
     }
 
     .back {
       display: inline-block;
-      color: #999;
-      font-size: 12px;
-      letter-spacing: 1px;
       margin-bottom: 35px;
-      transition: color 0.25s ease;
+      color: #999;
+      font-size: 11px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      animation: fadeUp 0.7s ease-out 0.1s both;
     }
 
-    .back:hover {
-      color: #fff;
-    }
-
-    .details {
+    .detail {
       display: grid;
       grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
-      gap: 55px;
       align-items: start;
+      gap: 55px;
     }
 
     .cover {
       width: 100%;
       aspect-ratio: 4 / 5;
-      background: #111;
       overflow: hidden;
+      background: #151515;
+      border: 1px solid #252525;
+      animation: coverReveal 1s cubic-bezier(0.2, 0.7, 0.3, 1) 0.15s both;
     }
 
     .cover img {
@@ -159,51 +130,64 @@ footer {
       width: 100%;
       height: 100%;
       object-fit: cover;
-      object-position: center;
-      transition:
-        transform 0.65s cubic-bezier(0.2, 0.7, 0.3, 1),
-        opacity 0.4s ease;
+      transition: transform 0.6s ease, opacity 0.4s ease;
     }
 
     .cover:hover img {
       transform: scale(1.035);
     }
 
+    .cover-placeholder {
+      height: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: #777;
+      font-size: 13px;
+      letter-spacing: 4px;
+    }
+
+    .content {
+      animation: fadeUp 0.9s ease-out 0.25s both;
+    }
+
     .eyebrow {
+      margin-bottom: 18px;
       color: #888;
-      font-size: 10px;
+      font-size: 11px;
       letter-spacing: 3px;
       text-transform: uppercase;
-      margin-bottom: 16px;
     }
 
     h1 {
-      font-size: clamp(30px, 5vw, 48px);
-      line-height: 1.1;
-      font-weight: 700;
-      letter-spacing: -1px;
-      margin-bottom: 12px;
+      font-size: clamp(35px, 5vw, 58px);
+      font-weight: 900;
+      line-height: 1.05;
+      letter-spacing: -1.5px;
+      overflow-wrap: anywhere;
     }
 
-    .production {
-      color: #aaa;
+    .subtitle {
+      margin-top: 14px;
+      color: #999;
       font-size: 14px;
-      margin-bottom: 30px;
+      line-height: 1.8;
     }
 
-    .divider {
+    .line {
+      width: 100%;
       height: 1px;
       background: #292929;
-      margin: 25px 0;
+      margin: 28px 0;
     }
 
-    .info {
+    .details {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 22px 15px;
+      gap: 23px 18px;
     }
 
-    .info-label {
+    .detail-label {
       color: #777;
       font-size: 10px;
       letter-spacing: 2px;
@@ -211,244 +195,312 @@ footer {
       margin-bottom: 8px;
     }
 
-    .info-value {
-      color: #f5f5f5;
-      font-size: 14px;
+    .detail-value {
+      color: #eee;
+      font-size: 13px;
+      overflow-wrap: anywhere;
     }
 
     .notice {
-      border: 1px solid #292929;
-      padding: 20px;
       margin-top: 30px;
-      transition: border-color 0.3s ease;
-    }
-
-    .notice:hover {
-      border-color: #555;
-    }
-
-    .notice h2 {
-      font-size: 13px;
-      font-weight: 600;
-      margin-bottom: 10px;
-    }
-
-    .notice p {
+      padding: 18px;
+      border: 1px solid #292929;
       color: #aaa;
-      font-size: 13px;
-      line-height: 1.8;
+      font-size: 12px;
+      line-height: 1.9;
     }
 
-    .instagram-link {
-      color: #fff;
-      text-decoration: underline;
-      text-underline-offset: 3px;
-      transition: opacity 0.25s ease;
+    .notice strong {
+      display: block;
+      color: #f5f5f5;
+      margin-bottom: 5px;
+      font-size: 11px;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
     }
 
-    .instagram-link:hover {
-      opacity: 0.7;
+    .actions {
+      display: flex;
+      flex-direction: column;
+      gap: 13px;
+      margin-top: 28px;
     }
 
-    .download {
+    .button {
       display: flex;
       justify-content: center;
       align-items: center;
       width: 100%;
-      min-height: 50px;
+      min-height: 52px;
+      padding: 15px 20px;
+      border: 1px solid #f5f5f5;
       background: #f5f5f5;
       color: #080808;
-      font-size: 11px;
-      font-weight: 700;
-      letter-spacing: 2px;
-      margin-top: 22px;
-      transition:
-        background 0.3s ease,
-        color 0.3s ease,
-        letter-spacing 0.3s ease;
-    }
-
-    .download:hover {
-      background: #d8d8d8;
-      letter-spacing: 2.5px;
-    }
-
-    .footer-note {
-      color: #666;
-      font-size: 10px;
-      line-height: 1.8;
-      margin-top: 15px;
       text-align: center;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      transition: background 0.25s ease, color 0.25s ease,
+                  transform 0.25s ease;
+    }
+
+    .button:hover {
+      opacity: 1;
+      background: #080808;
+      color: #f5f5f5;
+    }
+
+    .button:active {
+      transform: scale(0.985);
+    }
+
+    .button.secondary {
+      background: transparent;
+      color: #f5f5f5;
+      border-color: #333;
+    }
+
+    .button.secondary:hover {
+      background: #171717;
+    }
+
+    .error {
+      display: none;
+      margin-top: 20px;
+      color: #ff9999;
+      font-size: 12px;
+      line-height: 1.8;
     }
 
     footer {
-      border-top: 1px solid #252525;
-      padding: 25px 6%;
-      color: #666;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 15px;
+      padding: 25px 7%;
+      border-top: 1px solid #222;
+      color: #777;
       font-size: 10px;
-      letter-spacing: 1px;
-      text-align: center;
-      margin-top: 35px;
+      letter-spacing: 1.5px;
+      animation: fadeUp 0.8s ease-out 0.3s both;
     }
 
-    @media (max-width: 700px) {
+    @media (max-width: 760px) {
       header {
-        padding: 22px 6%;
-      }
-
-      .logo {
-        font-size: 15px;
-        letter-spacing: 2px;
+        padding: 22px 5%;
+        flex-direction: column;
       }
 
       nav {
-        gap: 14px;
-      }
-
-      nav a {
-        font-size: 9px;
+        justify-content: center;
+        gap: 16px;
       }
 
       main {
-        padding: 35px 6%;
+        padding: 35px 5% 65px;
       }
 
-      .details {
+      .detail {
         grid-template-columns: 1fr;
-        gap: 32px;
+        gap: 35px;
       }
 
       .cover {
-        max-width: 430px;
-        margin: auto;
+        max-width: 500px;
+        margin: 0 auto;
       }
 
-      h1 {
-        font-size: 35px;
+      .content {
+        width: 100%;
       }
-    }
 
-    @media (max-width: 380px) {
-      header {
-        align-items: flex-start;
-        gap: 15px;
-        flex-direction: column;
+      footer {
+        padding: 22px 5%;
       }
     }
 
     @media (prefers-reduced-motion: reduce) {
-      body {
-        animation: none;
-      }
-
-      .cover img,
-      .download,
-      nav a,
-      .back,
-      .instagram-link,
-      .notice {
-        transition: none;
-      }
-
-      .cover:hover img {
-        transform: none;
+      *,
+      *::before,
+      *::after {
+        animation: none !important;
+        transition: none !important;
+        scroll-behavior: auto !important;
       }
     }
   </style>
 </head>
 
 <body>
-
   <header>
     <a class="logo" href="index.html">KRAIILEFX.</a>
 
     <nav>
-      <a href="index.html">HOME</a>
-      <a href="scenepacks.html">SCENEPACKS</a>
-      <a href="about.html">ABOUT</a>
+      <a href="index.html">Home</a>
+      <a href="scenepacks.html">Scenepacks</a>
+      <a href="about.html">About</a>
+      <a href="https://www.instagram.com/kraiilefx/"
+         target="_blank" rel="noopener noreferrer">Instagram</a>
     </nav>
   </header>
 
   <main>
-    <a class="back" href="scenepacks.html">← BACK TO SCENEPACKS</a>
+    <a class="back" href="scenepacks.html">← All Scenepacks</a>
 
-    <section class="details">
-
-      <div class="cover">
-        <img
-          src="assets/covers/sharpstick.gif"
-          alt="Sharp Stick scenepack cover"
-        >
+    <section class="detail">
+      <div class="cover" id="cover">
+        <div class="cover-placeholder">KRAIILEFX</div>
       </div>
 
       <div class="content">
-        <p class="eyebrow">SCENEPACK DOWNLOAD</p>
+        <div class="eyebrow">KRAIILEFX SCENEPACKS</div>
+        <h1 id="packTitle">Loading...</h1>
+        <p class="subtitle" id="packDescription">
+          Your next edit starts here.
+        </p>
 
-        <h1>Sharp Stick</h1>
+        <div class="line"></div>
 
-        <p class="production">Sharp Stick · Josh</p>
-
-        <div class="divider"></div>
-
-        <div class="info">
+        <div class="details">
           <div>
-            <p class="info-label">Character</p>
-            <p class="info-value">Josh</p>
+            <div class="detail-label">Character</div>
+            <div class="detail-value" id="packCharacter">—</div>
           </div>
 
           <div>
-            <p class="info-label">Resolution</p>
-            <p class="info-value">1080p</p>
+            <div class="detail-label">Quality</div>
+            <div class="detail-value" id="packQuality">1080p</div>
           </div>
 
           <div>
-            <p class="info-label">Frame Rate</p>
-            <p class="info-value">24 FPS</p>
+            <div class="detail-label">Frame Rate</div>
+            <div class="detail-value" id="packFps">24 FPS</div>
           </div>
 
           <div>
-            <p class="info-label">Format</p>
-            <p class="info-value">Scenepack</p>
+            <div class="detail-label">Type</div>
+            <div class="detail-value">Scenepack</div>
           </div>
         </div>
-
-        <div class="divider"></div>
 
         <div class="notice">
-          <h2>BEFORE YOU DOWNLOAD</h2>
-
-          <p>
-            Follow
-            <a
-              class="instagram-link"
-              href="https://www.instagram.com/kraiiilefx/"
-              target="_blank"
-              rel="noopener noreferrer"
-            >@kraiiilefx on Instagram</a>
-            to get the download password.
-          </p>
+          <strong>Before downloading</strong>
+          Follow my Instagram account to get the password and download
+          instructions. Check the post or information provided with the
+          scenepack for the password.
         </div>
 
-        <a
-          class="download"
-          href="https://mega.nz/folder/3vIhgb7L"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          DOWNLOAD SCENEPACK ↗
-        </a>
+        <div class="actions">
+          <a class="button" id="downloadButton"
+             href="https://www.instagram.com/kraiilefx/"
+             target="_blank" rel="noopener noreferrer">
+            Get Scenepack
+          </a>
 
-        <p class="footer-note">
-          The password is provided separately on Instagram.
+          <a class="button secondary"
+             href="https://www.instagram.com/kraiilefx/"
+             target="_blank" rel="noopener noreferrer">
+            Follow on Instagram
+          </a>
+        </div>
+
+        <p class="error" id="errorMessage">
+          This scenepack could not be found. Please return to the
+          scenepacks page and select it again.
         </p>
       </div>
-
     </section>
   </main>
 
   <footer>
-    © 2026 KRAIILEFX. ALL RIGHTS RESERVED.
+    <span>© KRAIILEFX</span>
+    <a href="#top" onclick="window.scrollTo({top: 0, behavior: 'smooth'}); return false;">BACK TO TOP ↑</a>
   </footer>
 
+  <script>
+    async function loadPack() {
+      const params = new URLSearchParams(window.location.search);
+      const packId = params.get("id");
+
+      const titleElement = document.getElementById("packTitle");
+      const descriptionElement = document.getElementById("packDescription");
+      const characterElement = document.getElementById("packCharacter");
+      const qualityElement = document.getElementById("packQuality");
+      const fpsElement = document.getElementById("packFps");
+      const coverElement = document.getElementById("cover");
+      const downloadButton = document.getElementById("downloadButton");
+      const errorMessage = document.getElementById("errorMessage");
+
+      try {
+        const response = await fetch("data/scenepacks.json");
+
+        if (!response.ok) {
+          throw new Error("Could not load scenepack data.");
+        }
+
+        const data = await response.json();
+        const packs = Array.isArray(data)
+          ? data
+          : (data.scenepacks || data.packs || []);
+
+        const pack = packs.find(item =>
+          String(item.id || "").toLowerCase() ===
+          String(packId || "").toLowerCase()
+        );
+
+        if (!pack) {
+          titleElement.textContent = "Scenepack Not Found";
+          descriptionElement.textContent =
+            "This link may be incorrect or the scenepack may have been removed.";
+          errorMessage.style.display = "block";
+          coverElement.innerHTML =
+            '<div class="cover-placeholder">NOT FOUND</div>';
+          return;
+        }
+
+        document.title = (pack.title || "Scenepack") + " — KRAIILEFX";
+        titleElement.textContent = pack.title || "Untitled Scenepack";
+        descriptionElement.textContent =
+          pack.description || "Your next edit starts here.";
+        characterElement.textContent = pack.character || "—";
+        qualityElement.textContent = pack.quality || "1080p";
+        fpsElement.textContent = pack.fps || "24 FPS";
+
+        if (pack.cover) {
+          const img = document.createElement("img");
+          img.src = pack.cover;
+          img.alt = (pack.title || "Scenepack") + " cover";
+          img.onerror = () => {
+            coverElement.innerHTML =
+              '<div class="cover-placeholder">KRAIILEFX</div>';
+          };
+          coverElement.innerHTML = "";
+          coverElement.appendChild(img);
+        }
+
+        const downloadUrl = pack.download || pack.mega || pack.link;
+
+        if (downloadUrl) {
+          downloadButton.href = downloadUrl;
+          downloadButton.target = "_blank";
+          downloadButton.rel = "noopener noreferrer";
+          downloadButton.textContent = "Download Scenepack";
+        } else {
+          downloadButton.href = "https://www.instagram.com/kraiilefx/";
+          downloadButton.textContent = "Get Scenepack";
+        }
+      } catch (error) {
+        console.error(error);
+        titleElement.textContent = "Scenepack";
+        descriptionElement.textContent =
+          "Please return to the scenepacks page and try again.";
+        errorMessage.style.display = "block";
+      }
+    }
+
+    loadPack();
+  </script>
 </body>
 </html>
