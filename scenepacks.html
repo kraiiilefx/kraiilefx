@@ -210,12 +210,12 @@
           const card = document.createElement("a");
           card.className = "card";
 
-          const isAccountant =
-            pack.id === "Brax" ||
-            pack.name === "The Accountant";
-
-          if (isAccountant) {
+          // Each scenepack opens its own detail page.
+          if (pack.id === "Brax") {
             card.href = "./braxscenepack.html";
+          } else if (pack.id === "SweetVirginia") {
+            card.href =
+              "./kraiiilefxscenepack.html?id=SweetVirginia";
           } else if (pack.id === "SharpStick") {
             card.href =
               "./kraiiilefxscenepack.html?id=SharpStick";
