@@ -2,9 +2,9 @@
 [
   {
     "id": "sharpstick",
-"name": "sharp stick",
+"name": "Sharp Stick",
     "production": "Sharp Stick",
-    "character": "josh",
+    "character": "Josh",
     "resolution": "1080p",
     "fps": "24 FPS",
     "cover": "assets/covers/sharpstick.jpg",
