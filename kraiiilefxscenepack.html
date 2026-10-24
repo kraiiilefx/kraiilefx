@@ -5,73 +5,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="theme-color" content="#080808">
-
   <title>Sharp Stick Scenepack — KRAIILEFX</title>
-
-/* Smooth page entrance */
-body {
-  animation: pageFade 0.7s ease-out both;
-}
-
-@keyframes pageFade {
-  from {
-    opacity: 0;
-    transform: translateY(8px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-/* Smooth cover hover */
-.cover {
-  overflow: hidden;
-  background: #111;
-}
-
-.cover img {
-  transition: transform 0.6s cubic-bezier(0.2, 0.7, 0.3, 1),
-              opacity 0.4s ease;
-}
-
-.cover:hover img {
-  transform: scale(1.035);
-}
-
-/* Elegant links */
-nav a,
-.back,
-.instagram-link {
-  transition: color 0.25s ease,
-              opacity 0.25s ease;
-}
-
-.download {
-  transition: background 0.3s ease,
-              color 0.3s ease,
-              letter-spacing 0.3s ease;
-}
-
-.download:hover {
-  background: #d8d8d8;
-  letter-spacing: 2.5px;
-}
-
-/* Accessibility: respect reduced motion */
-@media (prefers-reduced-motion: reduce) {
-  body {
-    animation: none;
-  }
-
-  .cover img,
-  .download,
-  nav a,
-  .back,
-  .instagram-link {
-    transition: none;
-  }
-}
 
   <style>
     * {
@@ -85,6 +19,18 @@ nav a,
       color: #f5f5f5;
       font-family: Arial, Helvetica, sans-serif;
       min-height: 100vh;
+      animation: pageFade 0.8s ease-out both;
+    }
+
+    @keyframes pageFade {
+      from {
+        opacity: 0;
+        transform: translateY(8px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
 
     a {
@@ -115,7 +61,7 @@ nav a,
       color: #aaa;
       font-size: 11px;
       letter-spacing: 1px;
-      transition: color 0.2s;
+      transition: color 0.25s ease;
     }
 
     nav a:hover {
@@ -134,7 +80,7 @@ nav a,
       font-size: 12px;
       letter-spacing: 1px;
       margin-bottom: 35px;
-      transition: color 0.2s;
+      transition: color 0.25s ease;
     }
 
     .back:hover {
@@ -151,7 +97,7 @@ nav a,
     .cover {
       width: 100%;
       aspect-ratio: 4 / 5;
-      background: #151515;
+      background: #111;
       overflow: hidden;
     }
 
@@ -161,6 +107,13 @@ nav a,
       height: 100%;
       object-fit: cover;
       object-position: center;
+      transition:
+        transform 0.65s cubic-bezier(0.2, 0.7, 0.3, 1),
+        opacity 0.4s ease;
+    }
+
+    .cover:hover img {
+      transform: scale(1.035);
     }
 
     .eyebrow {
@@ -214,6 +167,11 @@ nav a,
       border: 1px solid #292929;
       padding: 20px;
       margin-top: 30px;
+      transition: border-color 0.3s ease;
+    }
+
+    .notice:hover {
+      border-color: #555;
     }
 
     .notice h2 {
@@ -232,6 +190,11 @@ nav a,
       color: #fff;
       text-decoration: underline;
       text-underline-offset: 3px;
+      transition: opacity 0.25s ease;
+    }
+
+    .instagram-link:hover {
+      opacity: 0.7;
     }
 
     .download {
@@ -246,11 +209,15 @@ nav a,
       font-weight: 700;
       letter-spacing: 2px;
       margin-top: 22px;
-      transition: background 0.2s, color 0.2s;
+      transition:
+        background 0.3s ease,
+        color 0.3s ease,
+        letter-spacing 0.3s ease;
     }
 
     .download:hover {
       background: #d8d8d8;
+      letter-spacing: 2.5px;
     }
 
     .footer-note {
@@ -315,6 +282,25 @@ nav a,
         flex-direction: column;
       }
     }
+
+    @media (prefers-reduced-motion: reduce) {
+      body {
+        animation: none;
+      }
+
+      .cover img,
+      .download,
+      nav a,
+      .back,
+      .instagram-link,
+      .notice {
+        transition: none;
+      }
+
+      .cover:hover img {
+        transform: none;
+      }
+    }
   </style>
 </head>
 
@@ -337,7 +323,8 @@ nav a,
 
       <div class="cover">
         <img
-src="assets/covers/sharpstick.gif"          alt="Sharp Stick scenepack cover"
+          src="assets/covers/sharpstick.gif"
+          alt="Sharp Stick scenepack cover"
         >
       </div>
 
