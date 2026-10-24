@@ -273,8 +273,6 @@
     <a href="scenepacks.html">ALL SCENEPACKS ↗</a>
   </footer>
 
-  <script>
-    
 <script>
 async function loadPack() {
   const params = new URLSearchParams(window.location.search);
@@ -290,16 +288,26 @@ async function loadPack() {
   const error = document.getElementById("errorMessage");
 
   try {
-    const response = await fetch("data/scenepacks.json");
+    const response = await fetch("./data/scenepacks.json");
 
     if (!response.ok) {
-      throw new Error("Scenepack data could not be loaded.");
+      throw new Error("JSON file could not be loaded: " + response.status);
     }
 
     const packs = await response.json();
 
+    if (!Array.isArray(packs)) {
+      throw new Error("The JSON file must contain an array.");
+    }
+
+    const normalize = value =>
+      String(value || "").toLowerCase().replace(/[^a-z0-9]/g, "");
+
     const pack = packs.find(item =>
-      String(item.id).toLowerCase() === packId.toLowerCase()
+      normalize(item.id) === normalize(packId)
+    ) || packs.find(item =>
+      normalize(item.name) === normalize(packId) ||
+      normalize(item.production) === normalize(packId)
     );
 
     if (!pack) {
@@ -309,42 +317,55 @@ async function loadPack() {
       return;
     }
 
-    // Use the actual field names from scenepacks.json
     title.textContent = pack.name || pack.production || "Scenepack";
-    document.title = (pack.name || "Scenepack") + " — KRAIILEFX";
+    document.title = title.textContent + " — KRAIILEFX";
 
     description.textContent =
       pack.instructions || "Scenepack by KRAIILEFX.";
 
     character.textContent = pack.character || "—";
-    quality.textContent = pack.resolution || "1080p";
-    fps.textContent = pack.fps || "24 FPS";
+    quality.textContent = pack.resolution || "—";
+    fps.textContent = pack.fps || "—";
 
-    // Load the cover image
-    if (pack.cover) {
+    if (cover) {
       const img = document.createElement("img");
-      img.src = pack.cover;
       img.alt = (pack.name || "Scenepack") + " cover";
+      img.src = pack.cover || "./assets/covers/sharpstick.gif";
+      img.style.width = "100%";
+      img.style.height = "100%";
+      img.style.objectFit = "cover";
 
-      img.onerror = () => {
-        cover.innerHTML =
-          '<div class="cover-placeholder">KRAIILEFX</div>';
+      img.onerror = function () {
+        if (this.dataset.fallbackTried) {
+          cover.innerHTML =
+            '<div class="cover-placeholder">KRAIILEFX</div>';
+          return;
+        }
+
+        this.dataset.fallbackTried = "true";
+        this.src = "./assets/covers/sharpstick.gif";
       };
 
       cover.replaceChildren(img);
     }
 
-    // Use the existing MEGA link
-    if (pack.mega) {
+    if (download && pack.mega) {
       download.href = pack.mega;
       download.textContent = "Download Scenepack";
+      download.target = "_blank";
+      download.rel = "noopener noreferrer";
     }
 
+    if (error) error.style.display = "none";
+
   } catch (err) {
-    console.error(err);
+    console.error("Scenepack loading error:", err);
+
     title.textContent = "Unable to Load Scenepack";
     description.textContent =
-      "Please refresh the page and try again.";
+      "Could not load scenepacks.json. Please check the file and try again.";
+
+    if (error) error.style.display = "block";
   }
 }
 
