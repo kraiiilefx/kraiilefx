@@ -14,9 +14,7 @@
       padding: 0;
     }
 
-    html {
-      scroll-behavior: smooth;
-    }
+    html { scroll-behavior: smooth; }
 
     body {
       background: #080808;
@@ -66,9 +64,7 @@
       transition: color .2s;
     }
 
-    nav a:hover {
-      color: white;
-    }
+    nav a:hover { color: white; }
 
     .hero {
       padding: 100px 7% 75px;
@@ -172,9 +168,7 @@
       letter-spacing: 3px;
     }
 
-    .pack-info {
-      padding-top: 15px;
-    }
+    .pack-info { padding-top: 15px; }
 
     .pack-title {
       font-size: 15px;
@@ -210,44 +204,20 @@
       letter-spacing: 1px;
     }
 
-    footer a {
-      color: #ddd;
-    }
+    footer a { color: #ddd; }
 
     @media (max-width: 750px) {
-      .topbar {
-        padding: 22px 5%;
-      }
-
-      .logo {
-        font-size: 19px;
-      }
-
-      nav {
-        gap: 12px;
-        justify-content: flex-end;
-      }
-
-      nav a {
-        font-size: 10px;
-      }
-
-      .hero {
-        padding: 75px 6% 55px;
-      }
-
-      .section {
-        padding: 25px 5% 65px;
-      }
-
+      .topbar { padding: 22px 5%; }
+      .logo { font-size: 19px; }
+      nav { gap: 12px; justify-content: flex-end; }
+      nav a { font-size: 10px; }
+      .hero { padding: 75px 6% 55px; }
+      .section { padding: 25px 5% 65px; }
       .grid {
         grid-template-columns: repeat(2, minmax(0, 1fr));
         gap: 18px 12px;
       }
-
-      .pack-title {
-        font-size: 12px;
-      }
+      .pack-title { font-size: 12px; }
     }
 
     @media (max-width: 420px) {
@@ -255,16 +225,11 @@
         flex-direction: column;
         align-items: center;
       }
-
-      nav {
-        justify-content: center;
-      }
+      nav { justify-content: center; }
     }
 
     @media (prefers-reduced-motion: reduce) {
-      *,
-      *::before,
-      *::after {
+      *, *::before, *::after {
         animation: none !important;
         transition: none !important;
       }
@@ -275,10 +240,9 @@
 <body id="top">
   <header class="topbar">
     <a class="logo" href="./index.html">KRAIILEFX.</a>
-
     <nav>
       <a href="./index.html">Home</a>
-      <a href="./scenepacks.html">Scenepacks</a>
+      <a href="./index.html#scenepacks">Scenepacks</a>
       <a href="./about.html">About</a>
       <a href="https://www.instagram.com/kraiilefx/"
          target="_blank" rel="noopener noreferrer">Instagram</a>
@@ -295,10 +259,10 @@
       </p>
     </section>
 
-    <section class="section">
+    <section class="section" id="scenepacks">
       <div class="section-heading">
         <h2>Latest Scenepacks</h2>
-        <span>THE COLLECTION</span>
+        <span id="packCount">THE COLLECTION</span>
       </div>
 
       <div class="grid" id="packGrid">
@@ -314,13 +278,14 @@
 
   <script>
     const grid = document.getElementById("packGrid");
+    const count = document.getElementById("packCount");
 
     async function loadScenepacks() {
       try {
         const response = await fetch("./data/scenepacks.json");
 
         if (!response.ok) {
-          throw new Error("JSON request failed: " + response.status);
+          throw new Error("Could not load scenepacks.json");
         }
 
         const data = await response.json();
@@ -329,6 +294,7 @@
           : (data.scenepacks || data.packs || []);
 
         grid.replaceChildren();
+        count.textContent = packs.length + " SCENEPACKS";
 
         if (!packs.length) {
           grid.innerHTML =
@@ -340,15 +306,22 @@
           const card = document.createElement("a");
           card.className = "pack-card";
           card.style.animationDelay = (index * 0.08) + "s";
-         card.href = pack.id === "SharpStick"
-  ? "./kraiiilefxscenepack.html?id=SharpStick"
-  : "./braxscenepack.html";
+
+          // Her scenepack kendi detay sayfasını açar.
+          if (pack.id === "SharpStick") {
+            card.href = "./kraiiilefxscenepack.html?id=SharpStick";
+          } else if (pack.id === "Brax") {
+            card.href = "./braxscenepack.html";
+          } else {
+            card.href = "./kraiiilefxscenepack.html?id=" +
+              encodeURIComponent(pack.id || "");
+          }
+
           const cover = document.createElement("div");
           cover.className = "cover";
 
           const img = document.createElement("img");
-          img.alt = (pack.name || pack.title || pack.production || "Scenepack")
-            + " cover";
+          img.alt = (pack.name || pack.title || "Scenepack") + " cover";
           img.loading = "lazy";
 
           const coverPath = pack.cover || "";
@@ -357,14 +330,19 @@
             img.src = "./" + coverPath.replace(/^\.?\//, "");
 
             img.onerror = () => {
-              cover.innerHTML =
-                '<div class="cover-placeholder">KRAIILEFX</div>';
+              cover.replaceChildren();
+              const placeholder = document.createElement("div");
+              placeholder.className = "cover-placeholder";
+              placeholder.textContent = "KRAIILEFX";
+              cover.appendChild(placeholder);
             };
 
             cover.appendChild(img);
           } else {
-            cover.innerHTML =
-              '<div class="cover-placeholder">KRAIILEFX</div>';
+            const placeholder = document.createElement("div");
+            placeholder.className = "cover-placeholder";
+            placeholder.textContent = "KRAIILEFX";
+            cover.appendChild(placeholder);
           }
 
           const info = document.createElement("div");
@@ -377,8 +355,7 @@
 
           const meta = document.createElement("div");
           meta.className = "pack-meta";
-          meta.textContent =
-            pack.character || pack.production || "SCENEPACK";
+          meta.textContent = pack.character || pack.production || "SCENEPACK";
 
           info.append(title, meta);
           card.append(cover, info);
