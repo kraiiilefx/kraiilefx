@@ -102,3 +102,8 @@ footer{border-top:1px solid var(--line);padding-block:28px;color:var(--muted);fo
 footer .wrap{display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px}
 .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-delay:0s!important;transition-duration:.01ms!important}.mark span,.lead,.hero .btn{opacity:1;transform:none}}
+@media(max-width:859px){
+  .detail .art{width:min(64%,260px);margin-inline:auto}
+  .detail h1{text-align:center}
+  .kicker{text-align:center}
+}
