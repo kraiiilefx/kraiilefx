@@ -89,14 +89,23 @@ function renderGrid(host,limit){
     host.textContent="";
     var list=limit?sortLatest(all).slice(0,limit):all;
     if(!list.length){host.appendChild(state("No scenepacks yet."));host.classList.remove("grid");return}
-    list.forEach(function(p){host.appendChild(card(p))});
+    var q=document.getElementById("search");
+    function draw(){
+      var term=q?q.value.trim().toLowerCase():"";
+      var shown=!term?list:list.filter(function(p){
+        return(p.title+" "+p.character+" "+p.id).toLowerCase().indexOf(term)!==-1;
+      });
+      host.textContent="";
+      if(!shown.length){host.appendChild(el("p","empty","No scenepacks found."));return}
+      shown.forEach(function(p){host.appendChild(card(p))});
+    }
+    if(q)q.oninput=draw;
+    draw();
   }).catch(function(){
     host.classList.remove("grid");host.textContent="";
     host.appendChild(state("Scenepacks could not be loaded. Check your connection and try again.",function(){host.classList.add("grid");renderGrid(host,limit)}));
   });
-}
-
-function renderDetail(host){
+}(host){
   var id=new URLSearchParams(location.search).get("id")||"";
   host.textContent="";host.appendChild(el("p","kicker","Loading…"));
   load().then(function(all){
