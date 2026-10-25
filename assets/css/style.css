@@ -106,4 +106,7 @@ footer .wrap{display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px}
   .detail .art{width:min(64%,260px);margin-inline:auto}
   .detail h1{text-align:center}
   .kicker{text-align:center}
+}@media(max-width:859px){
+  .detail .art{width:min(58%,230px);margin-inline:auto}
+  .kicker,.detail h1{text-align:center}
 }
