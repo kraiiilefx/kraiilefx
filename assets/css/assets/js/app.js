@@ -1,7 +1,7 @@
 (function(){
 "use strict";
 var DATA_URL="data/scenepacks.json";
-var DEFAULT_IG="https://www.instagram.com/kraiilefx/";
+var DEFAULT_IG="https://www.instagram.com/kraiiilefx/";
 var DETAIL_PAGE="kraiiilefxscenepack.html";
 
 function el(tag,cls,text){var e=document.createElement(tag);if(cls)e.className=cls;if(text!=null)e.textContent=text;return e}
@@ -105,7 +105,9 @@ function renderGrid(host,limit){
     host.classList.remove("grid");host.textContent="";
     host.appendChild(state("Scenepacks could not be loaded. Check your connection and try again.",function(){host.classList.add("grid");renderGrid(host,limit)}));
   });
-}(host){
+}
+
+function renderDetail(host){
   var id=new URLSearchParams(location.search).get("id")||"";
   host.textContent="";host.appendChild(el("p","kicker","Loading…"));
   load().then(function(all){
@@ -122,34 +124,9 @@ function renderGrid(host,limit){
     side.appendChild(el("p","kicker","Scenepack"));
     side.appendChild(el("h1",null,p.title));
     var dl=el("dl","facts");
-    [["Production",p.title],["Character",p.character],["Resolution",p.resolution],["Frame rate",p.fps]].forEach(function(f){
+    [["Movie / Series",p.title],["Character",p.character],["Resolution",p.resolution],["Frame rate",p.fps]].forEach(function(f){
       if(!f[1])return;var d=el("div");d.appendChild(el("dt",null,f[0]));d.appendChild(el("dd",null,f[1]));dl.appendChild(d)});
     side.appendChild(dl);
     var note=el("div","note");
     note.appendChild(el("strong",null,"Before downloading"));
-    note.appendChild(el("p",null,"To get the download password, follow @kraiilefx on Instagram and message the password request there."));
-    side.appendChild(note);
-    var act=el("div","actions");
-    var d=el("a","btn","DOWNLOAD SCENEPACK");
-    if(p.mega){d.href=p.mega;d.target="_blank";d.rel="noopener noreferrer"}else{d.setAttribute("aria-disabled","true");d.removeAttribute("href")}
-    var ig=el("a","btn ghost","GET PASSWORD ON INSTAGRAM");ig.href=p.instagram;ig.target="_blank";ig.rel="noopener noreferrer";
-    act.appendChild(d);act.appendChild(ig);side.appendChild(act);
-    box.appendChild(side);host.appendChild(box);
-  }).catch(function(){
-    host.textContent="";
-    host.appendChild(state("This scenepack could not be loaded. Check your connection and try again.",function(){renderDetail(host)}));
-  });
-}
-
-window.addEventListener("error",function(){
-  var m=document.querySelector("main");
-  if(m&&!m.children.length&&!m.textContent.trim())m.appendChild(state("Something went wrong. Reload the page."));
-});
-
-document.addEventListener("DOMContentLoaded",function(){
-  var g=document.getElementById("grid");if(g)renderGrid(g,0);
-  var l=document.getElementById("latest");if(l)renderGrid(l,4);
-  var d=document.getElementById("detail");if(d)renderDetail(d);
-  var y=document.getElementById("year");if(y)y.textContent=new Date().getFullYear();
-});
-})();
+    note.appendChild(el("p",null,"To get the download password, follow @kraiiilefx on Instagram and message the password request
