@@ -1,4 +1,3 @@
-
 [
   {
     "id": "SharpStick",
@@ -8,8 +7,8 @@
     "resolution": "1080p",
     "fps": "24 FPS",
     "cover": "assets/covers/indir.gif",
-    "instructions": "follow @kraiilefx on instagram to get the download password.",
-    "instagram": "https://www.instagram.com/kraiilefx/",
+    "instructions": "follow @kraiiilefx on instagram to get the download password.",
+    "instagram": "https://www.instagram.com/kraiiilefx/",
     "mega": "https://mega.nz/folder/3vIhgb7L",
     "date": "2026-10-24"
   },
@@ -21,8 +20,8 @@
     "resolution": "1080p",
     "fps": "24 FPS",
     "cover": "assets/covers/brax.gif",
-    "instructions": "follow @kraiilefx on instagram to get the download password.",
-    "instagram": "https://www.instagram.com/kraiilefx/",
+    "instructions": "follow @kraiiilefx on instagram to get the download password.",
+    "instagram": "https://www.instagram.com/kraiiilefx/",
     "mega": "https://mega.nz/folder/dU01yIYa",
     "date": "2026-10-25"
   },
@@ -34,10 +33,23 @@
     "resolution": "1080p",
     "fps": "24 FPS",
     "cover": "assets/covers/sweetw.gif",
-    "instructions": "follow @kraiilefx on instagram to get the download password.",
-    "instagram": "https://www.instagram.com/kraiilefx/",
+    "instructions": "follow @kraiiilefx on instagram to get the download password.",
+    "instagram": "https://www.instagram.com/kraiiilefx/",
     "mega": "https://mega.nz/folder/FB9XnRoa",
     "key": "VkJa0NPveRSRfj7r0xYiug",
+    "date": "2026-10-25"
+  },
+  {
+    "id": "Fury",
+    "name": "Fury",
+    "production": "Fury",
+    "character": "Grady Travis",
+    "resolution": "4K",
+    "fps": "24 FPS",
+    "cover": "assets/covers/fury.gif",
+    "instructions": "follow @kraiiilefx on instagram to get the download password.",
+    "instagram": "https://www.instagram.com/kraiiilefx/",
+    "mega": "https://mega.nz/folder/gE9k3boT",
     "date": "2026-10-25"
   }
 ]
