@@ -85,7 +85,7 @@
     "character": "Jack Harper",
     "resolution": "1080p",
     "fps": "24 FPS",
-    "cover": "assets/covers/jack.gif",
+    "cover": "assets/covers/jackharper.gif",
     "instructions": "follow @kraiiilefx on instagram to get the download password.",
     "instagram": "https://www.instagram.com/kraiiilefx/",
     "mega": "https://mega.nz/folder/XiZkABCJ",
@@ -98,10 +98,23 @@
     "character": "Michael \"Mikey\" Berzatto",
     "resolution": "1080p",
     "fps": "24 FPS",
-    "cover": "assets/covers/mikey.gif",
+    "cover": "assets/covers/thebear.gif",
     "instructions": "follow @kraiiilefx on instagram to get the download password.",
     "instagram": "https://www.instagram.com/kraiiilefx/",
     "mega": "https://mega.nz/folder/NVlF0IqZ",
+    "date": "2026-10-26"
+  },
+  {
+    "id": "SpiderManBrandNewDay",
+    "name": "Spider-Man: Brand New Day",
+    "production": "Spider-Man: Brand New Day",
+    "character": "Frank Castle",
+    "resolution": "4K",
+    "fps": "24 FPS",
+    "cover": "assets/covers/frank.gif",
+    "instructions": "follow @kraiiilefx on instagram to get the download password.",
+    "instagram": "https://www.instagram.com/kraiiilefx/",
+    "mega": "https://mega.nz/folder/UyhmWZxY",
     "date": "2026-10-26"
   }
 ]
