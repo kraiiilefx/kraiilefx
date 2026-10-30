@@ -24,6 +24,8 @@ function normalize(raw){
       resolution:pick(o,["resolution","cozunurluk","çözünürlük","quality"]),
       fps:pick(o,["fps","FPS","framerate"]),
       cover:pick(o,["cover","image","kapak","thumbnail","thumb"]),
+      folder:pick(o,["folder","klasor","klasör","actor","oyuncu"]),
+      folderCover:pick(o,["folderCover","folder_cover","klasorKapak"]),
       instagram:safeUrl(pick(o,["instagram","ig","instagramUrl"]))||DEFAULT_IG,
       mega:absUrlMega(pick(o,["mega","download","downloadUrl","link","url"])),
       date:pick(o,["date","tarih","added"]),
@@ -71,6 +73,36 @@ function card(p){
   a.appendChild(info);return a;
 }
 
+/* ---- klasörler ---- */
+function fslug(s){
+  return String(s).toLowerCase().replace(/ı/g,"i").replace(/ğ/g,"g").replace(/ü/g,"u").replace(/ş/g,"s").replace(/ö/g,"o").replace(/ç/g,"c")
+    .replace(/[^a-z0-9]+/g,"-").replace(/^-+|-+$/g,"");
+}
+function folderOf(p){return p.folder||"Other"}
+function groupFolders(list){
+  var map={},out=[];
+  list.forEach(function(p){
+    var n=folderOf(p),k=fslug(n)||"other";
+    if(!map[k]){map[k]={name:n,slug:k,packs:[],cover:""};out.push(map[k])}
+    var f=map[k];f.packs.push(p);
+    if(!f.cover&&p.folderCover)f.cover=p.folderCover;
+  });
+  out.forEach(function(f){
+    if(f.cover)return;
+    for(var i=0;i<f.packs.length;i++){if(f.packs[i].cover){f.cover=f.packs[i].cover;break}}
+  });
+  return out;
+}
+function folderCard(f){
+  var a=el("a","card");a.href="scenepacks.html?f="+encodeURIComponent(f.slug);
+  a.setAttribute("aria-label",f.name+" scenepacks");
+  a.appendChild(coverNode({title:f.name,id:f.name,cover:f.cover},""));
+  var info=el("div","info");
+  info.appendChild(el("div","t",f.name+" Scenepacks"));
+  info.appendChild(el("div","c",f.packs.length+(f.packs.length===1?" scenepack":" scenepacks")));
+  a.appendChild(info);return a;
+}
+
 function state(msg,retry){
   var s=el("div","state");s.setAttribute("role","alert");
   s.appendChild(el("p",null,msg));
@@ -94,14 +126,39 @@ function renderGrid(host,limit){
     var list=limit?sortLatest(all).slice(0,limit):all;
     if(!list.length){host.appendChild(state("No scenepacks yet."));host.classList.remove("grid");return}
     var q=document.getElementById("search");
+    var hasFolders=!limit&&list.some(function(p){return p.folder});
+    var fkey=new URLSearchParams(location.search).get("f")||"";
+
+    if(hasFolders&&fkey){
+      var cur=null;
+      groupFolders(list).forEach(function(f){if(f.slug===fkey)cur=f});
+      if(cur){
+        var h2=document.querySelector(".sec-head h2");
+        if(h2)h2.textContent=cur.name+" Scenepacks";
+        document.title=cur.name+" Scenepacks | KRAIIILEFX";
+      }
+      var back=el("a","btn ghost","ALL SCENEPACKS");back.href="scenepacks.html";back.style.marginBottom="24px";
+      var sb=document.querySelector(".searchbox")||host;
+      sb.parentNode.insertBefore(back,sb);
+    }
+
     function draw(){
       var term=q?q.value.trim().toLowerCase():"";
-      var shown=!term?list:list.filter(function(p){
-        return(p.title+" "+p.character+" "+p.id).toLowerCase().indexOf(term)!==-1;
-      });
       host.textContent="";
-      if(!shown.length){host.appendChild(el("p","empty","No scenepacks found."));return}
-      shown.forEach(function(p){host.appendChild(card(p))});
+      if(term){
+        var shown=list.filter(function(p){
+          return(p.title+" "+p.character+" "+p.id+" "+p.folder).toLowerCase().indexOf(term)!==-1;
+        });
+        if(!shown.length){host.appendChild(el("p","empty","No scenepacks found."));return}
+        shown.forEach(function(p){host.appendChild(card(p))});
+        return;
+      }
+      if(!hasFolders){list.forEach(function(p){host.appendChild(card(p))});return}
+      var groups=groupFolders(list);
+      if(!fkey){groups.forEach(function(f){host.appendChild(folderCard(f))});return}
+      var g=null;groups.forEach(function(f){if(f.slug===fkey)g=f});
+      if(!g){host.appendChild(el("p","empty","This folder does not exist."));return}
+      g.packs.forEach(function(p){host.appendChild(card(p))});
     }
     if(q)q.oninput=draw;
     draw();
