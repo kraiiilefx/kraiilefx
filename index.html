@@ -49,6 +49,29 @@
 }
 .socials-icons a { color: #fff; transition: transform .2s, opacity .2s; }
 .socials-icons a:hover { transform: scale(1.12); opacity: .8; }
+
+/* Açılış animasyonu */
+.socials-modal.open { animation: sm-fade .25s ease both; }
+.socials-modal.open .socials-box { animation: sm-pop .4s cubic-bezier(.2,.9,.3,1.2) both; }
+.socials-modal.open .socials-icons a { animation: sm-icon .5s cubic-bezier(.2,.9,.3,1.3) both; }
+.socials-modal.open .socials-icons a:nth-child(1) { animation-delay: .15s; }
+.socials-modal.open .socials-icons a:nth-child(2) { animation-delay: .27s; }
+
+@keyframes sm-fade { from { opacity: 0; } to { opacity: 1; } }
+@keyframes sm-pop {
+  from { opacity: 0; transform: translateY(24px) scale(.85); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+@keyframes sm-icon {
+  from { opacity: 0; transform: translateY(14px) scale(.4) rotate(-12deg); }
+  to   { opacity: 1; transform: translateY(0) scale(1) rotate(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .socials-modal.open,
+  .socials-modal.open .socials-box,
+  .socials-modal.open .socials-icons a { animation: none; }
+}
 </style>
 </head>
 <body>
