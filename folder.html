@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#000000">
+<title>KRAIIILEFX | Scenepacks</title>
+<style>
+  :root { --bg:#000; --fg:#fff; --muted:#9a9a9a; --line:#2a2a2a; }
+  * { box-sizing: border-box; }
+  body { margin:0; background:var(--bg); color:var(--fg); font-family: system-ui, sans-serif; padding: 24px; }
+  a { color: inherit; }
+  .back { color: var(--muted); text-decoration: none; }
+  .back:hover { color: var(--fg); }
+  h1 { font-size: clamp(2rem, 6vw, 3.5rem); margin: 32px 0 24px; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 16px; }
+  .card { display:block; padding: 20px; border: 1px solid var(--line); border-radius: 12px; text-decoration: none; }
+  .card:hover { border-color: var(--fg); }
+  .empty { color: var(--muted); }
+</style>
+</head>
+<body>
+  <a class="back" href="./scenepacks.html">&larr; Scenepacks</a>
+  <h1 id="title"></h1>
+  <div class="grid" id="list"></div>
+  <p class="empty" id="empty" hidden>Bu klasöre henüz scenepack eklenmedi.</p>
+
+<script>
+  // Yeni klasör eklemek için buraya bir satır ekle.
+  // packs: bu klasörün içindeki scenepack id'leri (scenepacks.html'deki pack.id ile aynı)
+  const FOLDERS = {
+    JonBernthal: { name: "Jon Bernthal", packs: [] }
+    // örnek: JonBernthal: { name: "Jon Bernthal", packs: [{ id: "SharpStick", name: "Sharp Stick" }] }
+  };
+
+  const id = new URLSearchParams(location.search).get("id");
+  const folder = FOLDERS[id];
+  const title = document.getElementById("title");
+  const list = document.getElementById("list");
+
+  if (!folder) {
+    title.textContent = "Klasör bulunamadı";
+  } else {
+    title.textContent = folder.name + " Scenepacks";
+    document.title = folder.name + " Scenepacks | KRAIIILEFX";
+    if (!folder.packs.length) document.getElementById("empty").hidden = false;
+    folder.packs.forEach(function (p) {
+      const a = document.createElement("a");
+      a.className = "card";
+      a.textContent = p.name || p.id;
+      a.href = "./kraiiilefxscenepack.html?id=" + encodeURIComponent(p.id);
+      list.appendChild(a);
+    });
+  }
+</script>
+</body>
+</html>
