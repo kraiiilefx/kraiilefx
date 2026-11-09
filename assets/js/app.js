@@ -48,7 +48,7 @@ function load(){
 function detailHref(p){
   return DETAIL_PAGE+"?id="+encodeURIComponent(p.id);
 }
-  
+
 function placeholder(p){
   var ph=el("div","ph",(p.title||p.id).trim().charAt(0).toUpperCase());
   ph.setAttribute("aria-hidden","true");
@@ -78,6 +78,7 @@ function fslug(s){
   return String(s).toLowerCase().replace(/ı/g,"i").replace(/ğ/g,"g").replace(/ü/g,"u").replace(/ş/g,"s").replace(/ö/g,"o").replace(/ç/g,"c")
     .replace(/[^a-z0-9]+/g,"-").replace(/^-+|-+$/g,"");
 }
+function norm(s){return fslug(s).replace(/-/g,"")}
 function folderOf(p){return p.folder||"Other"}
 function groupFolders(list){
   var map={},out=[];
@@ -118,7 +119,25 @@ function sortLatest(list){
     return b.order-a.order;
   });
 }
-  
+
+/* kartlar sırayla belirsin (CSS --i değişkenini kullanır) */
+function stagger(host){
+  Array.prototype.forEach.call(host.children,function(c,i){c.style.setProperty("--i",Math.min(i,12))});
+}
+
+/* kart üzerinde imleci takip eden ışık */
+function spotlight(host){
+  if(host._spot)return;
+  host._spot=1;
+  host.addEventListener("pointermove",function(e){
+    var c=e.target.closest?e.target.closest(".card"):null;
+    if(!c)return;
+    var r=c.getBoundingClientRect();
+    c.style.setProperty("--mx",(e.clientX-r.left)+"px");
+    c.style.setProperty("--my",(e.clientY-r.top)+"px");
+  });
+}
+
 function renderGrid(host,limit){
   skeleton(host,limit||8);
   load().then(function(all){
@@ -144,22 +163,40 @@ function renderGrid(host,limit){
 
     function draw(){
       var term=q?q.value.trim().toLowerCase():"";
-      host.textContent="";
-      if(term){
-        var shown=list.filter(function(p){
-          return(p.title+" "+p.character+" "+p.id+" "+p.folder).toLowerCase().indexOf(term)!==-1;
+      var nt=norm(term);
+      var groups=hasFolders?groupFolders(list):[];
+      var nodes=[];
+
+      if(nt){
+        /* arama: önce eşleşen KLASÖRLER (örn. "jon bernthal"), sonra tekil scenepack'ler */
+        if(hasFolders&&!fkey){
+          groups.forEach(function(f){
+            if(norm(f.name).indexOf(nt)!==-1)nodes.push(folderCard(f));
+          });
+        }
+        list.forEach(function(p){
+          if(fkey&&fslug(folderOf(p))!==fkey)return;
+          if(norm(p.title+" "+p.character+" "+p.id).indexOf(nt)!==-1)nodes.push(card(p));
         });
-        if(!shown.length){host.appendChild(el("p","empty","No scenepacks found."));return}
-        shown.forEach(function(p){host.appendChild(card(p))});
-        return;
+      }else if(hasFolders&&!fkey){
+        groups.forEach(function(f){nodes.push(folderCard(f))});
+      }else{
+        var src=list;
+        if(hasFolders&&fkey){
+          src=null;
+          groups.forEach(function(f){if(f.slug===fkey)src=f.packs});
+          if(!src){nodes.push(el("p","empty","This folder does not exist."));src=[]}
+        }
+        src.forEach(function(p){nodes.push(card(p))});
       }
-      if(!hasFolders){list.forEach(function(p){host.appendChild(card(p))});return}
-      var groups=groupFolders(list);
-      if(!fkey){groups.forEach(function(f){host.appendChild(folderCard(f))});return}
-      var g=null;groups.forEach(function(f){if(f.slug===fkey)g=f});
-      if(!g){host.appendChild(el("p","empty","This folder does not exist."));return}
-      g.packs.forEach(function(p){host.appendChild(card(p))});
+
+      host.textContent="";
+      if(nt&&!nodes.length)nodes.push(el("p","empty","No scenepacks found."));
+      nodes.forEach(function(n){host.appendChild(n)});
+      stagger(host);
     }
+
+    spotlight(host);
     if(q)q.oninput=draw;
     draw();
   }).catch(function(){
@@ -167,7 +204,7 @@ function renderGrid(host,limit){
     host.appendChild(state("Scenepacks could not be loaded. Check your connection and try again.",function(){host.classList.add("grid");renderGrid(host,limit)}));
   });
 }
-  
+
 function renderDetail(host){
   var id=new URLSearchParams(location.search).get("id")||"";
   host.textContent="";host.appendChild(el("p","kicker","Loading..."));
@@ -208,7 +245,7 @@ function renderDetail(host){
     host.appendChild(state("This scenepack could not be loaded. Check your connection and try again.",function(){renderDetail(host)}));
   });
 }
-  
+
 window.addEventListener("error",function(){
   var m=document.querySelector("main");
   if(m&&!m.children.length&&!m.textContent.trim())m.appendChild(state("Something went wrong. Reload the page."));
