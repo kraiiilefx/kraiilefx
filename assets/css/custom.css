@@ -378,6 +378,90 @@ footer .wrap { align-items: center; }
   to   { opacity: 1; transform: translateY(0) scale(1) rotate(0); }
 }
 
+/* ---------- Atmosfer: hero ışığı + vignette ---------- */
+.hero { position: relative; isolation: isolate; overflow: hidden; }
+.hero::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  top: 8%;
+  left: 24%;
+  width: min(980px, 120vw);
+  height: 620px;
+  transform: translateX(-50%);
+  pointer-events: none;
+  background: radial-gradient(closest-side, rgba(255,255,255,.10), rgba(255,255,255,.035) 55%, rgba(255,255,255,0) 100%);
+  animation: glow-in 2.4s ease .2s both;
+}
+@keyframes glow-in { from { opacity: 0; } to { opacity: 1; } }
+
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 8999;
+  pointer-events: none;
+  background: radial-gradient(ellipse at center, rgba(0,0,0,0) 55%, rgba(0,0,0,.55) 100%);
+}
+
+/* ---------- Menü: aktif/hover çizgisi ---------- */
+.nav a { position: relative; padding-bottom: 6px; }
+.nav a::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 1px;
+  background: #fff;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform .35s cubic-bezier(.2, .7, .2, 1);
+}
+.nav a:hover::after,
+.nav a[aria-current="page"]::after { transform: scaleX(1); }
+
+/* ---------- Kaydırma çubuğu ---------- */
+html { scrollbar-width: thin; scrollbar-color: #2c2c2c #000; }
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-track { background: #000; }
+::-webkit-scrollbar-thumb { background: #2a2a2a; border-radius: 10px; border: 2px solid #000; }
+::-webkit-scrollbar-thumb:hover { background: #444; }
+
+/* ---------- Sayfa açılışında yumuşak solma ---------- */
+main { animation: page-in .7s ease both; }
+@keyframes page-in { from { opacity: 0; } to { opacity: 1; } }
+
+/* ---------- "Give credit" satırı ---------- */
+.credit {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: var(--muted);
+  font-size: 14px;
+  letter-spacing: .04em;
+}
+.credit::before {
+  content: "";
+  width: 28px;
+  height: 1px;
+  background: var(--line-strong);
+}
+
+/* ---------- Kart spotlight (JS imleci takip ettirir) ---------- */
+.card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  opacity: 0;
+  background: radial-gradient(260px circle at var(--mx, 50%) var(--my, 50%), rgba(255,255,255,.16), rgba(255,255,255,0) 70%);
+  transition: opacity .4s ease;
+}
+.card:hover::before { opacity: 1; }
+@media (hover: none) { .card::before { display: none; } }
+
 /* ---------- Erişilebilirlik ---------- */
 a:focus-visible,
 button:focus-visible,
@@ -387,6 +471,8 @@ input:focus-visible {
 }
 @media (prefers-reduced-motion: reduce) {
   body::before { animation: none; }
+  .hero::before, main { animation: none; }
+  .nav a::after, .card::before { transition: none; }
   .skel { animation: none; }
   .card .cover, .card::after, .card .info .c, .card .info .c::before { transition: none; }
   .socials-modal.open,
