@@ -1,5 +1,5 @@
 /* =========================================================
-   KRAIIILEFX — custom.css (TAM SÜRÜM)
+   KRAIIILEFX — custom.css (TAM SÜRÜM v2)
    style.css'den SONRA yüklenir. Bu dosyanın tamamını değiştir.
    Palet: siyah / koyu gri / beyaz + film grain
    ========================================================= */
@@ -461,8 +461,30 @@ main { animation: page-in .7s ease both; }
 }
 .card:hover::before { opacity: 1; }
 @media (hover: none) { .card::before { display: none; } }
+
+/* ---------- Erişilebilirlik ---------- */
+a:focus-visible,
+button:focus-visible,
+input:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 3px;
+}
+/* Arama kutusunda kalın çerçeve çıkmasın (alt çizgi zaten beyaza döner) */
+.searchbox input:focus-visible { outline: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  body::before { animation: none; }
+  .hero::before, main { animation: none; }
+  .nav a::after, .card::before { transition: none; }
+  .skel { animation: none; }
+  .card .cover, .card::after, .card .info .c, .card .info .c::before { transition: none; }
+  .socials-modal.open,
+  .socials-modal.open .socials-box,
+  .socials-modal.open .socials-icons a { animation: none; }
+}
+
 /* =========================================================
-   custom.css EN ALTINA EKLE (mevcut hiçbir şeyi silme)
+   v2 EKLEMELER: kart animasyonu, geri butonu, detay sayfası
    ========================================================= */
 
 @keyframes fade-up {
@@ -474,14 +496,14 @@ main { animation: page-in .7s ease both; }
   to   { opacity: 1; transform: none; }
 }
 
-/* ---------- Kartlar: sırayla belirme (JS --i verir) ---------- */
+/* Kartlar: sırayla belirme (JS --i verir) */
 .grid > .card,
 .grid > .empty {
   animation: fade-up .6s cubic-bezier(.2, .8, .2, 1) both;
   animation-delay: calc(var(--i, 0) * 70ms);
 }
 
-/* ---------- Geri butonu ---------- */
+/* Geri butonu */
 .back {
   display: inline-flex;
   align-items: center;
@@ -497,7 +519,7 @@ main { animation: page-in .7s ease both; }
 .back:hover { color: #fff; }
 .back:hover .arr { transform: translateX(-6px); }
 
-/* ---------- Detay sayfası ---------- */
+/* Detay sayfası */
 #detail { padding-bottom: clamp(48px, 9vw, 96px); }
 
 .detail .art {
@@ -518,7 +540,6 @@ main { animation: page-in .7s ease both; }
   text-transform: uppercase;
 }
 
-/* sağ sütun: sırayla yukarı kayarak gelir */
 .detail > div:last-child > :not(.facts) {
   animation: fade-up .75s cubic-bezier(.2, .8, .2, 1) both;
 }
@@ -537,7 +558,6 @@ main { animation: page-in .7s ease both; }
 .facts div:nth-child(4) { animation-delay: .54s; }
 .facts div:hover { padding-left: 8px; border-color: var(--line-strong); }
 
-/* Butonlar: ilki dolu beyaz, ikincisi çizgili */
 .actions .btn {
   flex: 1 1 220px;
   text-align: center;
@@ -555,21 +575,4 @@ main { animation: page-in .7s ease both; }
   .grid > .card, .grid > .empty, .back,
   .detail .art, .detail > div:last-child > *, .facts div { animation: none; }
   .detail .art img, .back .arr, .facts div { transition: none; }
-}
-/* ---------- Erişilebilirlik ---------- */
-a:focus-visible,
-button:focus-visible,
-input:focus-visible {
-  outline: 2px solid #fff;
-  outline-offset: 3px;
-}
-@media (prefers-reduced-motion: reduce) {
-  body::before { animation: none; }
-  .hero::before, main { animation: none; }
-  .nav a::after, .card::before { transition: none; }
-  .skel { animation: none; }
-  .card .cover, .card::after, .card .info .c, .card .info .c::before { transition: none; }
-  .socials-modal.open,
-  .socials-modal.open .socials-box,
-  .socials-modal.open .socials-icons a { animation: none; }
 }
