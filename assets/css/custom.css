@@ -593,3 +593,7 @@ input:focus-visible {
 .socials-icons { gap: 12px; }
 .socials-icons svg { width: 46px; height: 46px; }
 .socials-modal.open .socials-icons a:nth-child(3) { animation-delay: .39s; }
+
+/* ---------- Footer: Legal linki ---------- */
+.legal-link { color: var(--muted); transition: color .25s; }
+.legal-link:hover { color: #fff; }
