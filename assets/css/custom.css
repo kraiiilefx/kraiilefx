@@ -576,3 +576,20 @@ input:focus-visible {
   .detail .art, .detail > div:last-child > *, .facts div { animation: none; }
   .detail .art img, .back .arr, .facts div { transition: none; }
 }
+
+
+/* =========================================================
+   v3: sosyal ikonlarda beyaz glow + guns.lol
+   ========================================================= */
+.social-links a:hover {
+  box-shadow: 0 0 14px rgba(255,255,255,.55), 0 0 34px rgba(255,255,255,.28);
+}
+.socials-icons a:hover svg {
+  filter: drop-shadow(0 0 8px rgba(255,255,255,.85)) drop-shadow(0 0 22px rgba(255,255,255,.45));
+}
+.social-links a,
+.socials-icons a { transition: color .25s, background .25s, border-color .25s, transform .25s, box-shadow .3s; }
+.socials-icons svg { transition: filter .3s ease; }
+.socials-icons { gap: 12px; }
+.socials-icons svg { width: 46px; height: 46px; }
+.socials-modal.open .socials-icons a:nth-child(3) { animation-delay: .39s; }
