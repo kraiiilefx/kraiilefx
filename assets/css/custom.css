@@ -461,7 +461,101 @@ main { animation: page-in .7s ease both; }
 }
 .card:hover::before { opacity: 1; }
 @media (hover: none) { .card::before { display: none; } }
+/* =========================================================
+   custom.css EN ALTINA EKLE (mevcut hiçbir şeyi silme)
+   ========================================================= */
 
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(22px); }
+  to   { opacity: 1; transform: none; }
+}
+@keyframes poster-in {
+  from { opacity: 0; transform: translateY(30px) scale(.96); }
+  to   { opacity: 1; transform: none; }
+}
+
+/* ---------- Kartlar: sırayla belirme (JS --i verir) ---------- */
+.grid > .card,
+.grid > .empty {
+  animation: fade-up .6s cubic-bezier(.2, .8, .2, 1) both;
+  animation-delay: calc(var(--i, 0) * 70ms);
+}
+
+/* ---------- Geri butonu ---------- */
+.back {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin: clamp(28px, 5vw, 48px) 0 clamp(22px, 4vw, 34px);
+  font-size: 14px;
+  letter-spacing: .04em;
+  color: var(--muted);
+  transition: color .25s;
+  animation: fade-up .6s ease both;
+}
+.back .arr { display: inline-block; transition: transform .35s cubic-bezier(.2, .7, .2, 1); }
+.back:hover { color: #fff; }
+.back:hover .arr { transform: translateX(-6px); }
+
+/* ---------- Detay sayfası ---------- */
+#detail { padding-bottom: clamp(48px, 9vw, 96px); }
+
+.detail .art {
+  position: relative;
+  isolation: isolate;
+  box-shadow: 0 30px 80px -34px rgba(255, 255, 255, .14);
+  animation: poster-in .9s cubic-bezier(.2, .8, .2, 1) both;
+}
+.detail .art img { transition: transform 1.2s cubic-bezier(.2, .7, .2, 1); }
+.detail .art:hover img { transform: scale(1.04); }
+@media (min-width: 761px) {
+  .detail .art { position: sticky; top: 96px; }
+}
+
+.kicker {
+  font-size: 12px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+}
+
+/* sağ sütun: sırayla yukarı kayarak gelir */
+.detail > div:last-child > :not(.facts) {
+  animation: fade-up .75s cubic-bezier(.2, .8, .2, 1) both;
+}
+.detail > div:last-child > :nth-child(1) { animation-delay: .15s; }
+.detail > div:last-child > :nth-child(2) { animation-delay: .22s; }
+.detail > div:last-child > :nth-child(4) { animation-delay: .62s; }
+.detail > div:last-child > :nth-child(5) { animation-delay: .70s; }
+
+.facts div {
+  animation: fade-up .6s cubic-bezier(.2, .8, .2, 1) both;
+  transition: padding-left .3s ease, border-color .3s ease;
+}
+.facts div:nth-child(1) { animation-delay: .30s; }
+.facts div:nth-child(2) { animation-delay: .38s; }
+.facts div:nth-child(3) { animation-delay: .46s; }
+.facts div:nth-child(4) { animation-delay: .54s; }
+.facts div:hover { padding-left: 8px; border-color: var(--line-strong); }
+
+/* Butonlar: ilki dolu beyaz, ikincisi çizgili */
+.actions .btn {
+  flex: 1 1 220px;
+  text-align: center;
+  font-size: 12px;
+}
+.actions .btn:not(.ghost) { background: #fff; color: #000; border-color: #fff; }
+.actions .btn:not(.ghost):hover { background: transparent; color: #fff; }
+
+@media (max-width: 760px) {
+  .detail .art { max-width: 440px; }
+  .detail h1 { margin-bottom: 20px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .grid > .card, .grid > .empty, .back,
+  .detail .art, .detail > div:last-child > *, .facts div { animation: none; }
+  .detail .art img, .back .arr, .facts div { transition: none; }
+}
 /* ---------- Erişilebilirlik ---------- */
 a:focus-visible,
 button:focus-visible,
