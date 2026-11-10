@@ -126,5 +126,19 @@
     "mega": "https://mega.nz/folder/UyhmWZxY",
     "folder": "Jon Bernthal",
     "date": "2026-10-26"
+  },  {
+    "id": "PhillipGraves",
+    "name": "Call of Duty: Modern Warfare 2",
+    "production": "Call of Duty: Modern Warfare 2",
+    "character": "Phillip Graves",
+    "resolution": "4K",
+    "fps": "24 FPS",
+    "cover": "assets/covers/graves.gif",
+    "folderCover": "assets/141.gif",
+    "instructions": "follow @kraiiilefx on instagram to get the download password.",
+    "instagram": "https://www.instagram.com/kraiiilefx/",
+    "mega": "",
+    "folder": "Call of Duty",
+    "date": "2026-11-10"
   }
 ]
