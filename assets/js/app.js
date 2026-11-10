@@ -252,7 +252,7 @@ function renderDetail(host){
     side.appendChild(el("p","kicker","Scenepack"));
     side.appendChild(el("h1",null,p.title));
     var facts=el("dl","facts");
-    [["Movie / Series",p.title],["Character",p.character],["Resolution",p.resolution],["Frame rate",p.fps]].forEach(function(f){
+    [["Movie / Series / Games",p.title],["Character",p.character],["Resolution",p.resolution],["Frame rate",p.fps]].forEach(function(f){
       if(!f[1])return;
       var row=el("div");
       row.appendChild(el("dt",null,f[0]));
