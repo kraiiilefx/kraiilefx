@@ -10,11 +10,134 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600&family=Unbounded:wght@300;400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="assets/css/style.css?v=3">
-<link rel="stylesheet" href="assets/css/custom.css?v=3">
+<link rel="stylesheet" href="assets/css/custom.css?v=4">
+<style>
+/* Arama kutusundaki beyaz odak çerçevesini kaldır */
+.searchbox .search,
+.searchbox .search:focus,
+.searchbox .search:focus-visible { outline: none !important; box-shadow: none !important; }
+
+/* ===== Kilitli "Coming Soon" kartı ===== */
+.card-locked { cursor: pointer; user-select: none; }
+.card-locked[hidden] { display: none; }
+
+.card-locked .lock-art {
+  position: relative;
+  aspect-ratio: 3 / 4;
+  display: grid;
+  place-items: center;
+  padding-bottom: 64px;
+  background:
+    radial-gradient(120% 80% at 50% 0%, rgba(255,255,255,.08), rgba(255,255,255,0) 60%),
+    #0d0d0d;
+}
+
+/* klasör sahnesi */
+.card-locked .stage {
+  position: relative;
+  width: 58%;
+  aspect-ratio: 120 / 96;
+  perspective: 700px;
+  filter: drop-shadow(0 12px 30px rgba(0,0,0,.7));
+  transition: transform .6s cubic-bezier(.2,.7,.2,1);
+}
+.card-locked .stage .back {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+/* klasörden çıkan gifler */
+.card-locked .peek {
+  position: absolute;
+  bottom: 14%;
+  left: var(--x, 50%);
+  width: 34% !important;
+  height: auto !important;
+  aspect-ratio: 3 / 4 !important;
+  object-fit: cover;
+  border-radius: 6px;
+  border: 1px solid rgba(255,255,255,.22);
+  filter: grayscale(1) brightness(.55);
+  transform: translateX(-50%) translateY(0) rotate(0deg);
+  transition: transform .65s cubic-bezier(.2,.8,.2,1), filter .5s ease;
+}
+.card-locked .p1 { --x: 27%; --r: -9deg; }
+.card-locked .p2 { --x: 50%; --r: 0deg; z-index: 1; }
+.card-locked .p3 { --x: 73%; --r: 9deg; }
+
+/* ön kapak: ana gif */
+.card-locked .lid {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 80%;
+  z-index: 3;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid rgba(255,255,255,.2);
+  background: #151515;
+  transform-origin: bottom center;
+  transition: transform .65s cubic-bezier(.2,.8,.2,1);
+}
+.card-locked .lid img {
+  position: absolute;
+  inset: 0;
+  width: 100% !important;
+  height: 100% !important;
+  aspect-ratio: auto !important;
+  object-fit: cover;
+  display: block;
+  opacity: .85;
+}
+
+/* kilit: hep görünür ve opak */
+.card-locked .lock-badge {
+  position: absolute;
+  z-index: 5;
+  top: 58%;
+  left: 50%;
+  width: 44px;
+  height: 44px;
+  margin: -22px 0 0 -22px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  color: #fff;
+  background: rgba(18,18,18,.92);
+  border: 1px solid rgba(255,255,255,.25);
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+  transition: transform .4s cubic-bezier(.2,.9,.3,1.3), box-shadow .4s ease;
+}
+
+/* hover: klasör açılır, gifler yukarı çıkar */
+.card-locked:hover .stage { transform: scale(1.04); }
+.card-locked:hover .lid { transform: rotateX(-38deg); }
+.card-locked:hover .peek { filter: grayscale(.25) brightness(.95); }
+.card-locked:hover .p1 { transform: translateX(-50%) translateY(-52%) rotate(var(--r)); }
+.card-locked:hover .p2 { transform: translateX(-50%) translateY(-68%) rotate(var(--r)); }
+.card-locked:hover .p3 { transform: translateX(-50%) translateY(-52%) rotate(var(--r)); }
+.card-locked:hover .lock-badge {
+  transform: rotate(-8deg) scale(1.08);
+  box-shadow: 0 0 18px rgba(255,255,255,.3);
+}
+
+/* telefonda hover yok: klasör hafif açık dursun */
+@media (hover: none) {
+  .card-locked .lid { transform: rotateX(-22deg); }
+  .card-locked .peek { filter: grayscale(.5) brightness(.8); }
+  .card-locked .p1 { transform: translateX(-50%) translateY(-38%) rotate(var(--r)); }
+  .card-locked .p2 { transform: translateX(-50%) translateY(-52%) rotate(var(--r)); }
+  .card-locked .p3 { transform: translateX(-50%) translateY(-38%) rotate(var(--r)); }
+}
+</style>
 </head>
 <body>
 
-<!-- Sosyal ikon seti (sayfada bir kez tanımlanır, her yerde <use> ile kullanılır) -->
+<!-- Sosyal ikon seti -->
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
   <symbol id="i-ig" viewBox="0 0 24 24">
     <g fill="none" stroke="currentColor" stroke-width="1.8">
@@ -26,6 +149,12 @@
   <symbol id="i-tt" viewBox="0 0 24 24">
     <path fill="currentColor" d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z"/>
   </symbol>
+  <symbol id="i-gl" viewBox="0 0 24 24">
+    <g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <rect x="3" y="3" width="18" height="18" rx="5"/>
+      <path d="M15.5 9.8A4 4 0 1 0 16 12h-3.5"/>
+    </g>
+  </symbol>
 </svg>
 
 <header class="top"><div class="wrap">
@@ -34,7 +163,7 @@
 </div></header>
 <main>
 <section class="section" style="padding-top:clamp(36px,7vw,72px)"><div class="wrap">
-<div class="sec-head" style="flex-direction:column;align-items:flex-start;gap:10px;margin-bottom:28px"><h2>Scenepacks</h2><p class="credit">Don&rsquo;t forget to give credit.</p></div><div class="searchbox">
+<div class="sec-head" style="flex-direction:column;align-items:flex-start;gap:10px;margin-bottom:28px"><h2>Scenepacks</h2><p style="color:var(--muted);font-size:15px">Don&rsquo;t forget to give credit.</p></div><div class="searchbox">
   <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
   <input type="search" id="search" class="search" placeholder="Search movie, series or character" autocomplete="off" aria-label="Search scenepacks">
 </div>
@@ -42,10 +171,11 @@
 <noscript><div class="wrap"><p class="state">JavaScript is required to show scenepacks.</p></div></noscript>
 </div></section>
 </main>
-<footer><div class="wrap"><span>KRAIIILEFX &copy; <span id="year">2026</span></span>
+<footer><div class="wrap"><span>KRAIIILEFX &copy; <span id="year">2026</span> &nbsp;&middot;&nbsp; <a class="legal-link" href="legal.html">Legal / DMCA</a></span>
 <span class="social-links">
   <a href="https://www.instagram.com/kraiiilefx/" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><svg aria-hidden="true"><use href="#i-ig"/></svg></a>
   <a href="https://www.tiktok.com/@kraiiilefx?lang=tr-TR" target="_blank" rel="noopener noreferrer" aria-label="TikTok"><svg aria-hidden="true"><use href="#i-tt"/></svg></a>
+  <a href="https://guns.lol/kraiiilefx" target="_blank" rel="noopener noreferrer" aria-label="guns.lol"><svg aria-hidden="true"><use href="#i-gl"/></svg></a>
 </span></div></footer>
 
 <div class="socials-modal" id="socialsModal" aria-hidden="true">
@@ -57,11 +187,12 @@
     <div class="socials-icons">
       <a href="https://www.instagram.com/kraiiilefx/" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><svg aria-hidden="true"><use href="#i-ig"/></svg></a>
       <a href="https://www.tiktok.com/@kraiiilefx?lang=tr-TR" target="_blank" rel="noopener noreferrer" aria-label="TikTok"><svg aria-hidden="true"><use href="#i-tt"/></svg></a>
+      <a href="https://guns.lol/kraiiilefx" target="_blank" rel="noopener noreferrer" aria-label="guns.lol"><svg aria-hidden="true"><use href="#i-gl"/></svg></a>
     </div>
   </div>
 </div>
 
-<script src="assets/js/app.js?v=3" defer></script>
+<script src="assets/js/app.js?v=4" defer></script>
 <script>
 (function () {
   var modal = document.getElementById('socialsModal');
@@ -76,16 +207,82 @@
 })();
 </script>
 <script>
+/* Kilitli "Coming Soon" klasör kartı: SADECE scenepacks ana sayfasında çalışır */
 (function () {
-  var g = document.getElementById('grid');
-  if (!g) return;
-  g.addEventListener('pointermove', function (e) {
-    var c = e.target.closest && e.target.closest('.card');
-    if (!c) return;
-    var r = c.getBoundingClientRect();
-    c.style.setProperty('--mx', (e.clientX - r.left) + 'px');
-    c.style.setProperty('--my', (e.clientY - r.top) + 'px');
-  });
+  /* /scenepacks veya /scenepacks.html dışındaki sayfalarda hiçbir şey yapma */
+  var path = location.pathname.replace(/\/+$/, '');
+  var isMainPage = /(^|\/)scenepacks(\.html)?$/.test(path);
+  if (!isMainPage) return;
+
+  var grid = document.getElementById('grid');
+  var search = document.getElementById('search');
+  if (!grid) return;
+
+  /* ====== BURAYI KENDİNE GÖRE DÜZENLE ====== */
+  var FOLDER_PAGE = 'folder.html';
+  var GIF = 'assets/141.gif';
+  var CHARS = [
+    'assets/soap.gif',
+    'assets/gaz.gif',
+    'assets/ghost.gif'
+  ];
+  /* ========================================= */
+
+  /* Görsel yüklenmezse kırık ikon göstermesin */
+  function img(src, cls) {
+    return '<img class="' + cls + '" src="' + src + '" alt="" loading="lazy" ' +
+           'onerror="this.style.visibility=\'hidden\'">';
+  }
+
+  var peeks = CHARS.slice(0, 3).map(function (src, i) {
+    return img(src, 'peek p' + (i + 1));
+  }).join('');
+
+  var locked = document.createElement('a');
+  locked.className = 'card card-locked';
+  locked.href = FOLDER_PAGE + '?id=CallOfDuty';
+  locked.setAttribute('aria-label', 'Call of Duty Scenepacks - Coming Soon');
+  locked.style.setProperty('--i', 1);
+  locked.innerHTML =
+    '<div class="lock-art">' +
+      '<div class="stage">' +
+        '<svg class="back" viewBox="0 0 120 96" fill="none" aria-hidden="true">' +
+          '<path d="M8 20a8 8 0 0 1 8-8h24l10 12h54a8 8 0 0 1 8 8v52a8 8 0 0 1-8 8H16a8 8 0 0 1-8-8V20Z" ' +
+          'fill="#161616" stroke="rgba(255,255,255,0.2)" stroke-width="1.5"/>' +
+        '</svg>' +
+        peeks +
+        '<div class="lid">' + img(GIF, '') + '</div>' +
+        '<div class="lock-badge">' +
+          '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
+            '<rect x="4" y="11" width="16" height="10" rx="2.5"/>' +
+            '<path d="M8 11V7.5a4 4 0 0 1 8 0V11"/>' +
+            '<circle cx="12" cy="16" r="1" fill="currentColor" stroke="none"/>' +
+          '</svg>' +
+        '</div>' +
+      '</div>' +
+    '</div>' +
+    '<div class="info">' +
+      '<div class="t">Coming Soon</div>' +
+      '<div class="c">Call of Duty Scenepacks</div>' +
+    '</div>';
+
+  var busy = false;
+  function sync() {
+    if (busy) return;
+    busy = true;
+    var q = search && search.value.trim();
+    var hasCards = grid.querySelector('.card:not(.card-locked)');
+    /* Klasör görünümünde (adreste ?... veya #... varsa) kartı gösterme */
+    var inFolderView = !!(location.search || location.hash);
+    locked.hidden = !!q || !hasCards || inFolderView;
+    if (grid.lastElementChild !== locked) grid.appendChild(locked);
+    busy = false;
+  }
+
+  new MutationObserver(function () { setTimeout(sync, 0); })
+    .observe(grid, { childList: true });
+  if (search) search.addEventListener('input', function () { setTimeout(sync, 0); });
+  sync();
 })();
 </script>
 </body>
