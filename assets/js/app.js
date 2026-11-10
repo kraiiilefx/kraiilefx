@@ -9,7 +9,8 @@ var LOCK_SVG='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-
 (function(){
   var st=document.createElement("style");
   st.textContent=
-    '.card.is-locked-pack img.cover{filter:brightness(.7)}'+
+    '.card.is-locked-pack img.cover{filter:grayscale(1) brightness(.75);transition:filter .5s ease,transform 1.2s cubic-bezier(.2,.7,.2,1)}'+
+    '.card.is-locked-pack:hover img.cover{filter:grayscale(0) brightness(1)}'+
     '.card .lockbadge{position:absolute;z-index:5;top:50%;left:50%;width:40px;height:40px;margin:-20px 0 0 -20px;color:#fff;opacity:1;pointer-events:none;filter:drop-shadow(0 2px 6px rgba(0,0,0,.8))}'+
     '.card .lockbadge svg{width:100%;height:100%;display:block}'+
     '.btn.is-locked{position:relative;cursor:not-allowed}'+
