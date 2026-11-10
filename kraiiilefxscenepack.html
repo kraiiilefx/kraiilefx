@@ -10,7 +10,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600&family=Unbounded:wght@300;400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="assets/css/style.css?v=3">
-<link rel="stylesheet" href="assets/css/custom.css?v=4">
+<link rel="stylesheet" href="assets/css/custom.css?v=7">
 
 <style>
 /* =========================================================
@@ -177,6 +177,32 @@ body main .actions .btn:not(.ghost)::after {
 }
 body main .actions .btn[aria-disabled="true"]::after { display: none; }
 
+/* ===== Kilitli scenepack butonları ===== */
+body main .actions .btn.is-locked {
+  position: relative;
+  cursor: not-allowed;
+  transform: none !important;
+}
+body main .actions .btn.is-locked::before { display: none !important; content: none !important; }
+body main .actions .btn.is-locked::after { display: none !important; }
+body main .actions .btn.is-locked:not(.ghost) {
+  background: rgba(255,255,255,.14);
+  color: #fff;
+  border-color: rgba(255,255,255,.14);
+}
+body main .actions .btn.is-locked .lbl { opacity: .3; }
+body main .actions .btn.is-locked .btnlock {
+  position: absolute;
+  top: 0; right: 0; bottom: 0; left: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  opacity: 1;
+  pointer-events: none;
+}
+body main .actions .btn.is-locked .btnlock svg { width: 22px; height: 22px; display: block; }
+
 /* Hareket istemeyenler için */
 @media (prefers-reduced-motion: reduce) {
   body main .back,
@@ -243,12 +269,12 @@ body main .actions .btn[aria-disabled="true"]::after { display: none; }
     <div class="socials-icons">
       <a href="https://www.instagram.com/kraiiilefx/" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><svg aria-hidden="true"><use href="#i-ig"/></svg></a>
       <a href="https://www.tiktok.com/@kraiiilefx?lang=tr-TR" target="_blank" rel="noopener noreferrer" aria-label="TikTok"><svg aria-hidden="true"><use href="#i-tt"/></svg></a>
-  <a href="https://guns.lol/kraiiilefx" target="_blank" rel="noopener noreferrer" aria-label="guns.lol"><svg aria-hidden="true"><use href="#i-gl"/></svg></a>
+      <a href="https://guns.lol/kraiiilefx" target="_blank" rel="noopener noreferrer" aria-label="guns.lol"><svg aria-hidden="true"><use href="#i-gl"/></svg></a>
     </div>
   </div>
 </div>
 
-<script src="assets/js/app.js?v=7" defer></script>
+<script src="assets/js/app.js?v=8" defer></script>
 <script>
 /* Socials pop-up */
 (function () {
@@ -318,6 +344,51 @@ body main .actions .btn[aria-disabled="true"]::after { display: none; }
 
   new MutationObserver(enhance).observe(host, { childList: true });
   enhance();
+})();
+
+/* Kilitli scenepack: iki butona da kilit koy (app.js'ten bağımsız çalışır) */
+(function () {
+  var host = document.getElementById('detail');
+  if (!host) return;
+  var id = new URLSearchParams(location.search).get('id') || '';
+  var LOCK = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="11" width="16" height="10" rx="2.5"/><path d="M8 11V7.5a4 4 0 0 1 8 0V11"/><circle cx="12" cy="16" r="1" fill="currentColor" stroke="none"/></svg>';
+  var isLocked = false;
+
+  function apply() {
+    if (!isLocked) return;
+    var btns = host.querySelectorAll('.actions .btn');
+    Array.prototype.forEach.call(btns, function (b) {
+      if (b.dataset.kxl) return;
+      b.dataset.kxl = '1';
+      var label = b.textContent.trim();
+      b.classList.add('is-locked');
+      b.setAttribute('aria-disabled', 'true');
+      b.removeAttribute('href');
+      b.removeAttribute('target');
+      b.textContent = '';
+      var l = document.createElement('span');
+      l.className = 'lbl';
+      l.textContent = label;
+      var k = document.createElement('span');
+      k.className = 'btnlock';
+      k.setAttribute('aria-hidden', 'true');
+      k.innerHTML = LOCK;
+      b.appendChild(l);
+      b.appendChild(k);
+    });
+  }
+
+  fetch('data/scenepacks.json?v=' + Date.now(), { cache: 'no-store' })
+    .then(function (r) { return r.json(); })
+    .then(function (data) {
+      var arr = Array.isArray(data) ? data : (data.scenepacks || data.packs || data.items || data.data || []);
+      var p = arr.filter(function (x) { return String(x.id).toLowerCase() === id.toLowerCase(); })[0];
+      isLocked = !!(p && (p.locked === true || String(p.locked).toLowerCase() === 'true'));
+      apply();
+    })
+    .catch(function () {});
+
+  new MutationObserver(apply).observe(host, { childList: true, subtree: true });
 })();
 </script>
 </body>
