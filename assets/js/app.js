@@ -3,11 +3,13 @@
 var DATA_URL="data/scenepacks.json";
 var DEFAULT_IG="https://www.instagram.com/kraiiilefx/";
 var DETAIL_PAGE="kraiiilefxscenepack.html";
+var LOCK_SVG='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="11" width="16" height="10" rx="2.5"/><path d="M8 11V7.5a4 4 0 0 1 8 0V11"/><circle cx="12" cy="16" r="1" fill="currentColor" stroke="none"/></svg>';
 
 function el(tag,cls,text){var e=document.createElement(tag);if(cls)e.className=cls;if(text!=null)e.textContent=text;return e}
 function pick(o,keys){for(var i=0;i<keys.length;i++){var v=o[keys[i]];if(v!=null&&String(v).trim()!=="")return String(v).trim()}return""}
 function safeUrl(u){try{var x=new URL(u,location.href);return(x.protocol==="https:"||x.protocol==="http:")?x.href:""}catch(e){return""}}
 function absUrlMega(u){var s=String(u||"").trim();return/^https?:\/\//i.test(s)?safeUrl(s):""}
+function lockIcon(cls){var s=el("span",cls);s.setAttribute("aria-hidden","true");s.innerHTML=LOCK_SVG;return s}
 
 function normalize(raw){
   var list=Array.isArray(raw)?raw:(raw&&(raw.scenepacks||raw.packs||raw.items||raw.data))||[];
@@ -24,10 +26,12 @@ function normalize(raw){
       resolution:pick(o,["resolution","cozunurluk","çözünürlük","quality"]),
       fps:pick(o,["fps","FPS","framerate"]),
       cover:pick(o,["cover","image","kapak","thumbnail","thumb"]),
+      coverPos:pick(o,["coverPos","coverPosition"]),
       folder:pick(o,["folder","klasor","klasör","actor","oyuncu"]),
       folderCover:pick(o,["folderCover","folder_cover","klasorKapak"]),
       instagram:safeUrl(pick(o,["instagram","ig","instagramUrl"]))||DEFAULT_IG,
       mega:absUrlMega(pick(o,["mega","download","downloadUrl","link","url"])),
+      locked:o.locked===true||String(o.locked).toLowerCase()==="true",
       date:pick(o,["date","tarih","added"]),
       order:i
     });
@@ -59,6 +63,7 @@ function coverNode(p,alt){
   var src=p.cover&&safeUrl(p.cover);
   if(!src){wrap.appendChild(placeholder(p));return wrap}
   var img=el("img","cover");img.alt=alt||"";img.loading="lazy";img.decoding="async";
+  if(p.coverPos)img.style.objectPosition=p.coverPos;
   img.addEventListener("error",function(){if(img.parentNode)img.parentNode.replaceChild(placeholder(p),img)});
   img.src=src;
   wrap.appendChild(img);return wrap;
@@ -66,7 +71,9 @@ function coverNode(p,alt){
 
 function card(p){
   var a=el("a","card");a.href=detailHref(p);a.setAttribute("aria-label",p.title+(p.character?" - "+p.character:""));
+  if(p.locked)a.classList.add("is-locked-pack");
   a.appendChild(coverNode(p,""));
+  if(p.locked)a.appendChild(lockIcon("lockbadge"));
   var info=el("div","info");
   info.appendChild(el("div","t",p.title));
   if(p.character)info.appendChild(el("div","c",p.character));
@@ -120,12 +127,10 @@ function sortLatest(list){
   });
 }
 
-/* kartlar sırayla belirsin (CSS --i değişkenini kullanır) */
 function stagger(host){
   Array.prototype.forEach.call(host.children,function(c,i){c.style.setProperty("--i",Math.min(i,12))});
 }
 
-/* kart üzerinde imleci takip eden ışık */
 function spotlight(host){
   if(host._spot)return;
   host._spot=1;
@@ -140,121 +145,3 @@ function spotlight(host){
 
 function renderGrid(host,limit){
   skeleton(host,limit||8);
-  load().then(function(all){
-    host.textContent="";
-    var list=limit?sortLatest(all).slice(0,limit):all;
-    if(!list.length){host.appendChild(state("No scenepacks yet."));host.classList.remove("grid");return}
-    var q=document.getElementById("search");
-    var hasFolders=!limit&&list.some(function(p){return p.folder});
-    var fkey=new URLSearchParams(location.search).get("f")||"";
-
-    if(hasFolders&&fkey){
-      var cur=null;
-      groupFolders(list).forEach(function(f){if(f.slug===fkey)cur=f});
-      if(cur){
-        var h2=document.querySelector(".sec-head h2");
-        if(h2)h2.textContent=cur.name+" Scenepacks";
-        document.title=cur.name+" Scenepacks | KRAIIILEFX";
-      }
-      var back=el("a","btn ghost","ALL SCENEPACKS");back.href="scenepacks.html";back.style.marginBottom="24px";
-      var sb=document.querySelector(".searchbox")||host;
-      sb.parentNode.insertBefore(back,sb);
-    }
-
-    function draw(){
-      var term=q?q.value.trim().toLowerCase():"";
-      var nt=norm(term);
-      var groups=hasFolders?groupFolders(list):[];
-      var nodes=[];
-
-      if(nt){
-        /* arama: önce eşleşen KLASÖRLER (örn. "jon bernthal"), sonra tekil scenepack'ler */
-        if(hasFolders&&!fkey){
-          groups.forEach(function(f){
-            if(norm(f.name).indexOf(nt)!==-1)nodes.push(folderCard(f));
-          });
-        }
-        list.forEach(function(p){
-          if(fkey&&fslug(folderOf(p))!==fkey)return;
-          if(norm(p.title+" "+p.character+" "+p.id).indexOf(nt)!==-1)nodes.push(card(p));
-        });
-      }else if(hasFolders&&!fkey){
-        groups.forEach(function(f){nodes.push(folderCard(f))});
-      }else{
-        var src=list;
-        if(hasFolders&&fkey){
-          src=null;
-          groups.forEach(function(f){if(f.slug===fkey)src=f.packs});
-          if(!src){nodes.push(el("p","empty","This folder does not exist."));src=[]}
-        }
-        src.forEach(function(p){nodes.push(card(p))});
-      }
-
-      host.textContent="";
-      if(nt&&!nodes.length)nodes.push(el("p","empty","No scenepacks found."));
-      nodes.forEach(function(n){host.appendChild(n)});
-      stagger(host);
-    }
-
-    spotlight(host);
-    if(q)q.oninput=draw;
-    draw();
-  }).catch(function(){
-    host.classList.remove("grid");host.textContent="";
-    host.appendChild(state("Scenepacks could not be loaded. Check your connection and try again.",function(){host.classList.add("grid");renderGrid(host,limit)}));
-  });
-}
-
-function renderDetail(host){
-  var id=new URLSearchParams(location.search).get("id")||"";
-  host.textContent="";host.appendChild(el("p","kicker","Loading..."));
-  load().then(function(all){
-    var p=all.filter(function(x){return x.id===id})[0]||all.filter(function(x){return x.id.toLowerCase()===id.toLowerCase()})[0];
-    host.textContent="";
-    if(!p){
-      host.appendChild(state(id?"This scenepack does not exist.":"No scenepack selected."));
-      var back=el("a","btn","ALL SCENEPACKS");back.href="scenepacks.html";host.appendChild(back);return;
-    }
-    document.title=p.title+(p.character?" - "+p.character:"")+" | KRAIIILEFX";
-    var box=el("div","detail");
-    var art=el("div","art");art.appendChild(coverNode(p,p.title));box.appendChild(art);
-    var side=el("div");
-    side.appendChild(el("p","kicker","Scenepack"));
-    side.appendChild(el("h1",null,p.title));
-    var facts=el("dl","facts");
-    [["Movie / Series",p.title],["Character",p.character],["Resolution",p.resolution],["Frame rate",p.fps]].forEach(function(f){
-      if(!f[1])return;
-      var row=el("div");
-      row.appendChild(el("dt",null,f[0]));
-      row.appendChild(el("dd",null,f[1]));
-      facts.appendChild(row);
-    });
-    side.appendChild(facts);
-    var note=el("div","note");
-    note.appendChild(el("strong",null,"Before downloading"));
-    note.appendChild(el("p",null,"To get the download password, follow @kraiiilefx on Instagram and message the password request there."));
-    side.appendChild(note);
-    var act=el("div","actions");
-    var dlBtn=el("a","btn","DOWNLOAD SCENEPACK");
-    if(p.mega){dlBtn.href=p.mega;dlBtn.target="_blank";dlBtn.rel="noopener noreferrer"}else{dlBtn.setAttribute("aria-disabled","true")}
-    var igBtn=el("a","btn ghost","GET PASSWORD ON INSTAGRAM");igBtn.href=p.instagram;igBtn.target="_blank";igBtn.rel="noopener noreferrer";
-    act.appendChild(dlBtn);act.appendChild(igBtn);side.appendChild(act);
-    box.appendChild(side);host.appendChild(box);
-  }).catch(function(){
-    host.textContent="";
-    host.appendChild(state("This scenepack could not be loaded. Check your connection and try again.",function(){renderDetail(host)}));
-  });
-}
-
-window.addEventListener("error",function(){
-  var m=document.querySelector("main");
-  if(m&&!m.children.length&&!m.textContent.trim())m.appendChild(state("Something went wrong. Reload the page."));
-});
-
-document.addEventListener("DOMContentLoaded",function(){
-  var grid=document.getElementById("grid");if(grid)renderGrid(grid,0);
-  var latest=document.getElementById("latest");if(latest)renderGrid(latest,4);
-  var detail=document.getElementById("detail");if(detail)renderDetail(detail);
-  var yr=document.getElementById("year");if(yr)yr.textContent=new Date().getFullYear();
-});
-})();
