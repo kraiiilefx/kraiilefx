@@ -207,24 +207,35 @@
 })();
 </script>
 <script>
-/* Kilitli "Coming Soon" klasör kartı (Jon Bernthal'ın yanında görünür) */
+/* Kilitli "Coming Soon" klasör kartı: SADECE scenepacks ana sayfasında çalışır */
 (function () {
+  /* /scenepacks veya /scenepacks.html dışındaki sayfalarda hiçbir şey yapma */
+  var path = location.pathname.replace(/\/+$/, '');
+  var isMainPage = /(^|\/)scenepacks(\.html)?$/.test(path);
+  if (!isMainPage) return;
+
   var grid = document.getElementById('grid');
   var search = document.getElementById('search');
   if (!grid) return;
 
   /* ====== BURAYI KENDİNE GÖRE DÜZENLE ====== */
   var FOLDER_PAGE = 'folder.html';
-  var GIF = 'assets/141.gif';
+  var GIF = 'assets/covers/141.gif';
   var CHARS = [
-    'assets/soap.gif',
-    'assets/gaz.gif',
-    'assets/ghost.gif'
+    'assets/covers/soap.gif',
+    'assets/covers/gaz.gif',
+    'assets/covers/ghost.gif'
   ];
   /* ========================================= */
 
+  /* Görsel yüklenmezse kırık ikon göstermesin */
+  function img(src, cls) {
+    return '<img class="' + cls + '" src="' + src + '" alt="" loading="lazy" ' +
+           'onerror="this.style.visibility=\'hidden\'">';
+  }
+
   var peeks = CHARS.slice(0, 3).map(function (src, i) {
-    return '<img class="peek p' + (i + 1) + '" src="' + src + '" alt="" loading="lazy">';
+    return img(src, 'peek p' + (i + 1));
   }).join('');
 
   var locked = document.createElement('a');
@@ -240,7 +251,7 @@
           'fill="#161616" stroke="rgba(255,255,255,0.2)" stroke-width="1.5"/>' +
         '</svg>' +
         peeks +
-        '<div class="lid"><img src="' + GIF + '" alt=""></div>' +
+        '<div class="lid">' + img(GIF, '') + '</div>' +
         '<div class="lock-badge">' +
           '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
             '<rect x="4" y="11" width="16" height="10" rx="2.5"/>' +
@@ -266,7 +277,8 @@
     busy = false;
   }
 
-  new MutationObserver(function () { setTimeout(sync, 0); }).observe(grid, { childList: true });
+  new MutationObserver(function () { setTimeout(sync, 0); })
+    .observe(grid, { childList: true });
   if (search) search.addEventListener('input', function () { setTimeout(sync, 0); });
   sync();
 })();
