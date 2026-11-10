@@ -154,7 +154,7 @@
 .card-locked:hover .stage { transform: none; }
 .card-locked:hover .lid img { transform: scale(1.05); }
 .card-locked .lid img {
-  object-position: 68% 50%;
+  object-position: 60% 50%;
   filter: grayscale(1) brightness(.8);
   transition: transform 1.2s cubic-bezier(.2,.7,.2,1), filter .5s ease;
 }
@@ -258,6 +258,12 @@
 
   var FOLDER_PAGE = 'folder.html';
 
+  /* Kilitli kartın yeri: 'end' = listenin sonu, 'start' = listenin başı */
+  var LOCKED_POSITION = 'start';
+
+  /* true = yeni eklenen klasör listenin başına gelir, eskiler sağa kayar */
+  var NEW_FOLDERS_FIRST = true;
+
   /* Ön kapak GIF'i: sırayla bu yolları dener, hangisi varsa onu kullanır */
   var GIF_CANDIDATES = [
     'assets/141.gif',
@@ -340,7 +346,23 @@
         kids[j].style.display = inside ? 'none' : '';
       }
     }
-    if (grid.lastElementChild !== locked) grid.appendChild(locked);
+    /* Yeni klasörler başa gelsin: app.js klasörleri eski->yeni sırayla çizer, biz tersine çeviririz.
+       Her kart sadece bir kez taşınır (data-kx işareti), böylece sıra bozulmaz. */
+    if (NEW_FOLDERS_FIRST && folderList) {
+      for (var n = 0; n < cards.length; n++) {
+        var fc = cards[n];
+        if (visible(fc) && /\d+\s*scenepacks?/i.test(fc.textContent || '') && !fc.getAttribute('data-kx')) {
+          fc.setAttribute('data-kx', '1');
+          grid.insertBefore(fc, grid.firstChild);
+        }
+      }
+    }
+
+    if (LOCKED_POSITION === 'start') {
+      if (grid.firstElementChild !== locked) grid.insertBefore(locked, grid.firstChild);
+    } else {
+      if (grid.lastElementChild !== locked) grid.appendChild(locked);
+    }
   }
 
   /* Sayfa nasıl değişirse değişsin 0.3 sn'de bir kontrol et */
