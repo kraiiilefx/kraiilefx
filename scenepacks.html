@@ -18,7 +18,7 @@
 .searchbox .search:focus-visible { outline: none !important; box-shadow: none !important; }
 
 /* ===== Kilitli "Coming Soon" kartı ===== */
-.card-locked { cursor: not-allowed; user-select: none; }
+.card-locked { cursor: pointer; user-select: none; }
 .card-locked[hidden] { display: none; }
 .card-locked .lock-art {
   position: relative;
@@ -139,9 +139,13 @@
   var search = document.getElementById('search');
   if (!grid) return;
 
-  var locked = document.createElement('div');
+  /* Jon Bernthal kartının açtığı klasör sayfasının dosya adı neyse onu yaz */
+  var FOLDER_PAGE = 'folder.html';
+
+  var locked = document.createElement('a');
   locked.className = 'card card-locked';
-  locked.setAttribute('aria-disabled', 'true');
+  locked.href = FOLDER_PAGE + '?id=CallOfDuty';
+  locked.setAttribute('aria-label', 'Call of Duty Scenepacks - Coming Soon');
   locked.style.setProperty('--i', 1);
   locked.innerHTML =
     '<div class="lock-art">' +
@@ -159,7 +163,7 @@
     '</div>' +
     '<div class="info">' +
       '<div class="t">Coming Soon</div>' +
-      '<div class="c">locked folder</div>' +
+      '<div class="c">Call of Duty Scenepacks</div>' +
     '</div>';
 
   var busy = false;
