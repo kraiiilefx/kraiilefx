@@ -154,7 +154,7 @@
 .card-locked:hover .stage { transform: none; }
 .card-locked:hover .lid img { transform: scale(1.05); }
 .card-locked .lid img {
-  object-position: 73% 50%;
+  object-position: 68% 50%;
   filter: grayscale(1) brightness(.8);
   transition: transform 1.2s cubic-bezier(.2,.7,.2,1), filter .5s ease;
 }
@@ -291,8 +291,8 @@
       '</div>' +
     '</div>' +
     '<div class="info">' +
-      '<div class="t">Coming Soon</div>' +
-      '<div class="c">Call of Duty Scenepacks</div>' +
+      '<div class="t">Call of Duty Scenepacks</div>' +
+      '<div class="c">Coming Soon</div>' +
     '</div>';
 
   /* Ön kapak GIF'ini yükle, bulamazsa sıradaki yolu dene */
@@ -319,12 +319,14 @@
       if (/\d+\s*scenepacks?/i.test(c.textContent || '')) folderList = true;
     }
     /* Sadece klasör kartlarının göründüğü ana listede göster */
-    /* Ekranda 3 veya daha fazla (Call of Duty olmayan) kart varsa klasörün içindeyiz */
-    var others = 0;
+    /* Klasör kartlarında "N scenepacks" yazısı olur. Bu yazısı olmayan görünür kart
+       (yani bir scenepack kartı) varsa bir klasörün içindeyiz. Klasör sayısından bağımsız çalışır. */
+    var packLike = 0;
     for (var m = 0; m < cards.length; m++) {
-      if (visible(cards[m]) && !/call of duty/i.test(cards[m].textContent || '')) others++;
+      var t = cards[m].textContent || '';
+      if (visible(cards[m]) && !/call of duty/i.test(t) && !/\d+\s*scenepacks?/i.test(t)) packLike++;
     }
-    var inside = others >= 3;
+    var inside = packLike >= 1;
 
     var hide = !!q || !folderList || packList || inside;
     locked.hidden = hide;
