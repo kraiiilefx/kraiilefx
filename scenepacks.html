@@ -153,8 +153,26 @@
 }
 .card-locked:hover .stage { transform: none; }
 .card-locked:hover .lid img { transform: scale(1.05); }
-.card-locked .lid img { object-position: 64% 30%; }
-.card-locked .lock-badge { top: 70%; }
+.card-locked .lid img {
+  object-position: 73% 50%;
+  filter: grayscale(1) brightness(.8);
+  transition: transform 1.2s cubic-bezier(.2,.7,.2,1), filter .5s ease;
+}
+.card-locked:hover .lid img { filter: grayscale(0) brightness(1); }
+.card-locked .info { z-index: 6; }
+@media (hover: none) {
+  .card-locked .lid img { filter: grayscale(1) brightness(.8); }
+}
+.card-locked .lock-badge {
+  top: 50%; left: 50%;
+  width: 28px; height: 28px; margin: -14px 0 0 -14px;
+  background: none; border: 0; border-radius: 0;
+  -webkit-backdrop-filter: none; backdrop-filter: none;
+  box-shadow: none !important;
+  color: #fff; opacity: 1;
+  filter: drop-shadow(0 2px 6px rgba(0,0,0,.7));
+}
+.card-locked .lock-badge svg { width: 26px; height: 26px; }
 </style>
 </head>
 <body>
