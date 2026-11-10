@@ -271,8 +271,15 @@
     if (busy) return;
     busy = true;
     var q = search && search.value.trim();
-    var hasCards = grid.querySelector('.card:not(.card-locked)');
-    locked.hidden = !!q || !hasCards;
+    /* Ana sayfada klasör kartında "9 scenepacks" gibi bir yazı olur.
+       Klasörün içindeyken (adres değişmese bile) bu yazı yoktur, kart gizlenir. */
+    var cards = grid.querySelectorAll('.card:not(.card-locked)');
+    var onFolderList = false;
+    for (var i = 0; i < cards.length; i++) {
+      var visible = cards[i].offsetParent !== null && !cards[i].hidden;
+      if (visible && /\d+\s*scenepacks?/i.test(cards[i].textContent || '')) { onFolderList = true; break; }
+    }
+    locked.hidden = !!q || !onFolderList;
     if (grid.lastElementChild !== locked) grid.appendChild(locked);
     busy = false;
   }
