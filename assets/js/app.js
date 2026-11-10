@@ -5,6 +5,21 @@ var DEFAULT_IG="https://www.instagram.com/kraiiilefx/";
 var DETAIL_PAGE="kraiiilefxscenepack.html";
 var LOCK_SVG='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="11" width="16" height="10" rx="2.5"/><path d="M8 11V7.5a4 4 0 0 1 8 0V11"/><circle cx="12" cy="16" r="1" fill="currentColor" stroke="none"/></svg>';
 
+/* kilit stilleri JS içinde: custom.css önbellekte kalsa bile çalışır */
+(function(){
+  var st=document.createElement("style");
+  st.textContent=
+    '.card.is-locked-pack img.cover{filter:brightness(.7)}'+
+    '.card .lockbadge{position:absolute;z-index:5;top:50%;left:50%;width:40px;height:40px;margin:-20px 0 0 -20px;color:#fff;opacity:1;pointer-events:none;filter:drop-shadow(0 2px 6px rgba(0,0,0,.8))}'+
+    '.card .lockbadge svg{width:100%;height:100%;display:block}'+
+    '.btn.is-locked{position:relative;cursor:not-allowed}'+
+    '.btn.is-locked::before{display:none!important;content:none!important}'+
+    '.btn.is-locked .lbl{opacity:.3}'+
+    '.btn.is-locked .btnlock{position:absolute;top:0;right:0;bottom:0;left:0;display:flex;align-items:center;justify-content:center;color:currentColor;opacity:1;pointer-events:none}'+
+    '.btn.is-locked .btnlock svg{width:22px;height:22px;display:block}';
+  document.head.appendChild(st);
+})();
+
 function el(tag,cls,text){var e=document.createElement(tag);if(cls)e.className=cls;if(text!=null)e.textContent=text;return e}
 function pick(o,keys){for(var i=0;i<keys.length;i++){var v=o[keys[i]];if(v!=null&&String(v).trim()!=="")return String(v).trim()}return""}
 function safeUrl(u){try{var x=new URL(u,location.href);return(x.protocol==="https:"||x.protocol==="http:")?x.href:""}catch(e){return""}}
@@ -213,6 +228,7 @@ function lockedBtn(btn,label){
   btn.classList.add("is-locked");
   btn.setAttribute("aria-disabled","true");
   btn.removeAttribute("href");
+  btn.removeAttribute("target");
   btn.textContent="";
   btn.appendChild(el("span","lbl",label));
   btn.appendChild(lockIcon("btnlock"));
@@ -277,35 +293,3 @@ document.addEventListener("DOMContentLoaded",function(){
   var yr=document.getElementById("year");if(yr)yr.textContent=new Date().getFullYear();
 });
 })();
-/* Klasördeki kilitli kart */
-.card.is-locked-pack { position: relative; }
-.card.is-locked-pack img.cover { filter: brightness(.7); }
-.card .lockbadge {
-  position: absolute;
-  z-index: 3;
-  top: 50%;
-  left: 50%;
-  width: 34px;
-  height: 34px;
-  margin: -17px 0 0 -17px;
-  color: #fff;
-  pointer-events: none;
-  filter: drop-shadow(0 2px 6px rgba(0,0,0,.7));
-}
-.card .lockbadge svg { width: 100%; height: 100%; display: block; }
-
-/* Detay sayfasındaki kilitli butonlar */
-.btn.is-locked {
-  position: relative;
-  cursor: not-allowed;
-}
-.btn.is-locked::before { display: none !important; }
-.btn.is-locked .lbl { opacity: .3; }
-.btn.is-locked .btnlock {
-  position: absolute;
-  inset: 0;
-  display: grid;
-  place-items: center;
-  color: currentColor;
-}
-.btn.is-locked .btnlock svg { width: 22px; height: 22px; display: block; }
