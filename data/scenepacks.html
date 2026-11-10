@@ -10,14 +10,12 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600&family=Unbounded:wght@300;400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="assets/css/style.css?v=3">
-<link rel="stylesheet" href="assets/css/custom.css?v=4">
+<link rel="stylesheet" href="assets/css/custom.css?v=5">
 <style>
-/* Arama kutusundaki beyaz odak çerçevesini kaldır */
 .searchbox .search,
 .searchbox .search:focus,
 .searchbox .search:focus-visible { outline: none !important; box-shadow: none !important; }
 
-/* ===== Kilitli "Coming Soon" kartı ===== */
 .card-locked { cursor: pointer; user-select: none; }
 .card-locked[hidden] { display: none; }
 
@@ -31,8 +29,6 @@
     radial-gradient(120% 80% at 50% 0%, rgba(255,255,255,.08), rgba(255,255,255,0) 60%),
     #0d0d0d;
 }
-
-/* klasör sahnesi */
 .card-locked .stage {
   position: relative;
   width: 58%;
@@ -41,14 +37,7 @@
   filter: drop-shadow(0 12px 30px rgba(0,0,0,.7));
   transition: transform .6s cubic-bezier(.2,.7,.2,1);
 }
-.card-locked .stage .back {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-}
-
-/* klasörden çıkan gifler */
+.card-locked .stage .back { position: absolute; inset: 0; width: 100%; height: 100%; }
 .card-locked .peek {
   position: absolute;
   bottom: 14%;
@@ -66,8 +55,6 @@
 .card-locked .p1 { --x: 27%; --r: -9deg; }
 .card-locked .p2 { --x: 50%; --r: 0deg; z-index: 1; }
 .card-locked .p3 { --x: 73%; --r: 9deg; }
-
-/* ön kapak: ana gif */
 .card-locked .lid {
   position: absolute;
   left: 0;
@@ -92,8 +79,6 @@
   display: block;
   opacity: .85;
 }
-
-/* kilit: hep görünür ve opak */
 .card-locked .lock-badge {
   position: absolute;
   z-index: 5;
@@ -112,8 +97,6 @@
   backdrop-filter: blur(6px);
   transition: transform .4s cubic-bezier(.2,.9,.3,1.3), box-shadow .4s ease;
 }
-
-/* hover: klasör açılır, gifler yukarı çıkar */
 .card-locked:hover .stage { transform: scale(1.04); }
 .card-locked:hover .lid { transform: rotateX(-38deg); }
 .card-locked:hover .peek { filter: grayscale(.25) brightness(.95); }
@@ -124,8 +107,6 @@
   transform: rotate(-8deg) scale(1.08);
   box-shadow: 0 0 18px rgba(255,255,255,.3);
 }
-
-/* telefonda hover yok: klasör hafif açık dursun */
 @media (hover: none) {
   .card-locked .lid { transform: rotateX(-22deg); }
   .card-locked .peek { filter: grayscale(.5) brightness(.8); }
@@ -133,11 +114,50 @@
   .card-locked .p2 { transform: translateX(-50%) translateY(-52%) rotate(var(--r)); }
   .card-locked .p3 { transform: translateX(-50%) translateY(-38%) rotate(var(--r)); }
 }
+
+/* Jon kartı gibi: gif tüm kartı kaplasın */
+.card-locked .lock-art { display: block; padding-bottom: 0; overflow: hidden; background: #0d0d0d; }
+.card-locked .stage {
+  position: absolute; inset: 0; width: 100%; aspect-ratio: auto;
+  perspective: none; filter: none;
+}
+.card-locked .lid {
+  inset: 0; height: 100%; border: 0; border-radius: 0; background: #0d0d0d;
+  transform: none !important;
+}
+.card-locked .lid img {
+  opacity: .75; transition: transform 1.2s cubic-bezier(.2,.7,.2,1);
+}
+.card-locked .lid::after {
+  content: ""; position: absolute; inset: 0; pointer-events: none;
+  background: linear-gradient(to top, rgba(0,0,0,.88) 0%, rgba(0,0,0,.35) 45%, rgba(0,0,0,0) 100%);
+}
+.card-locked:hover .stage { transform: none; }
+.card-locked:hover .lid img { transform: scale(1.05); }
+.card-locked .lid img {
+  object-position: 60% 50%;
+  filter: grayscale(1) brightness(.8);
+  transition: transform 1.2s cubic-bezier(.2,.7,.2,1), filter .5s ease;
+}
+.card-locked:hover .lid img { filter: grayscale(0) brightness(1); }
+.card-locked .info { z-index: 6; }
+@media (hover: none) {
+  .card-locked .lid img { filter: grayscale(1) brightness(.8); }
+}
+.card-locked .lock-badge {
+  top: 50%; left: 50%;
+  width: 28px; height: 28px; margin: -14px 0 0 -14px;
+  background: none; border: 0; border-radius: 0;
+  -webkit-backdrop-filter: none; backdrop-filter: none;
+  box-shadow: none !important;
+  color: #fff; opacity: 1;
+  filter: drop-shadow(0 2px 6px rgba(0,0,0,.7));
+}
+.card-locked .lock-badge svg { width: 26px; height: 26px; }
 </style>
 </head>
 <body>
 
-<!-- Sosyal ikon seti -->
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
   <symbol id="i-ig" viewBox="0 0 24 24">
     <g fill="none" stroke="currentColor" stroke-width="1.8">
@@ -192,7 +212,7 @@
   </div>
 </div>
 
-<script src="assets/js/app.js?v=4" defer></script>
+<script src="assets/js/app.js?v=5" defer></script>
 <script>
 (function () {
   var modal = document.getElementById('socialsModal');
@@ -207,51 +227,34 @@
 })();
 </script>
 <script>
-/* Kilitli "Coming Soon" klasör kartı: SADECE scenepacks ana sayfasında çalışır */
+/* Kilitli "Coming Soon" klasör kartı: SADECE ana scenepacks listesinde görünür */
 (function () {
-  /* /scenepacks veya /scenepacks.html dışındaki sayfalarda hiçbir şey yapma */
   var path = location.pathname.replace(/\/+$/, '');
-  var isMainPage = /(^|\/)scenepacks(\.html)?$/.test(path);
-  if (!isMainPage) return;
+  if (!/(^|\/)scenepacks(\.html)?$/.test(path)) return;
 
   var grid = document.getElementById('grid');
   var search = document.getElementById('search');
   if (!grid) return;
 
-  /* ====== BURAYI KENDİNE GÖRE DÜZENLE ====== */
-  var FOLDER_PAGE = 'folder.html';
-  var GIF = 'assets/js/141.gif';
-  var CHARS = [
-    'assets/soap.gif',
-    'assets/gaz.gif',
-    'assets/ghost.gif'
+  var LOCKED_POSITION = 'start';
+  var NEW_FOLDERS_FIRST = true;
+
+  var GIF_CANDIDATES = [
+    'assets/141.gif',
+    'assets/js/141.gif',
+    'assets/covers/141.gif',
+    'assets/141.GIF'
   ];
-  /* ========================================= */
-
-  /* Görsel yüklenmezse kırık ikon göstermesin */
-  function img(src, cls) {
-    return '<img class="' + cls + '" src="' + src + '" alt="" loading="lazy" ' +
-           'onerror="this.style.visibility=\'hidden\'">';
-  }
-
-  var peeks = CHARS.slice(0, 3).map(function (src, i) {
-    return img(src, 'peek p' + (i + 1));
-  }).join('');
 
   var locked = document.createElement('a');
   locked.className = 'card card-locked';
-  locked.href = FOLDER_PAGE + '?id=CallOfDuty';
+  locked.href = 'scenepacks.html?f=call-of-duty';
   locked.setAttribute('aria-label', 'Call of Duty Scenepacks - Coming Soon');
   locked.style.setProperty('--i', 1);
   locked.innerHTML =
     '<div class="lock-art">' +
       '<div class="stage">' +
-        '<svg class="back" viewBox="0 0 120 96" fill="none" aria-hidden="true">' +
-          '<path d="M8 20a8 8 0 0 1 8-8h24l10 12h54a8 8 0 0 1 8 8v52a8 8 0 0 1-8 8H16a8 8 0 0 1-8-8V20Z" ' +
-          'fill="#161616" stroke="rgba(255,255,255,0.2)" stroke-width="1.5"/>' +
-        '</svg>' +
-        peeks +
-        '<div class="lid">' + img(GIF, '') + '</div>' +
+        '<div class="lid"><img alt=""></div>' +
         '<div class="lock-badge">' +
           '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
             '<rect x="4" y="11" width="16" height="10" rx="2.5"/>' +
@@ -262,31 +265,72 @@
       '</div>' +
     '</div>' +
     '<div class="info">' +
-      '<div class="t">Coming Soon</div>' +
-      '<div class="c">Call of Duty Scenepacks</div>' +
+      '<div class="t">Call of Duty Scenepacks</div>' +
+      '<div class="c">Coming Soon</div>' +
     '</div>';
 
-  var busy = false;
+  var lidImg = locked.querySelector('.lid img');
+  var k = 0;
+  lidImg.onerror = function () {
+    k++;
+    if (k < GIF_CANDIDATES.length) { lidImg.src = GIF_CANDIDATES[k]; }
+    else { lidImg.style.visibility = 'hidden'; }
+  };
+  lidImg.src = GIF_CANDIDATES[0];
+
+  function visible(el) { return el.offsetParent !== null && !el.hidden; }
+
+  var RX_COUNT = /\d+\s*scenepacks?/i;
+  var RX_COD_FOLDER = /call of duty\s*scenepacks/i;
+
   function sync() {
-    if (busy) return;
-    busy = true;
     var q = search && search.value.trim();
-    /* Ana sayfada klasör kartında "9 scenepacks" gibi bir yazı olur.
-       Klasörün içindeyken (adres değişmese bile) bu yazı yoktur, kart gizlenir. */
     var cards = grid.querySelectorAll('.card:not(.card-locked)');
-    var onFolderList = false;
+    var folderList = false, packList = false, packLike = 0, codCard = null;
+
     for (var i = 0; i < cards.length; i++) {
-      var visible = cards[i].offsetParent !== null && !cards[i].hidden;
-      if (visible && /\d+\s*scenepacks?/i.test(cards[i].textContent || '')) { onFolderList = true; break; }
+      var c = cards[i];
+      var t = c.textContent || '';
+      if (RX_COD_FOLDER.test(t) && RX_COUNT.test(t)) {
+        if (!codCard) codCard = c;
+        folderList = true;
+        continue;
+      }
+      if (!visible(c)) continue;
+      var href = c.getAttribute('href') || '';
+      if (/kraiiilefxscenepack/i.test(href)) packList = true;
+      if (RX_COUNT.test(t)) folderList = true; else packLike++;
     }
-    locked.hidden = !!q || !onFolderList;
-    if (grid.lastElementChild !== locked) grid.appendChild(locked);
-    busy = false;
+    var inside = packLike >= 1;
+
+    var hide = !!q || !folderList || packList || inside;
+    locked.hidden = hide;
+    locked.style.display = hide ? 'none' : '';
+
+    /* otomatik oluşan 2. Call of Duty kartını gizle */
+    if (codCard) {
+      codCard.style.display = q ? '' : 'none';
+    }
+
+    if (NEW_FOLDERS_FIRST && folderList) {
+      for (var n = 0; n < cards.length; n++) {
+        var fc = cards[n];
+        if (visible(fc) && RX_COUNT.test(fc.textContent || '') && !fc.getAttribute('data-kx')) {
+          fc.setAttribute('data-kx', '1');
+          grid.insertBefore(fc, grid.firstChild);
+        }
+      }
+    }
+
+    if (LOCKED_POSITION === 'start') {
+      if (grid.firstElementChild !== locked) grid.insertBefore(locked, grid.firstChild);
+    } else {
+      if (grid.lastElementChild !== locked) grid.appendChild(locked);
+    }
   }
 
-  new MutationObserver(function () { setTimeout(sync, 0); })
-    .observe(grid, { childList: true });
-  if (search) search.addEventListener('input', function () { setTimeout(sync, 0); });
+  setInterval(sync, 300);
+  if (search) search.addEventListener('input', sync);
   sync();
 })();
 </script>
