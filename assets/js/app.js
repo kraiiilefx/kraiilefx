@@ -277,3 +277,35 @@ document.addEventListener("DOMContentLoaded",function(){
   var yr=document.getElementById("year");if(yr)yr.textContent=new Date().getFullYear();
 });
 })();
+/* Klasördeki kilitli kart */
+.card.is-locked-pack { position: relative; }
+.card.is-locked-pack img.cover { filter: brightness(.7); }
+.card .lockbadge {
+  position: absolute;
+  z-index: 3;
+  top: 50%;
+  left: 50%;
+  width: 34px;
+  height: 34px;
+  margin: -17px 0 0 -17px;
+  color: #fff;
+  pointer-events: none;
+  filter: drop-shadow(0 2px 6px rgba(0,0,0,.7));
+}
+.card .lockbadge svg { width: 100%; height: 100%; display: block; }
+
+/* Detay sayfasındaki kilitli butonlar */
+.btn.is-locked {
+  position: relative;
+  cursor: not-allowed;
+}
+.btn.is-locked::before { display: none !important; }
+.btn.is-locked .lbl { opacity: .3; }
+.btn.is-locked .btnlock {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  color: currentColor;
+}
+.btn.is-locked .btnlock svg { width: 22px; height: 22px; display: block; }
