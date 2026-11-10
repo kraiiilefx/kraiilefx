@@ -276,7 +276,8 @@
     var cards = grid.querySelectorAll('.card:not(.card-locked)');
     var onFolderList = false;
     for (var i = 0; i < cards.length; i++) {
-      if (/\d+\s*scenepacks?/i.test(cards[i].textContent || '')) { onFolderList = true; break; }
+      var visible = cards[i].offsetParent !== null && !cards[i].hidden;
+      if (visible && /\d+\s*scenepacks?/i.test(cards[i].textContent || '')) { onFolderList = true; break; }
     }
     locked.hidden = !!q || !onFolderList;
     if (grid.lastElementChild !== locked) grid.appendChild(locked);
