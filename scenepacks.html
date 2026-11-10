@@ -12,7 +12,7 @@
 <link rel="stylesheet" href="assets/css/style.css?v=3">
 <link rel="stylesheet" href="assets/css/custom.css?v=4">
 <style>
-/* Arama kutusundaki beyaz odak çerçevesini kaldır (alt çizgi odakta zaten beyaza döner) */
+/* Arama kutusundaki beyaz odak çerçevesini kaldır */
 .searchbox .search,
 .searchbox .search:focus,
 .searchbox .search:focus-visible { outline: none !important; box-shadow: none !important; }
@@ -20,6 +20,7 @@
 /* ===== Kilitli "Coming Soon" kartı ===== */
 .card-locked { cursor: pointer; user-select: none; }
 .card-locked[hidden] { display: none; }
+
 .card-locked .lock-art {
   position: relative;
   aspect-ratio: 3 / 4;
@@ -30,40 +31,111 @@
     radial-gradient(120% 80% at 50% 0%, rgba(255,255,255,.08), rgba(255,255,255,0) 60%),
     #0d0d0d;
 }
-.card-locked .lock-folder {
-  width: 52%;
-  height: auto;
+
+/* klasör sahnesi */
+.card-locked .stage {
+  position: relative;
+  width: 58%;
+  aspect-ratio: 120 / 96;
+  perspective: 700px;
   filter: drop-shadow(0 12px 30px rgba(0,0,0,.7));
   transition: transform .6s cubic-bezier(.2,.7,.2,1);
 }
+.card-locked .stage .back {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+/* klasörden çıkan karakterler */
+.card-locked .peek {
+  position: absolute;
+  bottom: 14%;
+  left: var(--x, 50%);
+  width: 34%;
+  height: auto;
+  aspect-ratio: 3 / 4;
+  object-fit: cover;
+  border-radius: 6px;
+  border: 1px solid rgba(255,255,255,.22);
+  filter: grayscale(1) brightness(.55);
+  transform: translateX(-50%) translateY(0) rotate(0deg);
+  transition: transform .65s cubic-bezier(.2,.8,.2,1), filter .5s ease;
+}
+.card-locked .p1 { --x: 27%; --r: -9deg; }
+.card-locked .p2 { --x: 50%; --r: 0deg; z-index: 1; }
+.card-locked .p3 { --x: 73%; --r: 9deg; }
+
+/* GIF: klasörün ön kapağı */
+.card-locked .lid {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 80%;
+  z-index: 3;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid rgba(255,255,255,.2);
+  background: #151515;
+  transform-origin: bottom center;
+  transition: transform .65s cubic-bezier(.2,.8,.2,1);
+}
+.card-locked .lid img {
+  width: 100%;
+  height: 100%;
+  aspect-ratio: auto;
+  object-fit: cover;
+  display: block;
+  opacity: .8;
+}
+
+/* kilit: hep görünür ve opak */
 .card-locked .lock-badge {
   position: absolute;
-  top: 50%;
+  z-index: 5;
+  top: 58%;
   left: 50%;
   width: 44px;
   height: 44px;
   margin: -22px 0 0 -22px;
-  transform: translateY(-14px);
   display: grid;
   place-items: center;
   border-radius: 50%;
   color: #fff;
-  background: rgba(255,255,255,.08);
-  border: 1px solid rgba(255,255,255,.22);
+  background: rgba(18,18,18,.92);
+  border: 1px solid rgba(255,255,255,.25);
   -webkit-backdrop-filter: blur(6px);
   backdrop-filter: blur(6px);
   transition: transform .4s cubic-bezier(.2,.9,.3,1.3), box-shadow .4s ease;
 }
-.card-locked:hover .lock-folder { transform: scale(1.05); }
+
+/* hover: klasör açılır, karakterler görünür */
+.card-locked:hover .stage { transform: scale(1.04); }
+.card-locked:hover .lid { transform: rotateX(-38deg); }
+.card-locked:hover .peek { filter: grayscale(.35) brightness(.9); }
+.card-locked:hover .p1 { transform: translateX(-50%) translateY(-52%) rotate(var(--r)); }
+.card-locked:hover .p2 { transform: translateX(-50%) translateY(-68%) rotate(var(--r)); }
+.card-locked:hover .p3 { transform: translateX(-50%) translateY(-52%) rotate(var(--r)); }
 .card-locked:hover .lock-badge {
-  transform: translateY(-14px) rotate(-8deg) scale(1.08);
-  box-shadow: 0 0 18px rgba(255,255,255,.35);
+  transform: rotate(-8deg) scale(1.08);
+  box-shadow: 0 0 18px rgba(255,255,255,.3);
+}
+
+/* telefonda hover yok: klasör hafif açık dursun */
+@media (hover: none) {
+  .card-locked .lid { transform: rotateX(-22deg); }
+  .card-locked .peek { filter: grayscale(.5) brightness(.8); }
+  .card-locked .p1 { transform: translateX(-50%) translateY(-38%) rotate(var(--r)); }
+  .card-locked .p2 { transform: translateX(-50%) translateY(-52%) rotate(var(--r)); }
+  .card-locked .p3 { transform: translateX(-50%) translateY(-38%) rotate(var(--r)); }
 }
 </style>
 </head>
 <body>
 
-<!-- Sosyal ikon seti (sayfada bir kez tanımlanır, her yerde <use> ile kullanılır) -->
+<!-- Sosyal ikon seti -->
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
   <symbol id="i-ig" viewBox="0 0 24 24">
     <g fill="none" stroke="currentColor" stroke-width="1.8">
@@ -113,7 +185,7 @@
     <div class="socials-icons">
       <a href="https://www.instagram.com/kraiiilefx/" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><svg aria-hidden="true"><use href="#i-ig"/></svg></a>
       <a href="https://www.tiktok.com/@kraiiilefx?lang=tr-TR" target="_blank" rel="noopener noreferrer" aria-label="TikTok"><svg aria-hidden="true"><use href="#i-tt"/></svg></a>
-  <a href="https://guns.lol/kraiiilefx" target="_blank" rel="noopener noreferrer" aria-label="guns.lol"><svg aria-hidden="true"><use href="#i-gl"/></svg></a>
+      <a href="https://guns.lol/kraiiilefx" target="_blank" rel="noopener noreferrer" aria-label="guns.lol"><svg aria-hidden="true"><use href="#i-gl"/></svg></a>
     </div>
   </div>
 </div>
@@ -139,8 +211,19 @@
   var search = document.getElementById('search');
   if (!grid) return;
 
-  /* Jon Bernthal kartının açtığı klasör sayfasının dosya adı neyse onu yaz */
+  /* ====== BURAYI KENDİNE GÖRE DÜZENLE ====== */
   var FOLDER_PAGE = 'folder.html';
+  var GIF = 'assets/sharpstick.gif';           /* klasörün üstüne gelecek gif */
+  var CHARS = [                                /* klasörden çıkan karakterler (en fazla 3) */
+    'assets/covers/karakter1.jpg',
+    'assets/covers/karakter2.jpg',
+    'assets/covers/karakter3.jpg'
+  ];
+  /* ========================================= */
+
+  var peeks = CHARS.slice(0, 3).map(function (src, i) {
+    return '<img class="peek p' + (i + 1) + '" src="' + src + '" alt="" loading="lazy">';
+  }).join('');
 
   var locked = document.createElement('a');
   locked.className = 'card card-locked';
@@ -149,16 +232,20 @@
   locked.style.setProperty('--i', 1);
   locked.innerHTML =
     '<div class="lock-art">' +
-      '<svg class="lock-folder" viewBox="0 0 120 96" fill="none" aria-hidden="true">' +
-        '<path d="M8 20a8 8 0 0 1 8-8h24l10 12h54a8 8 0 0 1 8 8v52a8 8 0 0 1-8 8H16a8 8 0 0 1-8-8V20Z" ' +
-        'fill="rgba(255,255,255,0.05)" stroke="rgba(255,255,255,0.2)" stroke-width="1.5"/>' +
-      '</svg>' +
-      '<div class="lock-badge">' +
-        '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
-          '<rect x="4" y="11" width="16" height="10" rx="2.5"/>' +
-          '<path d="M8 11V7.5a4 4 0 0 1 8 0V11"/>' +
-          '<circle cx="12" cy="16" r="1" fill="currentColor" stroke="none"/>' +
+      '<div class="stage">' +
+        '<svg class="back" viewBox="0 0 120 96" fill="none" aria-hidden="true">' +
+          '<path d="M8 20a8 8 0 0 1 8-8h24l10 12h54a8 8 0 0 1 8 8v52a8 8 0 0 1-8 8H16a8 8 0 0 1-8-8V20Z" ' +
+          'fill="#161616" stroke="rgba(255,255,255,0.2)" stroke-width="1.5"/>' +
         '</svg>' +
+        peeks +
+        '<div class="lid"><img src="' + GIF + '" alt=""></div>' +
+        '<div class="lock-badge">' +
+          '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
+            '<rect x="4" y="11" width="16" height="10" rx="2.5"/>' +
+            '<path d="M8 11V7.5a4 4 0 0 1 8 0V11"/>' +
+            '<circle cx="12" cy="16" r="1" fill="currentColor" stroke="none"/>' +
+          '</svg>' +
+        '</div>' +
       '</div>' +
     '</div>' +
     '<div class="info">' +
