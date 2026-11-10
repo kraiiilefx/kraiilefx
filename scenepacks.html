@@ -133,6 +133,27 @@
   .card-locked .p2 { transform: translateX(-50%) translateY(-52%) rotate(var(--r)); }
   .card-locked .p3 { transform: translateX(-50%) translateY(-38%) rotate(var(--r)); }
 }
+
+/* ===== Jon kartı gibi: 141 gif'i tüm kartı kaplasın ===== */
+.card-locked .lock-art { display: block; padding-bottom: 0; overflow: hidden; background: #0d0d0d; }
+.card-locked .stage {
+  position: absolute; inset: 0; width: 100%; aspect-ratio: auto;
+  perspective: none; filter: none;
+}
+.card-locked .lid {
+  inset: 0; height: 100%; border: 0; border-radius: 0; background: #0d0d0d;
+  transform: none !important;
+}
+.card-locked .lid img {
+  opacity: .75; transition: transform 1.2s cubic-bezier(.2,.7,.2,1);
+}
+.card-locked .lid::after {
+  content: ""; position: absolute; inset: 0; pointer-events: none;
+  background: linear-gradient(to top, rgba(0,0,0,.88) 0%, rgba(0,0,0,.35) 45%, rgba(0,0,0,0) 100%);
+}
+.card-locked:hover .stage { transform: none; }
+.card-locked:hover .lid img { transform: scale(1.05); }
+.card-locked .lock-badge { top: 42%; }
 </style>
 </head>
 <body>
@@ -225,11 +246,7 @@
     'assets/covers/141.gif',
     'assets/141.GIF'
   ];
-  var CHARS = [
-    'assets/soap.gif',
-    'assets/gaz.gif',
-    'assets/ghost.gif'
-  ];
+  var CHARS = []; /* arkadaki küçük gifler kaldırıldı */
 
   var peeks = CHARS.slice(0, 3).map(function (src, i) {
     return '<img class="peek p' + (i + 1) + '" src="' + src + '" alt="" loading="lazy" onerror="this.style.visibility=\'hidden\'">';
@@ -283,9 +300,25 @@
       if (/\d+\s*scenepacks?/i.test(c.textContent || '')) folderList = true;
     }
     /* Sadece klasör kartlarının göründüğü ana listede göster */
-    var hide = !!q || !folderList || packList;
+    /* Ekranda 3 veya daha fazla (Call of Duty olmayan) kart varsa klasörün içindeyiz */
+    var others = 0;
+    for (var m = 0; m < cards.length; m++) {
+      if (visible(cards[m]) && !/call of duty/i.test(cards[m].textContent || '')) others++;
+    }
+    var inside = others >= 3;
+
+    var hide = !!q || !folderList || packList || inside;
     locked.hidden = hide;
     locked.style.display = hide ? 'none' : '';
+
+    /* app.js'in kendi eklediği bir Call of Duty kartı varsa onu da klasör içinde gizle */
+    var kids = grid.children;
+    for (var j = 0; j < kids.length; j++) {
+      if (kids[j] === locked) continue;
+      if (/call of duty/i.test(kids[j].textContent || '')) {
+        kids[j].style.display = inside ? 'none' : '';
+      }
+    }
     if (grid.lastElementChild !== locked) grid.appendChild(locked);
   }
 
