@@ -16,6 +16,49 @@
 .searchbox .search,
 .searchbox .search:focus,
 .searchbox .search:focus-visible { outline: none !important; box-shadow: none !important; }
+
+/* ===== Kilitli "Coming Soon" kartı ===== */
+.card-locked { cursor: not-allowed; user-select: none; }
+.card-locked[hidden] { display: none; }
+.card-locked .lock-art {
+  position: relative;
+  aspect-ratio: 3 / 4;
+  display: grid;
+  place-items: center;
+  padding-bottom: 64px;
+  background:
+    radial-gradient(120% 80% at 50% 0%, rgba(255,255,255,.08), rgba(255,255,255,0) 60%),
+    #0d0d0d;
+}
+.card-locked .lock-folder {
+  width: 52%;
+  height: auto;
+  filter: drop-shadow(0 12px 30px rgba(0,0,0,.7));
+  transition: transform .6s cubic-bezier(.2,.7,.2,1);
+}
+.card-locked .lock-badge {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 44px;
+  height: 44px;
+  margin: -22px 0 0 -22px;
+  transform: translateY(-14px);
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  color: #fff;
+  background: rgba(255,255,255,.08);
+  border: 1px solid rgba(255,255,255,.22);
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+  transition: transform .4s cubic-bezier(.2,.9,.3,1.3), box-shadow .4s ease;
+}
+.card-locked:hover .lock-folder { transform: scale(1.05); }
+.card-locked:hover .lock-badge {
+  transform: translateY(-14px) rotate(-8deg) scale(1.08);
+  box-shadow: 0 0 18px rgba(255,255,255,.35);
+}
 </style>
 </head>
 <body>
@@ -87,6 +130,52 @@
   closeBtn.addEventListener('click', close);
   modal.addEventListener('click', function (e) { if (e.target === modal) close(); });
   document.addEventListener('keydown', function (e) { if (e.key === 'Escape') close(); });
+})();
+</script>
+<script>
+/* Kilitli "Coming Soon" klasör kartı (Jon Bernthal'ın yanında görünür) */
+(function () {
+  var grid = document.getElementById('grid');
+  var search = document.getElementById('search');
+  if (!grid) return;
+
+  var locked = document.createElement('div');
+  locked.className = 'card card-locked';
+  locked.setAttribute('aria-disabled', 'true');
+  locked.style.setProperty('--i', 1);
+  locked.innerHTML =
+    '<div class="lock-art">' +
+      '<svg class="lock-folder" viewBox="0 0 120 96" fill="none" aria-hidden="true">' +
+        '<path d="M8 20a8 8 0 0 1 8-8h24l10 12h54a8 8 0 0 1 8 8v52a8 8 0 0 1-8 8H16a8 8 0 0 1-8-8V20Z" ' +
+        'fill="rgba(255,255,255,0.05)" stroke="rgba(255,255,255,0.2)" stroke-width="1.5"/>' +
+      '</svg>' +
+      '<div class="lock-badge">' +
+        '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
+          '<rect x="4" y="11" width="16" height="10" rx="2.5"/>' +
+          '<path d="M8 11V7.5a4 4 0 0 1 8 0V11"/>' +
+          '<circle cx="12" cy="16" r="1" fill="currentColor" stroke="none"/>' +
+        '</svg>' +
+      '</div>' +
+    '</div>' +
+    '<div class="info">' +
+      '<div class="t">Coming Soon</div>' +
+      '<div class="c">locked folder</div>' +
+    '</div>';
+
+  var busy = false;
+  function sync() {
+    if (busy) return;
+    busy = true;
+    var q = search && search.value.trim();
+    var hasCards = grid.querySelector('.card:not(.card-locked)');
+    locked.hidden = !!q || !hasCards;
+    if (grid.lastElementChild !== locked) grid.appendChild(locked);
+    busy = false;
+  }
+
+  new MutationObserver(function () { setTimeout(sync, 0); }).observe(grid, { childList: true });
+  if (search) search.addEventListener('input', function () { setTimeout(sync, 0); });
+  sync();
 })();
 </script>
 </body>
