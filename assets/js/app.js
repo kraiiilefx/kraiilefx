@@ -13,6 +13,15 @@ var LOCK_SVG='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-
     '.card.is-locked-pack:hover img.cover{filter:grayscale(0) brightness(1)}'+
     '.card .lockbadge{position:absolute;z-index:5;top:50%;left:50%;width:40px;height:40px;margin:-20px 0 0 -20px;color:#fff;opacity:1;pointer-events:none;filter:drop-shadow(0 2px 6px rgba(0,0,0,.8))}'+
     '.card .lockbadge svg{width:100%;height:100%;display:block}'+
+
+    /* kilit animasyonu: arada sallanır, kulp hafifçe açılır; hover'da hızlanır */
+    '@keyframes lockWiggle{0%,55%,100%{transform:rotate(0)}60%{transform:rotate(-14deg)}66%{transform:rotate(11deg)}72%{transform:rotate(-8deg)}78%{transform:rotate(5deg)}84%{transform:rotate(0)}}'+
+    '@keyframes lockShackle{0%,55%,100%{transform:translateY(0) rotate(0)}62%,80%{transform:translateY(-2.5px) rotate(-22deg)}}'+
+    '.card .lockbadge svg{transform-origin:50% 60%;animation:lockWiggle 3.6s ease-in-out infinite}'+
+    '.card .lockbadge svg path{transform-box:view-box;transform-origin:16px 11px;animation:lockShackle 3.6s ease-in-out infinite}'+
+    '.card.is-locked-pack:hover .lockbadge svg,.card.is-locked-pack:hover .lockbadge svg path{animation-duration:1.4s}'+
+    '@media (prefers-reduced-motion:reduce){.card .lockbadge svg,.card .lockbadge svg path{animation:none}}'+
+
     '.btn.is-locked{position:relative;cursor:not-allowed}'+
     '.btn.is-locked::before{display:none!important;content:none!important}'+
     '.btn.is-locked .lbl{opacity:.3}'+
