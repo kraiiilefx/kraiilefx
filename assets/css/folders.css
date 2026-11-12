@@ -15,17 +15,57 @@
   position: relative; display: block; aspect-ratio: 3 / 4; overflow: hidden;
   border-radius: 12px; border: 1px solid rgba(255,255,255,.12); background: #0d0d0d;
   color: #fff; text-decoration: none; -webkit-tap-highlight-color: transparent;
-  animation: kxIn .5s ease both; animation-delay: calc(var(--i, 0) * 50ms);
+  animation: kxIn .5s ease backwards; animation-delay: calc(var(--i, 0) * 50ms);
 }
 @keyframes kxIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
 .kx-art, .kx-art img { position: absolute; inset: 0; width: 100%; height: 100%; }
+.kx-art { background: radial-gradient(120% 80% at 50% 0%, rgba(255,255,255,.07), rgba(255,255,255,0) 60%), #121212; }
+.kx-art[data-missing]::before {
+  content: "Gif yok: " attr(data-missing); position: absolute; left: 10px; right: 10px; top: 42%;
+  text-align: center; font-size: 11px; color: #8a8a8a; word-break: break-all;
+}
+.kx-m-art { background: #121212; }
 .kx-art img { object-fit: cover; filter: grayscale(1) brightness(.8); transition: transform 1s cubic-bezier(.2,.7,.2,1), filter .5s ease; }
 .kx-card::after {
   content: ""; position: absolute; inset: 0; pointer-events: none;
   background: linear-gradient(to top, rgba(0,0,0,.9) 0%, rgba(0,0,0,.3) 45%, rgba(0,0,0,0) 100%);
 }
 .kx-card:hover .kx-art img { transform: scale(1.05); filter: grayscale(0) brightness(1); }
-.kx-card:hover { border-color: rgba(255,255,255,.35); }
+/* ===== animasyonlar ===== */
+.kx-card { transition: transform .45s cubic-bezier(.2,.8,.2,1), border-color .3s ease, box-shadow .45s ease; }
+.kx-card:hover {
+  border-color: rgba(255,255,255,.4); transform: translateY(-6px);
+  box-shadow: 0 18px 40px rgba(0,0,0,.6);
+}
+.kx-card:active { transform: translateY(-2px) scale(.99); }
+
+/* parlama: hover'da kartin ustunden isik gecer */
+.kx-card::before {
+  content: ""; position: absolute; top: 0; bottom: 0; left: -60%; width: 40%; z-index: 4;
+  pointer-events: none; transform: skewX(-18deg);
+  background: linear-gradient(100deg, transparent, rgba(255,255,255,.16), transparent);
+}
+.kx-card:hover::before { animation: kxShine .9s ease; }
+@keyframes kxShine { from { left: -60%; } to { left: 130%; } }
+
+/* yazi hafif yukari kayar */
+.kx-info { transition: transform .45s cubic-bezier(.2,.8,.2,1); }
+.kx-card:hover .kx-info { transform: translateY(-4px); }
+.kx-c { transition: color .3s ease; }
+.kx-card:hover .kx-c { color: #fff; }
+
+/* rozetler: hover'da doner, kilit nabiz gibi parlar */
+.kx-badge { transition: transform .4s cubic-bezier(.2,.9,.3,1.3); }
+.kx-card:hover .kx-badge { transform: rotate(-8deg) scale(1.12); }
+.kx-card.is-locked .kx-badge { animation: kxPulse 2.6s ease-in-out infinite; }
+@keyframes kxPulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(255,255,255,0); }
+  50% { box-shadow: 0 0 14px 2px rgba(255,255,255,.28); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .kx-card, .kx-card::before, .kx-badge { animation: none !important; transition: none !important; }
+}
 
 .kx-info { position: absolute; left: 0; right: 0; bottom: 0; z-index: 3; padding: 14px; }
 .kx-t { font-family: 'Unbounded', sans-serif; font-size: 13px; font-weight: 500; line-height: 1.3; }
@@ -63,7 +103,10 @@
 
 /* modal */
 .kx-modal { position: fixed; inset: 0; z-index: 100; display: none; place-items: center; padding: 20px; background: rgba(0,0,0,.8); }
-.kx-modal.open { display: grid; }
+.kx-modal.open { display: grid; animation: kxFade .25s ease; }
+.kx-modal.open .kx-box { animation: kxPop .35s cubic-bezier(.2,.8,.2,1); }
+@keyframes kxFade { from { opacity: 0; } to { opacity: 1; } }
+@keyframes kxPop { from { opacity: 0; transform: translateY(16px) scale(.97); } to { opacity: 1; transform: none; } }
 .kx-box {
   position: relative; display: flex; gap: 22px; width: min(720px, 100%); max-height: 90vh; overflow: auto;
   padding: 20px; border-radius: 16px; background: #111; border: 1px solid rgba(255,255,255,.14); color: #fff;
