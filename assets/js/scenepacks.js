@@ -1,16 +1,14 @@
 /* KRAIIILEFX scenepacks: Folder > Subfolder > Pack
-   Data fields used: folder, subfolder, folderCover, subfolderCover, locked, mega, key */
+   Data fields used: folder, subfolder, folderCover, subfolderCover, locked, mega, key
+   Opsiyonel video alanlari: video, poster, folderVideo, folderPoster, subfolderVideo, subfolderPoster */
 (function () {
   'use strict';
 
-  var DATA_URL = 'data/scenepacks.json'; // GitHub'daki data klasoru
-  /* Karta basinca acilan eski detay sayfasi. Bos ('') birakirsan kucuk pencere acilir. */
-  var PACK_PAGE = 'kraiiilefxscenepack.html';
+  var DATA_URL = 'data/scenepacks.json';
 
   var grid = document.getElementById('grid');
   var search = document.getElementById('search');
   var crumbs = document.getElementById('crumbs');
-  var pageTitle = document.getElementById('pageTitle');
   var modal = document.getElementById('packModal');
   var modalBody = document.getElementById('packBody');
   var packs = [];
@@ -33,28 +31,55 @@
     return { folder: p[0] || '', sub: p[1] || '' };
   }
 
+  /* ---------- video: sadece ekrana yakinken iner ve oynar ---------- */
+  var saver = navigator.connection && navigator.connection.saveData;
+  var reduce = window.matchMedia && matchMedia('(prefers-reduced-motion:reduce)').matches;
+  var vio = ('IntersectionObserver' in window) ? new IntersectionObserver(function (es) {
+    es.forEach(function (en) {
+      var v = en.target;
+      if (en.isIntersecting) {
+        if (!v.getAttribute('src')) v.setAttribute('src', v.getAttribute('data-src'));
+        var pr = v.play(); if (pr && pr.catch) pr.catch(function () {});
+      } else { v.pause(); }
+    });
+  }, { rootMargin: '200px', threshold: 0.2 }) : null;
+
+  function watchVideos(root) {
+    if (!vio || saver || reduce) return;
+    root.querySelectorAll('video[data-src]').forEach(function (v) { v.muted = true; vio.observe(v); });
+  }
+
   /* ---------- cards ---------- */
-  function art(src, pos) {
+  function art(src, pos, video, poster) {
+    var style = pos ? ' style="object-position:' + esc(pos) + '"' : '';
+    if (video) {
+      return '<div class="kx-art"><video data-src="' + esc(video) + '"' +
+        (poster ? ' poster="' + esc(poster) + '"' : '') +
+        ' muted loop playsinline preload="none"' + style + '></video></div>';
+    }
     if (!src) return '<div class="kx-art"></div>';
-    return '<div class="kx-art"><img src="' + esc(src) + '" alt=""' +
-      (pos ? ' style="object-position:' + esc(pos) + '"' : '') + '></div>';
+    return '<div class="kx-art"><img src="' + esc(src) + '" alt="" loading="lazy" decoding="async"' + style + '></div>';
   }
 
   function packCard(p, i) {
     var lock = p.locked || !p.mega;
-    return '<a class="kx-card' + (lock ? ' is-locked' : '') + '" href="' + (PACK_PAGE ? PACK_PAGE + '?id=' + enc(p.id) : '#') + '" data-pack="' + esc(p.id) +
-      '" style="--i:' + i + '">' + art(p.cover, p.coverPos) + (lock ? ICON_LOCK : '') +
+    return '<a class="kx-card' + (lock ? ' is-locked' : '') + '" href="#" data-pack="' + esc(p.id) +
+      '" style="--i:' + i + '">' + art(p.cover, p.coverPos, p.video, p.poster) + (lock ? ICON_LOCK : '') +
       '<div class="kx-info"><div class="kx-t">' + esc(p.name) + '</div><div class="kx-c">' +
       esc(lock ? 'Coming Soon' : p.character) + '</div></div></a>';
   }
 
   function folderCard(name, group, key, href, i) {
-    var coverKey = key === 'folder' ? 'folderCover' : 'subfolderCover';
-    var withCover = group.filter(function (g) { return g[coverKey]; })[0] || group[0];
+    var isTop = key === 'folder';
+    var coverKey = isTop ? 'folderCover' : 'subfolderCover';
+    var videoKey = isTop ? 'folderVideo' : 'subfolderVideo';
+    var posterKey = isTop ? 'folderPoster' : 'subfolderPoster';
+    var withCover = group.filter(function (g) { return g[coverKey] || g[videoKey]; })[0] || group[0];
     var cover = withCover[coverKey] || withCover.cover;
     var n = group.length;
-    return '<a class="kx-card kx-folder" href="' + href + '" style="--i:' + i + '">' + art(cover, withCover.coverPos) +
-      ICON_FOLDER + '<div class="kx-info"><div class="kx-t">' + esc(name) + ' Scenepacks</div><div class="kx-c">' +
+    return '<a class="kx-card kx-folder" href="' + href + '" style="--i:' + i + '">' +
+      art(cover, withCover.coverPos, withCover[videoKey], withCover[posterKey]) +
+      ICON_FOLDER + '<div class="kx-info"><div class="kx-t">' + esc(name) + '</div><div class="kx-c">' +
       n + ' scenepack' + (n === 1 ? '' : 's') + '</div></div></a>';
   }
 
@@ -75,12 +100,6 @@
 
   /* ---------- render ---------- */
   function setCrumbs(r) {
-    /* Baslik: Scenepacks / Call of Duty Scenepacks / Ghost Scenepacks */
-    var name = r.sub || r.folder;
-    var text = name ? name + ' Scenepacks' : 'Scenepacks';
-    if (pageTitle) pageTitle.textContent = text;
-    document.title = text + ' | KRAIIILEFX';
-
     var h = '<a href="#/">Scenepacks</a>';
     if (r.folder) {
       h += '<span>/</span>' + (r.sub ? '<a href="#/' + enc(r.folder) + '">' + esc(r.folder) + '</a>' : '<b>' + esc(r.folder) + '</b>');
@@ -94,6 +113,7 @@
     var r = route();
     var q = search.value.trim().toLowerCase();
     var html = '', list;
+    if (vio) vio.disconnect();
 
     if (q) {
       setCrumbs({ folder: '', sub: '' });
@@ -119,54 +139,44 @@
     }
 
     grid.innerHTML = html || '<p class="kx-empty">Nothing here yet.</p>';
+    watchVideos(grid);
   }
 
   /* ---------- pack modal ---------- */
+  var closing = false;
   function openPack(id) {
+    if (closing) return;
     var p = packs.filter(function (x) { return x.id === id; })[0];
-    if (!p) return;
-    var off = p.locked || !p.mega;
+    if (!p || p.locked || !p.mega) return;
     var link = p.mega + (p.key ? '#' + p.key : '');
-    var dl = off
-      ? '<span class="kx-btn kx-main is-off">Coming Soon</span>'
-      : '<a class="kx-btn kx-main" href="' + esc(link) + '" target="_blank" rel="noopener noreferrer">Download</a>';
     modalBody.innerHTML =
-      '<div class="kx-m-art">' + art(p.cover, p.coverPos) + (off ? ICON_LOCK : '') + '</div>' +
+      '<div class="kx-m-art">' + art(p.cover, p.coverPos, p.video, p.poster) + '</div>' +
       '<div class="kx-m-txt"><h3>' + esc(p.name) + '</h3>' +
       '<p class="kx-m-sub">' + esc(p.character) + '</p>' +
       '<div class="kx-chips"><span>' + esc(p.resolution) + '</span><span>' + esc(p.fps) + '</span></div>' +
       '<p class="kx-m-note">' + esc(p.instructions) + '</p>' +
       '<div class="kx-btns">' +
       '<a class="kx-btn" href="' + esc(p.instagram) + '" target="_blank" rel="noopener noreferrer">Instagram</a>' +
-      dl +
+      '<a class="kx-btn kx-main" href="' + esc(link) + '" target="_blank" rel="noopener noreferrer">Download</a>' +
       '</div></div>';
     modal.classList.add('open');
+    watchVideos(modalBody);
   }
-  function closePack() { modal.classList.remove('open'); }
-
-  /* ---------- gif bulunamazsa baska klasorlerde ara ---------- */
-  var GIF_DIRS = ['assets/covers/', 'assets/', 'assets/js/', 'assets/img/', 'assets/images/'];
-  function imgFallback(e) {
-    var img = e.target;
-    if (!img || img.tagName !== 'IMG' || !img.closest('.kx-art')) return;
-    var file = (img.getAttribute('src') || '').split('/').pop();
-    var n = (parseInt(img.getAttribute('data-try'), 10) || 0) + 1;
-    if (n < GIF_DIRS.length) {
-      img.setAttribute('data-try', n);
-      img.src = GIF_DIRS[n] + file;
-    } else {
-      img.style.visibility = 'hidden';
-      img.parentNode.setAttribute('data-missing', file);
-      console.warn('Gif bulunamadi:', file);
-    }
+  function closePack() {
+    if (!modal.classList.contains('open') || closing) return;
+    closing = true;
+    modal.classList.add('closing');
+    setTimeout(function () {
+      modal.classList.remove('open', 'closing');
+      modalBody.innerHTML = '';
+      closing = false;
+    }, 260);
   }
-  grid.addEventListener('error', imgFallback, true);
-  modal.addEventListener('error', imgFallback, true);
 
   /* ---------- events ---------- */
   grid.addEventListener('click', function (e) {
     var a = e.target.closest('[data-pack]');
-    if (!a || PACK_PAGE) return;
+    if (!a) return;
     e.preventDefault();
     openPack(a.getAttribute('data-pack'));
   });
@@ -176,6 +186,28 @@
   document.addEventListener('keydown', function (e) { if (e.key === 'Escape') closePack(); });
   window.addEventListener('hashchange', function () { search.value = ''; render(); window.scrollTo(0, 0); });
   search.addEventListener('input', render);
+
+  /* ---------- imlec efektleri: 3D egilme + isik (sadece fare olan cihazlarda) ---------- */
+  if (window.matchMedia && matchMedia('(hover:hover) and (pointer:fine)').matches && !reduce) {
+    var cur = null, raf = 0;
+    var reset = function (el) { el.style.setProperty('--rx', '0deg'); el.style.setProperty('--ry', '0deg'); };
+    document.addEventListener('pointermove', function (e) {
+      var el = e.target.closest ? e.target.closest('.kx-card, .kx-m-art') : null;
+      if (cur && cur !== el) reset(cur);
+      cur = el;
+      if (!el) return;
+      cancelAnimationFrame(raf);
+      raf = requestAnimationFrame(function () {
+        var r = el.getBoundingClientRect();
+        var x = (e.clientX - r.left) / r.width, y = (e.clientY - r.top) / r.height;
+        var max = el.classList.contains('is-locked') ? 0 : 7;
+        el.style.setProperty('--ry', ((x - 0.5) * max) + 'deg');
+        el.style.setProperty('--rx', ((0.5 - y) * max) + 'deg');
+        el.style.setProperty('--mx', (x * 100) + '%');
+        el.style.setProperty('--my', (y * 100) + '%');
+      });
+    });
+  }
 
   /* ---------- load ---------- */
   fetch(DATA_URL + '?v=' + Date.now())
