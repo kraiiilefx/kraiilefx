@@ -4,6 +4,8 @@
   'use strict';
 
   var DATA_URL = 'data/scenepacks.json'; // GitHub'daki data klasoru
+  /* Karta basinca acilan eski detay sayfasi. Bos ('') birakirsan kucuk pencere acilir. */
+  var PACK_PAGE = 'kraiiilefxscenepack.html';
 
   var grid = document.getElementById('grid');
   var search = document.getElementById('search');
@@ -40,7 +42,7 @@
 
   function packCard(p, i) {
     var lock = p.locked || !p.mega;
-    return '<a class="kx-card' + (lock ? ' is-locked' : '') + '" href="#" data-pack="' + esc(p.id) +
+    return '<a class="kx-card' + (lock ? ' is-locked' : '') + '" href="' + (PACK_PAGE ? PACK_PAGE + '?id=' + enc(p.id) : '#') + '" data-pack="' + esc(p.id) +
       '" style="--i:' + i + '">' + art(p.cover, p.coverPos) + (lock ? ICON_LOCK : '') +
       '<div class="kx-info"><div class="kx-t">' + esc(p.name) + '</div><div class="kx-c">' +
       esc(lock ? 'Coming Soon' : p.character) + '</div></div></a>';
@@ -129,7 +131,7 @@
       ? '<span class="kx-btn kx-main is-off">Coming Soon</span>'
       : '<a class="kx-btn kx-main" href="' + esc(link) + '" target="_blank" rel="noopener noreferrer">Download</a>';
     modalBody.innerHTML =
-      '<div class="kx-m-art">' + art(p.cover, p.coverPos) + '</div>' +
+      '<div class="kx-m-art">' + art(p.cover, p.coverPos) + (off ? ICON_LOCK : '') + '</div>' +
       '<div class="kx-m-txt"><h3>' + esc(p.name) + '</h3>' +
       '<p class="kx-m-sub">' + esc(p.character) + '</p>' +
       '<div class="kx-chips"><span>' + esc(p.resolution) + '</span><span>' + esc(p.fps) + '</span></div>' +
@@ -154,6 +156,7 @@
       img.src = GIF_DIRS[n] + file;
     } else {
       img.style.visibility = 'hidden';
+      img.parentNode.setAttribute('data-missing', file);
       console.warn('Gif bulunamadi:', file);
     }
   }
@@ -163,7 +166,7 @@
   /* ---------- events ---------- */
   grid.addEventListener('click', function (e) {
     var a = e.target.closest('[data-pack]');
-    if (!a) return;
+    if (!a || PACK_PAGE) return;
     e.preventDefault();
     openPack(a.getAttribute('data-pack'));
   });
