@@ -34,7 +34,7 @@
   /* ---------- cards ---------- */
   function art(src, pos) {
     if (!src) return '<div class="kx-art"></div>';
-    return '<div class="kx-art"><img src="' + esc(src) + '" alt="" loading="lazy"' +
+    return '<div class="kx-art"><img src="' + esc(src) + '" alt=""' +
       (pos ? ' style="object-position:' + esc(pos) + '"' : '') + '></div>';
   }
 
@@ -141,6 +141,24 @@
     modal.classList.add('open');
   }
   function closePack() { modal.classList.remove('open'); }
+
+  /* ---------- gif bulunamazsa baska klasorlerde ara ---------- */
+  var GIF_DIRS = ['assets/covers/', 'assets/', 'assets/js/', 'assets/img/', 'assets/images/'];
+  function imgFallback(e) {
+    var img = e.target;
+    if (!img || img.tagName !== 'IMG' || !img.closest('.kx-art')) return;
+    var file = (img.getAttribute('src') || '').split('/').pop();
+    var n = (parseInt(img.getAttribute('data-try'), 10) || 0) + 1;
+    if (n < GIF_DIRS.length) {
+      img.setAttribute('data-try', n);
+      img.src = GIF_DIRS[n] + file;
+    } else {
+      img.style.visibility = 'hidden';
+      console.warn('Gif bulunamadi:', file);
+    }
+  }
+  grid.addEventListener('error', imgFallback, true);
+  modal.addEventListener('error', imgFallback, true);
 
   /* ---------- events ---------- */
   grid.addEventListener('click', function (e) {
