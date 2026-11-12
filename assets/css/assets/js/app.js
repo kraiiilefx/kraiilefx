@@ -3,11 +3,38 @@
 var DATA_URL="data/scenepacks.json";
 var DEFAULT_IG="https://www.instagram.com/kraiiilefx/";
 var DETAIL_PAGE="kraiiilefxscenepack.html";
+var LOCK_SVG='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="11" width="16" height="10" rx="2.5"/><path d="M8 11V7.5a4 4 0 0 1 8 0V11"/><circle cx="12" cy="16" r="1" fill="currentColor" stroke="none"/></svg>';
+
+/* kilit stilleri JS içinde: custom.css önbellekte kalsa bile çalışır */
+(function(){
+  var st=document.createElement("style");
+  st.textContent=
+    '.card.is-locked-pack img.cover{filter:grayscale(1) brightness(.75);transition:filter .5s ease,transform 1.2s cubic-bezier(.2,.7,.2,1)}'+
+    '.card.is-locked-pack:hover img.cover{filter:grayscale(0) brightness(1)}'+
+    '.card .lockbadge{position:absolute;z-index:5;top:50%;left:50%;width:40px;height:40px;margin:-20px 0 0 -20px;color:#fff;opacity:1;pointer-events:none;filter:drop-shadow(0 2px 6px rgba(0,0,0,.8))}'+
+    '.card .lockbadge svg{width:100%;height:100%;display:block}'+
+
+    /* kilit animasyonu: arada sallanır, kulp hafifçe açılır; hover'da hızlanır */
+    '@keyframes lockWiggle{0%,55%,100%{transform:rotate(0)}60%{transform:rotate(-14deg)}66%{transform:rotate(11deg)}72%{transform:rotate(-8deg)}78%{transform:rotate(5deg)}84%{transform:rotate(0)}}'+
+    '@keyframes lockShackle{0%,55%,100%{transform:translateY(0) rotate(0)}62%,80%{transform:translateY(-2.5px) rotate(-22deg)}}'+
+    '.card .lockbadge svg{transform-origin:50% 60%;animation:lockWiggle 3.6s ease-in-out infinite}'+
+    '.card .lockbadge svg path{transform-box:view-box;transform-origin:16px 11px;animation:lockShackle 3.6s ease-in-out infinite}'+
+    '.card.is-locked-pack:hover .lockbadge svg,.card.is-locked-pack:hover .lockbadge svg path{animation-duration:1.4s}'+
+    '@media (prefers-reduced-motion:reduce){.card .lockbadge svg,.card .lockbadge svg path{animation:none}}'+
+
+    '.btn.is-locked{position:relative;cursor:not-allowed}'+
+    '.btn.is-locked::before{display:none!important;content:none!important}'+
+    '.btn.is-locked .lbl{opacity:.3}'+
+    '.btn.is-locked .btnlock{position:absolute;top:0;right:0;bottom:0;left:0;display:flex;align-items:center;justify-content:center;color:currentColor;opacity:1;pointer-events:none}'+
+    '.btn.is-locked .btnlock svg{width:22px;height:22px;display:block}';
+  document.head.appendChild(st);
+})();
 
 function el(tag,cls,text){var e=document.createElement(tag);if(cls)e.className=cls;if(text!=null)e.textContent=text;return e}
 function pick(o,keys){for(var i=0;i<keys.length;i++){var v=o[keys[i]];if(v!=null&&String(v).trim()!=="")return String(v).trim()}return""}
 function safeUrl(u){try{var x=new URL(u,location.href);return(x.protocol==="https:"||x.protocol==="http:")?x.href:""}catch(e){return""}}
 function absUrlMega(u){var s=String(u||"").trim();return/^https?:\/\//i.test(s)?safeUrl(s):""}
+function lockIcon(cls){var s=el("span",cls);s.setAttribute("aria-hidden","true");s.innerHTML=LOCK_SVG;return s}
 
 function normalize(raw){
   var list=Array.isArray(raw)?raw:(raw&&(raw.scenepacks||raw.packs||raw.items||raw.data))||[];
@@ -24,8 +51,14 @@ function normalize(raw){
       resolution:pick(o,["resolution","cozunurluk","çözünürlük","quality"]),
       fps:pick(o,["fps","FPS","framerate"]),
       cover:pick(o,["cover","image","kapak","thumbnail","thumb"]),
+      coverPos:pick(o,["coverPos","coverPosition"]),
+      folder:pick(o,["folder","klasor","klasör","actor","oyuncu"]),
+      folderCover:pick(o,["folderCover","folder_cover","klasorKapak"]),
+      subfolder:pick(o,["subfolder","altklasor","altKlasor","altklasör","sub"]),
+      subfolderCover:pick(o,["subfolderCover","subfolder_cover","altKlasorKapak"]),
       instagram:safeUrl(pick(o,["instagram","ig","instagramUrl"]))||DEFAULT_IG,
       mega:absUrlMega(pick(o,["mega","download","downloadUrl","link","url"])),
+      locked:o.locked===true||String(o.locked).toLowerCase()==="true",
       date:pick(o,["date","tarih","added"]),
       order:i
     });
@@ -47,23 +80,86 @@ function detailHref(p){
   return DETAIL_PAGE+"?id="+encodeURIComponent(p.id);
 }
 
-function placeholder(p){var d=el("div","ph",(p.title||p.id).trim().charAt(0).toUpperCase());d.setAttribute("aria-hidden","true");return d}
+function placeholder(p){
+  var ph=el("div","ph",(p.title||p.id).trim().charAt(0).toUpperCase());
+  ph.setAttribute("aria-hidden","true");
+  return ph;
+}
 function coverNode(p,alt){
   var wrap=document.createDocumentFragment();
   var src=p.cover&&safeUrl(p.cover);
   if(!src){wrap.appendChild(placeholder(p));return wrap}
   var img=el("img","cover");img.alt=alt||"";img.loading="lazy";img.decoding="async";
+  if(p.coverPos)img.style.objectPosition=p.coverPos;
   img.addEventListener("error",function(){if(img.parentNode)img.parentNode.replaceChild(placeholder(p),img)});
   img.src=src;
   wrap.appendChild(img);return wrap;
 }
 
 function card(p){
-  var a=el("a","card");a.href=detailHref(p);a.setAttribute("aria-label",p.title+(p.character?" — "+p.character:""));
+  var a=el("a","card");a.href=detailHref(p);a.setAttribute("aria-label",p.title+(p.character?" - "+p.character:""));
+  if(p.locked)a.classList.add("is-locked-pack");
   a.appendChild(coverNode(p,""));
+  if(p.locked)a.appendChild(lockIcon("lockbadge"));
   var info=el("div","info");
   info.appendChild(el("div","t",p.title));
   if(p.character)info.appendChild(el("div","c",p.character));
+  a.appendChild(info);return a;
+}
+
+/* ---- klasörler ---- */
+function fslug(s){
+  return String(s).toLowerCase().replace(/ı/g,"i").replace(/ğ/g,"g").replace(/ü/g,"u").replace(/ş/g,"s").replace(/ö/g,"o").replace(/ç/g,"c")
+    .replace(/[^a-z0-9]+/g,"-").replace(/^-+|-+$/g,"");
+}
+function norm(s){return fslug(s).replace(/-/g,"")}
+function folderOf(p){return p.folder||"Other"}
+function groupFolders(list){
+  var map={},out=[];
+  list.forEach(function(p){
+    var n=folderOf(p),k=fslug(n)||"other";
+    if(!map[k]){map[k]={name:n,slug:k,packs:[],cover:""};out.push(map[k])}
+    var f=map[k];f.packs.push(p);
+    if(!f.cover&&p.folderCover)f.cover=p.folderCover;
+  });
+  out.forEach(function(f){
+    if(f.cover)return;
+    for(var i=0;i<f.packs.length;i++){if(f.packs[i].cover){f.cover=f.packs[i].cover;break}}
+  });
+  return out;
+}
+function folderCard(f){
+  var a=el("a","card");a.href="scenepacks.html?f="+encodeURIComponent(f.slug);
+  a.setAttribute("aria-label",f.name+" scenepacks");
+  a.appendChild(coverNode({title:f.name,id:f.name,cover:f.cover},""));
+  var info=el("div","info");
+  info.appendChild(el("div","t",f.name+" Scenepacks"));
+  info.appendChild(el("div","c",f.packs.length+(f.packs.length===1?" scenepack":" scenepacks")));
+  a.appendChild(info);return a;
+}
+
+function groupSubs(packs){
+  var map={},out=[];
+  packs.forEach(function(p){
+    if(!p.subfolder)return;
+    var k=fslug(p.subfolder)||"other";
+    if(!map[k]){map[k]={name:p.subfolder,slug:k,packs:[],cover:""};out.push(map[k])}
+    var g=map[k];g.packs.push(p);
+    if(!g.cover&&p.subfolderCover)g.cover=p.subfolderCover;
+  });
+  out.forEach(function(g){
+    if(g.cover)return;
+    for(var i=0;i<g.packs.length;i++){if(g.packs[i].cover){g.cover=g.packs[i].cover;break}}
+  });
+  return out;
+}
+function subfolderCard(parentSlug,g){
+  var a=el("a","card");a.href="scenepacks.html?f="+encodeURIComponent(parentSlug)+"&s="+encodeURIComponent(g.slug);
+  a.setAttribute("aria-label",g.name+" scenepacks");
+  a.appendChild(coverNode({title:g.name,id:g.name,cover:g.cover},""));
+  var info=el("div","info");
+  info.appendChild(el("div","t",g.name+" Scenepacks"));
+  info.appendChild(el("div","c",g.packs.length+(g.packs.length===1?" scenepack":" scenepacks")));
   a.appendChild(info);return a;
 }
 
@@ -83,6 +179,22 @@ function sortLatest(list){
   });
 }
 
+function stagger(host){
+  Array.prototype.forEach.call(host.children,function(c,i){c.style.setProperty("--i",Math.min(i,12))});
+}
+
+function spotlight(host){
+  if(host._spot)return;
+  host._spot=1;
+  host.addEventListener("pointermove",function(e){
+    var c=e.target.closest?e.target.closest(".card"):null;
+    if(!c)return;
+    var r=c.getBoundingClientRect();
+    c.style.setProperty("--mx",(e.clientX-r.left)+"px");
+    c.style.setProperty("--my",(e.clientY-r.top)+"px");
+  });
+}
+
 function renderGrid(host,limit){
   skeleton(host,limit||8);
   load().then(function(all){
@@ -90,68 +202,30 @@ function renderGrid(host,limit){
     var list=limit?sortLatest(all).slice(0,limit):all;
     if(!list.length){host.appendChild(state("No scenepacks yet."));host.classList.remove("grid");return}
     var q=document.getElementById("search");
+    var hasFolders=!limit&&list.some(function(p){return p.folder});
+    var params=new URLSearchParams(location.search);
+    var fkey=params.get("f")||"";
+    var skey=params.get("s")||"";
+    var curF=null,curS=null;
+
+    if(hasFolders&&fkey){
+      groupFolders(list).forEach(function(f){if(f.slug===fkey)curF=f});
+      if(curF&&skey){groupSubs(curF.packs).forEach(function(g){if(g.slug===skey)curS=g})}
+      var shown=curS||curF;
+      if(shown){
+        var h2=document.querySelector(".sec-head h2");
+        if(h2)h2.textContent=shown.name+" Scenepacks";
+        document.title=shown.name+" Scenepacks | KRAIIILEFX";
+      }
+      var inSub=!!(curS&&curF);
+      var back=el("a","btn ghost",inSub?"BACK TO "+curF.name.toUpperCase():"ALL SCENEPACKS");
+      back.href=inSub?"scenepacks.html?f="+encodeURIComponent(curF.slug):"scenepacks.html";
+      back.style.marginBottom="24px";
+      var sb=document.querySelector(".searchbox")||host;
+      sb.parentNode.insertBefore(back,sb);
+    }
+
     function draw(){
       var term=q?q.value.trim().toLowerCase():"";
-      var shown=!term?list:list.filter(function(p){
-        return(p.title+" "+p.character+" "+p.id).toLowerCase().indexOf(term)!==-1;
-      });
-      host.textContent="";
-      if(!shown.length){host.appendChild(el("p","empty","No scenepacks found."));return}
-      shown.forEach(function(p){host.appendChild(card(p))});
-    }
-    if(q)q.oninput=draw;
-    draw();
-  }).catch(function(){
-    host.classList.remove("grid");host.textContent="";
-    host.appendChild(state("Scenepacks could not be loaded. Check your connection and try again.",function(){host.classList.add("grid");renderGrid(host,limit)}));
-  });
-}
-
-function renderDetail(host){
-  var id=new URLSearchParams(location.search).get("id")||"";
-  host.textContent="";host.appendChild(el("p","kicker","Loading…"));
-  load().then(function(all){
-    var p=all.filter(function(x){return x.id===id})[0]||all.filter(function(x){return x.id.toLowerCase()===id.toLowerCase()})[0];
-    host.textContent="";
-    if(!p){
-      host.appendChild(state(id?"This scenepack does not exist.":"No scenepack selected."));
-      var b=el("a","btn","ALL SCENEPACKS");b.href="scenepacks.html";host.appendChild(b);return;
-    }
-    document.title=p.title+(p.character?" — "+p.character:"")+" | KRAIIILEFX";
-    var box=el("div","detail");
-    var art=el("div","art");art.appendChild(coverNode(p,p.title));box.appendChild(art);
-    var side=el("div");
-    side.appendChild(el("p","kicker","Scenepack"));
-    side.appendChild(el("h1",null,p.title));
-    var dl=el("dl","facts");
-    [["Movie / Series",p.title],["Character",p.character],["Resolution",p.resolution],["Frame rate",p.fps]].forEach(function(f){
-      if(!f[1])return;var d=el("div");d.appendChild(el("dt",null,f[0]));d.appendChild(el("dd",null,f[1]));dl.appendChild(d)});
-    side.appendChild(dl);
-    var note=el("div","note");
-    note.appendChild(el("strong",null,"Before downloading"));
-    note.appendChild(el("p",null,"To get the download password, follow @kraiiilefx on Instagram and message the password request there."));
-    side.appendChild(note);
-    var act=el("div","actions");
-    var d=el("a","btn","DOWNLOAD SCENEPACK");
-    if(p.mega){d.href=p.mega;d.target="_blank";d.rel="noopener noreferrer"}else{d.setAttribute("aria-disabled","true");d.removeAttribute("href")}
-    var ig=el("a","btn ghost","GET PASSWORD ON INSTAGRAM");ig.href=p.instagram;ig.target="_blank";ig.rel="noopener noreferrer";
-    act.appendChild(d);act.appendChild(ig);side.appendChild(act);
-    box.appendChild(side);host.appendChild(box);
-  }).catch(function(){
-    host.textContent="";
-    host.appendChild(state("This scenepack could not be loaded. Check your connection and try again.",function(){renderDetail(host)}));
-  });
-}
-
-window.addEventListener("error",function(){
-  var m=document.querySelector("main");
-  if(m&&!m.children.length&&!m.textContent.trim())m.appendChild(state("Something went wrong. Reload the page."));
-});
-
-document.addEventListener("DOMContentLoaded",function(){
-  var g=document.getElementById("grid");if(g)renderGrid(g,0);
-  var l=document.getElementById("latest");if(l)renderGrid(l,4);
-  var d=document.getElementById("detail");if(d)renderDetail(d);
-  var y=document.getElementById("year");if(y)y.textContent=new Date().getFullYear();
-});
-})();
+      var nt=norm(term);
+      var groups=hasFolders?groupFolders(list):[];
