@@ -128,21 +128,23 @@
     "date": "2026-10-26"
   },
   {
-    "id": "GhostMW4",
-    "name": "Call of Duty: MW4",
-    "production": "Call of Duty: MW4",
-    "character": "Simon \"Ghost\" Riley",
-    "resolution": "4K Upscaled",
-    "fps": "60 FPS",
-    "cover": "assets/covers/ghost.gif",
-    "instructions": "follow @kraiiilefx on instagram to get the download password.",
-    "instagram": "https://www.instagram.com/kraiiilefx/",
-    "mega": "https://mega.nz/file/R3ZwjYBS",
-    "locked": false,
-    "folder": "Call of Duty",
-    "date": "2026-11-12",
-    "subfolder": "Ghost",
-    "subfolderCover": "assets/covers/ghost.gif"
+   {
+  "id": "GhostMW4",
+  "name": "Ghost MW4 Scenepack",
+  "production": "Call of Duty: MW4",
+  "character": "Simon \"Ghost\" Riley",
+  "resolution": "4K Upscaled",
+  "fps": "60 FPS",
+  "cover": "assets/covers/ghost.gif",
+  "instructions": "follow @kraiiilefx on instagram to get the download password.",
+  "instagram": "https://www.instagram.com/kraiiilefx/",
+  "mega": "https://mega.nz/file/R3ZwjYBS",
+  "locked": false,
+  "folder": "Call of Duty",
+  "subfolder": "Ghost",
+  "subfolderCover": "assets/covers/ghost.gif",
+  "date": "2026-11-12"
+}
   },
   {
     "id": "PhillipGraves",
