@@ -1,4 +1,4 @@
-/* KRAIIILEFX folder + pack cards (kx-*) — v2: animasyonlu kartlar + popup */
+/* KRAIIILEFX folder + pack cards (kx-*) — v2 */
 .searchbox .search,
 .searchbox .search:focus,
 .searchbox .search:focus-visible { outline: none !important; box-shadow: none !important; }
@@ -11,7 +11,7 @@
 .kx-grid { display: grid; gap: 20px; grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); margin-top: 22px; }
 @media (max-width: 520px) { .kx-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; } }
 
-/* ================= KART ================= */
+/* ===== KART ===== */
 .kx-card {
   --ease: cubic-bezier(.22, 1, .36, 1);
   --mx: 50%; --my: 0%; --rx: 0deg; --ry: 0deg; --lift: 0px;
@@ -23,32 +23,29 @@
   animation: kxIn .9s var(--ease) backwards; animation-delay: calc(var(--i, 0) * 70ms);
 }
 @keyframes kxIn { from { opacity: 0; transform: translateY(28px) scale(.97); } to { opacity: 1; transform: none; } }
-
 .kx-card:hover { --lift: -8px; border-color: rgba(255,255,255,.28); box-shadow: 0 28px 50px -18px rgba(0,0,0,.85); }
 .kx-card:active { --lift: -3px; }
 .kx-card:focus-visible { outline: 2px solid #efe9da; outline-offset: 3px; }
 
-.kx-art, .kx-art img { position: absolute; inset: 0; width: 100%; height: 100%; }
+.kx-art, .kx-art img, .kx-art video { position: absolute; inset: 0; width: 100%; height: 100%; }
 .kx-art { background: radial-gradient(120% 80% at 50% 0%, rgba(255,255,255,.07), rgba(255,255,255,0) 60%), #121212; }
 .kx-art[data-missing]::before {
   content: "Gif yok: " attr(data-missing); position: absolute; left: 10px; right: 10px; top: 42%;
   text-align: center; font-size: 11px; color: #8a8a8a; word-break: break-all;
 }
 .kx-m-art { background: #121212; }
-.kx-art img {
+.kx-art img, .kx-art video {
   object-fit: cover; filter: grayscale(1) brightness(.8);
   transition: transform 1.4s var(--ease), filter .7s ease;
 }
-.kx-card:hover .kx-art img { transform: scale(1.07); filter: grayscale(0) brightness(1); }
+.kx-card:hover .kx-art img, .kx-card:hover .kx-art video { transform: scale(1.07); filter: grayscale(0) brightness(1); }
 
-/* alt gölge + imleci takip eden ışık */
 .kx-card::after {
   content: ""; position: absolute; inset: 0; pointer-events: none; z-index: 2;
   background:
     radial-gradient(220px circle at var(--mx) var(--my), rgba(255,255,255,.14), transparent 60%),
     linear-gradient(to top, rgba(0,0,0,.9) 0%, rgba(0,0,0,.3) 45%, rgba(0,0,0,0) 100%);
 }
-/* imleci takip eden ince ışıklı kenar */
 .kx-card::before {
   content: ""; position: absolute; inset: 0; z-index: 4; border-radius: inherit; padding: 1px; pointer-events: none;
   background: radial-gradient(200px circle at var(--mx) var(--my), rgba(239,233,218,.8), transparent 65%);
@@ -74,22 +71,20 @@
 .kx-badge svg { width: 17px; height: 17px; }
 .kx-card:hover .kx-badge { transform: rotate(-8deg) scale(1.12); background: #f5f3ee; color: #0a0a0a; }
 
-/* kilitli kartlar */
 .kx-card.is-locked { cursor: default; }
-.kx-card.is-locked .kx-art img { filter: grayscale(1) brightness(.7); }
-.kx-card.is-locked:hover .kx-art img { transform: scale(1.03); filter: grayscale(1) brightness(.85); }
+.kx-card.is-locked .kx-art img, .kx-card.is-locked .kx-art video { filter: grayscale(1) brightness(.7); }
+.kx-card.is-locked:hover .kx-art img, .kx-card.is-locked:hover .kx-art video { transform: scale(1.03); filter: grayscale(1) brightness(.85); }
 .kx-card.is-locked .kx-badge { top: 10px; right: 10px; background: rgba(10,10,10,.8); animation: kxPulse 2.6s ease-in-out infinite; }
 .kx-card.is-locked:hover .kx-badge { background: rgba(10,10,10,.8); color: #fff; }
 @keyframes kxPulse {
   0%, 100% { box-shadow: 0 0 0 0 rgba(255,255,255,0); }
   50% { box-shadow: 0 0 14px 2px rgba(255,255,255,.28); }
 }
-.kx-m-art .kx-art img { filter: none; }
+.kx-m-art .kx-art img, .kx-m-art .kx-art video { filter: none; }
 
-/* telefonda hover yok: normal kartlar renkli, kilitli kartlar siyah-beyaz kalsin */
 @media (hover: none) {
-  .kx-art img { filter: none; }
-  .kx-card.is-locked .kx-art img { filter: grayscale(1) brightness(.7); }
+  .kx-art img, .kx-art video { filter: none; }
+  .kx-card.is-locked .kx-art img, .kx-card.is-locked .kx-art video { filter: grayscale(1) brightness(.7); }
 }
 @media (max-width: 520px) {
   .kx-card { border-radius: 14px; }
@@ -99,20 +94,18 @@
   .kx-t { font-size: 11.5px; }
   .kx-c { font-size: 12px; margin-top: 3px; }
 }
-
 .kx-empty { grid-column: 1 / -1; color: #8a8a8a; text-align: center; padding: 40px 0; }
 
-/* ================= POPUP ================= */
+/* ===== POPUP ===== */
 .kx-modal {
   --ease: cubic-bezier(.22, 1, .36, 1);
   position: fixed; inset: 0; z-index: 100; display: none; place-items: center; padding: 20px;
   background: rgba(5,5,6,.6);
 }
-.kx-modal.open {
-  display: grid; animation: kxFade .4s ease both;
-  -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px);
-}
+.kx-modal.open { display: grid; animation: kxFade .4s ease both; -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px); }
 @keyframes kxFade { from { opacity: 0; } to { opacity: 1; } }
+.kx-modal.open.closing { animation: kxFadeOut .26s ease both; }
+@keyframes kxFadeOut { from { opacity: 1; } to { opacity: 0; } }
 
 .kx-box {
   position: relative; display: flex; gap: 26px; width: min(740px, 100%); max-height: 90vh; overflow: auto;
@@ -123,6 +116,8 @@
 }
 .kx-modal.open .kx-box { animation: kxPop .7s var(--ease) both; }
 @keyframes kxPop { from { opacity: 0; transform: translateY(44px) scale(.92); } to { opacity: 1; transform: none; } }
+.kx-modal.open.closing .kx-box { animation: kxPopOut .26s ease both; }
+@keyframes kxPopOut { from { opacity: 1; transform: none; } to { opacity: 0; transform: translateY(20px) scale(.96); } }
 
 .kx-close {
   position: absolute; top: 12px; right: 14px; z-index: 3; width: 34px; height: 34px; border: 0; border-radius: 50%;
@@ -132,7 +127,6 @@
 .kx-close:hover { transform: rotate(90deg); background: rgba(255,255,255,.16); }
 .kx-close:focus-visible { outline: 2px solid #efe9da; }
 
-/* görsel: yukarıdan aşağı açılır, imleçle hafif eğilir */
 .kx-m-art {
   --rx: 0deg; --ry: 0deg; --mx: 50%; --my: 30%;
   position: relative; flex: 0 0 250px; aspect-ratio: 3 / 4; border-radius: 16px; overflow: hidden;
@@ -146,7 +140,6 @@
   background: radial-gradient(circle at var(--mx) var(--my), rgba(255,255,255,.18), transparent 45%); mix-blend-mode: overlay;
 }
 
-/* yazılar sırayla yükselir */
 .kx-m-txt { flex: 1; min-width: 0; padding: 6px 28px 0 0; }
 .kx-modal.open .kx-m-txt > * { animation: kxRise .8s var(--ease) both; }
 .kx-modal.open .kx-m-txt > :nth-child(1) { animation-delay: .22s; }
@@ -154,7 +147,6 @@
 .kx-modal.open .kx-m-txt > :nth-child(3) { animation-delay: .38s; }
 .kx-modal.open .kx-m-txt > :nth-child(4) { animation-delay: .46s; }
 .kx-modal.open .kx-m-txt > :nth-child(5) { animation-delay: .54s; }
-.kx-modal.open .kx-m-txt > :nth-child(n+6) { animation-delay: .62s; }
 @keyframes kxRise { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: none; } }
 
 .kx-m-txt h3 { margin: 0 0 6px; font-family: 'Unbounded', sans-serif; font-size: 19px; font-weight: 500; letter-spacing: -.01em; }
@@ -173,7 +165,6 @@
 .kx-btn:focus-visible { outline: 2px solid #efe9da; outline-offset: 2px; }
 .kx-btn.kx-main { background: #f5f3ee; color: #0a0a0a; border-color: #f5f3ee; }
 .kx-btn.kx-main:hover { background: #fff; }
-/* ana butonda parlama geçer */
 .kx-btn.kx-main::after {
   content: ""; position: absolute; top: 0; bottom: 0; left: -60%; width: 40%; transform: skewX(-20deg); pointer-events: none;
   background: linear-gradient(100deg, transparent, rgba(255,255,255,.85), transparent);
@@ -187,7 +178,6 @@
   .kx-m-art { flex-basis: auto; width: 60%; }
   .kx-m-txt { padding-right: 0; }
 }
-
 @media (prefers-reduced-motion: reduce) {
   .kx-card, .kx-card *, .kx-modal, .kx-modal *, .kx-btn { animation-duration: .01s !important; animation-delay: 0s !important; transition-duration: .01s !important; }
 }
