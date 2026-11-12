@@ -1,60 +1,78 @@
-<!DOCTYPE html>
-<html lang="tr">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#000000">
-<title>KRAIIILEFX | Scenepacks</title>
-<style>
-  :root { --bg:#000; --fg:#fff; --muted:#9a9a9a; --line:#2a2a2a; }
-  * { box-sizing: border-box; }
-  body { margin:0; background:var(--bg); color:var(--fg); font-family: system-ui, sans-serif; padding: 24px; }
-  a { color: inherit; }
-  .back { color: var(--muted); text-decoration: none; }
-  .back:hover { color: var(--fg); }
-  h1 { font-size: clamp(2rem, 6vw, 3.5rem); margin: 32px 0 24px; }
-  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 16px; }
-  .card { display:block; padding: 20px; border: 1px solid var(--line); border-radius: 12px; text-decoration: none; }
-  .card:hover { border-color: var(--fg); }
-  .empty { color: var(--muted); }
-</style>
-<script data-goatcounter="https://kraiiilefx.goatcounter.com/count"
-        async src="//gc.zgo.at/count.js"></script>
-</head>
-<body>
-  <a class="back" href="./scenepacks.html">&larr; Scenepacks</a>
-  <h1 id="title"></h1>
-  <div class="grid" id="list"></div>
-  <p class="empty" id="empty" hidden>Bu klasöre henüz scenepack eklenmedi.</p>
+/* KRAIIILEFX folder + pack cards (kx-*) */
+.searchbox .search,
+.searchbox .search:focus,
+.searchbox .search:focus-visible { outline: none !important; box-shadow: none !important; }
 
-<script>
-  // Yeni klasör eklemek için buraya bir satır ekle.
-  // packs: bu klasörün içindeki scenepack id'leri (scenepacks.html'deki pack.id ile aynı)
-  const FOLDERS = {
-    JonBernthal: { name: "Jon Bernthal", packs: [] },
-    CallOfDuty:  { name: "Call of Duty", packs: [] }
-    // örnek: CallOfDuty: { name: "Call of Duty", packs: [{ id: "Ghost", name: "Ghost" }] }
-  };
+.kx-crumbs { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin: 0 0 20px; font-size: 14px; color: #8a8a8a; }
+.kx-crumbs a { color: #cfcfcf; text-decoration: none; }
+.kx-crumbs a:hover { color: #fff; }
+.kx-crumbs b { color: #fff; font-weight: 500; }
 
-  const id = new URLSearchParams(location.search).get("id");
-  const folder = FOLDERS[id];
-  const title = document.getElementById("title");
-  const list = document.getElementById("list");
+.kx-grid { display: grid; gap: 18px; grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); margin-top: 22px; }
+@media (max-width: 520px) { .kx-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; } }
 
-  if (!folder) {
-    title.textContent = "Klasör bulunamadı";
-  } else {
-    title.textContent = folder.name + " Scenepacks";
-    document.title = folder.name + " Scenepacks | KRAIIILEFX";
-    if (!folder.packs.length) document.getElementById("empty").hidden = false;
-    folder.packs.forEach(function (p) {
-      const a = document.createElement("a");
-      a.className = "card";
-      a.textContent = p.name || p.id;
-      a.href = "./kraiiilefxscenepack.html?id=" + encodeURIComponent(p.id);
-      list.appendChild(a);
-    });
-  }
-</script>
-</body>
-</html>
+.kx-card {
+  position: relative; display: block; aspect-ratio: 3 / 4; overflow: hidden;
+  border-radius: 12px; border: 1px solid rgba(255,255,255,.12); background: #0d0d0d;
+  color: #fff; text-decoration: none; -webkit-tap-highlight-color: transparent;
+  animation: kxIn .5s ease both; animation-delay: calc(var(--i, 0) * 50ms);
+}
+@keyframes kxIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+.kx-art, .kx-art img { position: absolute; inset: 0; width: 100%; height: 100%; }
+.kx-art img { object-fit: cover; transition: transform 1s cubic-bezier(.2,.7,.2,1), filter .5s ease; }
+.kx-card::after {
+  content: ""; position: absolute; inset: 0; pointer-events: none;
+  background: linear-gradient(to top, rgba(0,0,0,.9) 0%, rgba(0,0,0,.3) 45%, rgba(0,0,0,0) 100%);
+}
+.kx-card:hover .kx-art img { transform: scale(1.05); }
+.kx-card:hover { border-color: rgba(255,255,255,.35); }
+
+.kx-info { position: absolute; left: 0; right: 0; bottom: 0; z-index: 3; padding: 14px; }
+.kx-t { font-family: 'Unbounded', sans-serif; font-size: 13px; font-weight: 500; line-height: 1.3; }
+.kx-c { margin-top: 5px; font-size: 13px; color: #b5b5b5; }
+
+.kx-badge {
+  position: absolute; z-index: 3; top: 12px; right: 12px; width: 32px; height: 32px;
+  display: grid; place-items: center; border-radius: 50%; color: #fff;
+  background: rgba(15,15,15,.75); border: 1px solid rgba(255,255,255,.22);
+  -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px);
+}
+.kx-badge svg { width: 17px; height: 17px; }
+
+.kx-card.is-locked { cursor: default; }
+.kx-card.is-locked .kx-art img { filter: grayscale(1) brightness(.7); }
+.kx-card.is-locked:hover .kx-art img { transform: none; }
+/* kilit: yuzu kapatmasin diye sag ust kosede, kucuk */
+.kx-card.is-locked .kx-badge { top: 10px; right: 10px; width: 32px; height: 32px; background: rgba(10,10,10,.8); }
+@media (max-width: 520px) {
+  .kx-badge { top: 8px; right: 8px; width: 26px; height: 26px; }
+  .kx-badge svg { width: 14px; height: 14px; }
+  .kx-card.is-locked .kx-badge { top: 8px; right: 8px; width: 26px; height: 26px; }
+  .kx-info { padding: 10px; }
+  .kx-t { font-size: 11.5px; }
+  .kx-c { font-size: 12px; margin-top: 3px; }
+}
+
+.kx-empty { grid-column: 1 / -1; color: #8a8a8a; text-align: center; padding: 40px 0; }
+
+/* modal */
+.kx-modal { position: fixed; inset: 0; z-index: 100; display: none; place-items: center; padding: 20px; background: rgba(0,0,0,.8); }
+.kx-modal.open { display: grid; }
+.kx-box {
+  position: relative; display: flex; gap: 22px; width: min(720px, 100%); max-height: 90vh; overflow: auto;
+  padding: 20px; border-radius: 16px; background: #111; border: 1px solid rgba(255,255,255,.14); color: #fff;
+}
+.kx-close { position: absolute; top: 8px; right: 12px; border: 0; background: none; color: #fff; font-size: 28px; cursor: pointer; }
+.kx-m-art { position: relative; flex: 0 0 240px; aspect-ratio: 3 / 4; border-radius: 10px; overflow: hidden; }
+.kx-m-txt { flex: 1; min-width: 0; padding-top: 6px; }
+.kx-m-txt h3 { margin: 0 0 6px; font-family: 'Unbounded', sans-serif; font-size: 18px; font-weight: 500; }
+.kx-m-sub { margin: 0 0 14px; color: #b5b5b5; }
+.kx-chips { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px; }
+.kx-chips span { padding: 5px 11px; border-radius: 99px; border: 1px solid rgba(255,255,255,.2); font-size: 12px; }
+.kx-m-note { margin: 0 0 18px; font-size: 14px; color: #cfcfcf; line-height: 1.5; }
+.kx-btns { display: flex; gap: 10px; flex-wrap: wrap; }
+.kx-btn { padding: 10px 18px; border-radius: 10px; border: 1px solid rgba(255,255,255,.3); color: #fff; text-decoration: none; font-size: 14px; }
+.kx-btn:hover { background: rgba(255,255,255,.1); }
+.kx-btn.kx-main { background: #fff; color: #000; border-color: #fff; }
+.kx-btn.kx-main:hover { background: #e5e5e5; }
+@media (max-width: 600px) { .kx-box { flex-direction: column; } .kx-m-art { flex-basis: auto; width: 55%; } }
