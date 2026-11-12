@@ -143,5 +143,20 @@
     "locked": true,
     "folder": "Call of Duty",
     "date": "2026-11-10"
+  },
+  {
+    "id": "SimonGhostRiley",
+    "name": "Call of Duty",
+    "production": "Call of Duty",
+    "character": "Simon \"Ghost\" Riley",
+    "resolution": "4K Upscaled",
+    "fps": "60 FPS",
+    "cover": "assets/covers/ghost.gif",
+    "instructions": "follow @kraiiilefx on instagram to get the download password.",
+    "instagram": "https://www.instagram.com/kraiiilefx/",
+    "mega": "",
+    "locked": false,
+    "folder": "Call of Duty",
+    "date": "2026-11-12"
   }
 ]
