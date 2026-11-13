@@ -100,7 +100,8 @@
 
   /* ---------- render ---------- */
   function setCrumbs(r) {
-    var h = '<a href="#/">Scenepacks</a>';
+    /* Soldaki "Scenepacks" yazisi direkt ana sayfaya (index.html) gider */
+    var h = '<a href="index.html">Scenepacks</a>';
     if (r.folder) {
       h += '<span>/</span>' + (r.sub ? '<a href="#/' + enc(r.folder) + '">' + esc(r.folder) + '</a>' : '<b>' + esc(r.folder) + '</b>');
     }
