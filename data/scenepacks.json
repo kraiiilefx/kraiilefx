@@ -162,6 +162,23 @@
     "date": "2026-11-12"
   },
   {
+    "id": "PriceMW4",
+    "name": "Captain John Price Modern Warfare 4 Scenepack",
+    "production": "Call of Duty: MW4",
+    "character": "Captain John Price",
+    "resolution": "4K Upscaled",
+    "fps": "60 FPS",
+    "cover": "assets/covers/price.gif",
+    "instructions": "follow @kraiiilefx on instagram to get the download password.",
+    "instagram": "https://www.instagram.com/kraiiilefx/",
+    "mega": "",
+    "locked": true,
+    "folder": "Call of Duty",
+    "subfolder": "Captain John Price",
+    "subfolderCover": "assets/covers/price-folder.gif",
+    "date": "2026-11-14"
+  },
+  {
     "id": "PhillipGraves",
     "name": "Phillip Graves",
     "production": "Call of Duty: Modern Warfare 2",
