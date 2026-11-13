@@ -3,78 +3,105 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>KRAIIILEFX | Video editor & scenepacks</title>
-<meta name="description" content="KRAIIILEFX makes scenepacks from films, series, games and characters for video editors.">
-<meta name="theme-color" content="#000000">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600&family=Unbounded:wght@300;400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/css/style.css?v=3">
-<link rel="stylesheet" href="assets/css/custom.css?v=3">
+<title>KRAIIILEFX</title>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;500&family=Unbounded:wght@200;300&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0d0d0d;--fg:#ffffff;--mute:#7a7a7e;--line:#2e2e30;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);color-scheme:dark}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+@media (prefers-color-scheme:light){:root:not([data-theme="dark"]){--bg:#fafaf8;--fg:#0d0d0d;--mute:#85858a;--line:#dcdcd9;color-scheme:light}}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;background:var(--bg);color:var(--fg);font-family:'Manrope',system-ui,sans-serif;font-weight:300;display:flex;flex-direction:column;text-align:center}
+header{display:flex;justify-content:space-between;align-items:center;padding:28px 32px;font-size:14px}
+header .m{font-family:'Unbounded','Manrope',sans-serif;font-weight:300;letter-spacing:.2em;font-size:12px}
+header a{color:var(--mute);text-decoration:none;margin-left:24px}
+header a:hover,header a.on{color:var(--fg)}
+main{flex:1;display:flex;align-items:center;justify-content:center;padding:24px}
+.stage{width:min(860px,94vw)}
+h1{margin:0;font-family:'Unbounded','Manrope',system-ui,sans-serif;font-weight:200;font-size:clamp(28px,8.2vw,92px);letter-spacing:.05em;line-height:1.1;color:var(--fg);white-space:nowrap}
+.tag{margin:28px 0 0;font-size:18px;color:var(--mute)}
+.btn{display:inline-block;margin-top:26px;padding:13px 28px;border:1px solid var(--mute);border-radius:999px;background:none;color:var(--fg);font:inherit;font-weight:500;font-size:14px;letter-spacing:.06em;cursor:pointer;transition:background .2s,color .2s}
+.btn:hover,.btn:focus-visible{background:var(--fg);color:var(--bg)}
+.tray{display:grid;grid-template-rows:0fr;transition:grid-template-rows .5s cubic-bezier(.3,.7,.2,1)}
+.tray>div{overflow:hidden;min-height:0}
+.stage:hover .tray,.stage:focus-within .tray,.stage.open .tray{grid-template-rows:1fr}
+.cards{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;width:min(420px,100%);margin:0 auto;padding-top:30px;opacity:0;transition:opacity .4s .1s}
+.stage:hover .cards,.stage:focus-within .cards,.stage.open .cards{opacity:1}
+.card{aspect-ratio:4/5;background:none;border:1px solid var(--line);padding:0;cursor:pointer;position:relative;overflow:hidden;transition:border-color .25s}
+.card{display:block;color:#fff;text-decoration:none;text-align:left}
+.card i{position:absolute;inset:0;opacity:0;transition:opacity .35s}
+.card img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
+.card:hover i,.card:focus-visible i{opacity:1}
+.card:hover,.card:focus-visible{border-color:var(--fg)}
+.card .lb{position:absolute;left:0;right:0;bottom:0;padding:40px 14px 14px;background:linear-gradient(to top,rgba(0,0,0,.78),transparent);display:flex;flex-direction:column;gap:3px}
+.card .lb b{font-weight:500;font-size:13px;letter-spacing:.04em}
+.card .lb small{font-size:11px;opacity:.7;letter-spacing:.06em}
+.card .lk{position:absolute;top:12px;right:12px;width:18px;height:18px;fill:none;stroke:#fff;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round;filter:drop-shadow(0 1px 3px rgba(0,0,0,.6))}
+.card.locked{cursor:default}
+.card.locked img{filter:grayscale(.6) brightness(.6)}
+@media (hover:none){.card i{opacity:1}}
+/* kart animasyonlari */
+.card{opacity:0;translate:0 22px;scale:1;box-shadow:0 0 0 rgba(0,0,0,0);
+  transition:opacity .55s calc(.15s + var(--i,0)*.12s) ease,translate .7s calc(.15s + var(--i,0)*.12s) cubic-bezier(.2,.8,.2,1),scale .45s cubic-bezier(.2,.8,.2,1),border-color .25s,box-shadow .45s}
+.stage:hover .card,.stage:focus-within .card,.stage.open .card{opacity:1;translate:0 0}
+.card:hover,.card:focus-visible{scale:1.04;box-shadow:0 18px 40px -12px rgba(0,0,0,.7)}
+.card img{transform:scale(1.14);transition:transform 1.1s cubic-bezier(.2,.8,.2,1)}
+.card:hover img,.card:focus-visible img{transform:scale(1)}
+.card .lb{transform:translateY(12px);opacity:0;transition:transform .45s .05s cubic-bezier(.2,.8,.2,1),opacity .45s .05s}
+.card:hover .lb,.card:focus-visible .lb{transform:none;opacity:1}
+@media (hover:none){.card .lb{transform:none;opacity:1}.card img{transform:none}}
+@media (prefers-reduced-motion:reduce){.card{opacity:1;translate:none}.card img,.card .lb{transform:none}}
+
+.soc{display:flex;gap:12px;justify-content:center;margin-top:34px}
+.soc a{width:44px;height:44px;border:1px solid var(--line);border-radius:50%;display:grid;place-items:center;color:var(--mute);transition:color .2s,border-color .2s}
+.soc a:hover{color:var(--fg);border-color:var(--mute)}
+.soc svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+footer{padding:24px 32px 32px;font-size:12px;color:var(--mute);display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px}
+footer a{color:inherit;text-decoration:none;margin-left:16px}
+footer a:hover{color:var(--fg)}
+:focus-visible{outline:1px solid var(--fg);outline-offset:4px}
+@media (max-width:640px){header{padding:20px}footer{padding:20px;justify-content:center}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
 </head>
 <body>
+<header><span class="m">KRAIIILEFX</span><nav><a class="on" href="#">Home</a><a href="scenepacks.html">Scenepacks</a></nav></header>
 
-<!-- Sosyal ikon seti (sayfada bir kez tanımlanır, her yerde <use> ile kullanılır) -->
-<svg width="0" height="0" style="position:absolute" aria-hidden="true">
-  <symbol id="i-ig" viewBox="0 0 24 24">
-    <g fill="none" stroke="currentColor" stroke-width="1.8">
-      <rect x="3" y="3" width="18" height="18" rx="5"/>
-      <circle cx="12" cy="12" r="4"/>
-    </g>
-    <circle cx="17.5" cy="6.5" r="1.1" fill="currentColor"/>
-  </symbol>
-  <symbol id="i-tt" viewBox="0 0 24 24">
-    <path fill="currentColor" d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z"/>
-  </symbol>
-</svg>
-
-<header class="top"><div class="wrap">
-<a class="logo" href="index.html">KRAIIILEFX</a>
-<nav class="nav" aria-label="Main"><a href="index.html" aria-current="page">Home</a><a href="scenepacks.html">Scenepacks</a><a href="#" id="socialsBtn">Socials</a></nav>
-</div></header>
 <main>
-<section class="hero"><div class="wrap">
-<h1 class="mark" aria-label="KRAIIILEFX"><span style="animation-delay:0.00s">K</span><span style="animation-delay:0.05s">R</span><span style="animation-delay:0.10s">A</span><span style="animation-delay:0.15s">I</span><span style="animation-delay:0.20s">I</span><span style="animation-delay:0.25s">I</span><span style="animation-delay:0.30s">L</span><span style="animation-delay:0.35s">E</span><span style="animation-delay:0.40s">F</span><span style="animation-delay:0.45s">X</span></h1>
-<p class="lead">More game, series and film scenepacks are coming.</p>
-<a class="btn" href="scenepacks.html">EXPLORE SCENEPACKS</a>
-<div class="social-links">
-  <a href="https://www.instagram.com/kraiiilefx/" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><svg aria-hidden="true"><use href="#i-ig"/></svg></a>
-  <a href="https://www.tiktok.com/@kraiiilefx?lang=tr-TR" target="_blank" rel="noopener noreferrer" aria-label="TikTok"><svg aria-hidden="true"><use href="#i-tt"/></svg></a>
+<div class="stage" id="stage">
+<h1>KRAIIILEFX</h1>
+<p class="tag">More game, series and film scenepacks are coming.</p>
+<button class="btn" id="btn">Explore scenepacks</button>
+<div class="tray"><div><div class="cards" id="cards"></div></div></div>
+<div class="soc">
+  <a href="#" aria-label="Instagram"><svg viewBox="0 0 24 24"><rect x="3.5" y="3.5" width="17" height="17" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.2" cy="6.8" r=".6"/></svg></a>
+  <a href="#" aria-label="TikTok"><svg viewBox="0 0 24 24"><path d="M14 4v10.5a3.5 3.5 0 1 1-3.5-3.5"/><path d="M14 4c.4 2.4 2 3.9 4.5 4.1"/></svg></a>
 </div>
-</div></section>
+</div>
 </main>
-<footer><div class="wrap"><span>KRAIIILEFX &copy; <span id="year">2026</span></span>
-<span class="social-links">
-  <a href="https://www.instagram.com/kraiiilefx/" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><svg aria-hidden="true"><use href="#i-ig"/></svg></a>
-  <a href="https://www.tiktok.com/@kraiiilefx?lang=tr-TR" target="_blank" rel="noopener noreferrer" aria-label="TikTok"><svg aria-hidden="true"><use href="#i-tt"/></svg></a>
-</span></div></footer>
 
-<div class="socials-modal" id="socialsModal" aria-hidden="true">
-  <div class="socials-box" role="dialog" aria-label="kraiiilefx socials">
-    <div class="socials-title">
-      kraiiilefx socials
-      <button class="socials-close" id="socialsClose" aria-label="Close">&times;</button>
-    </div>
-    <div class="socials-icons">
-      <a href="https://www.instagram.com/kraiiilefx/" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><svg aria-hidden="true"><use href="#i-ig"/></svg></a>
-      <a href="https://www.tiktok.com/@kraiiilefx?lang=tr-TR" target="_blank" rel="noopener noreferrer" aria-label="TikTok"><svg aria-hidden="true"><use href="#i-tt"/></svg></a>
-    </div>
-  </div>
-</div>
-
-<script src="assets/js/app.js?v=3" defer></script>
+<footer><span>KRAIIILEFX © 2026</span><span><a href="#">Legal</a><a href="#">DMCA</a></span></footer>
 <script>
-(function () {
-  var modal = document.getElementById('socialsModal');
-  var openBtn = document.getElementById('socialsBtn');
-  var closeBtn = document.getElementById('socialsClose');
-  function open(e) { if (e) e.preventDefault(); modal.classList.add('open'); modal.setAttribute('aria-hidden', 'false'); }
-  function close() { modal.classList.remove('open'); modal.setAttribute('aria-hidden', 'true'); }
-  openBtn.addEventListener('click', open);
-  closeBtn.addEventListener('click', close);
-  modal.addEventListener('click', function (e) { if (e.target === modal) close(); });
-  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') close(); });
-})();
+/* Her kare bir scenepack önizlemesi. Düzenlemek için sadece bu listeyi değiştir.
+   img: önizleme görseli yolu (boş bırakırsan renkli gradient görünür)
+   href: tıklayınca açılacak sayfa
+   locked: true ise kilit ikonu gösterir ("Coming soon") */
+const packs=[
+  {title:'Call of Duty',sub:'3 scenepacks',img:'assets/covers/call-of-duty.webp',href:'scenepacks.html#/Call%20of%20Duty',locked:false,g:['#7a4a58','#d9a6b4']},
+  {title:'Jon Bernthal',sub:'9 scenepacks',img:'assets/covers/jon-bernthal.webp',href:'scenepacks.html#/Jon%20Bernthal',locked:false,g:['#4a6a73','#9dbcc5']}
+];
+const cards=document.getElementById('cards'),stage=document.getElementById('stage');
+const lock='<svg class="lk" viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>';
+packs.forEach((p,idx)=>{
+  const a=document.createElement('a');
+  a.className='card'+(p.locked?' locked':'');
+  a.href=p.href;a.style.setProperty('--i',idx);
+  a.setAttribute('aria-label','Scenepack: '+p.title);
+  const grad=`<span style="position:absolute;inset:0;background:linear-gradient(160deg,${p.g[0]},${p.g[1]})"></span>`;
+  const bg=grad+(p.img?`<img src="${p.img}" alt="" loading="lazy" onerror="this.remove()">`:'');
+  a.innerHTML=`<i>${bg}<span class="lb"><b>${p.title}</b>${p.sub?`<small>${p.sub}</small>`:''}</span>${p.locked?lock:''}</i>`;
+  cards.appendChild(a);
+});
+document.getElementById('btn').onclick=()=>stage.classList.toggle('open');
 </script>
 </body>
 </html>
