@@ -138,3 +138,115 @@
     pointer-events: none;
   }
   /* Geçen parlama */
+  .card::after {
+    content: "";
+    position: absolute;
+    top: 0; bottom: 0;
+    left: -60%;
+    width: 40%;
+    z-index: -1;
+    background: linear-gradient(100deg, transparent, rgba(255,255,255,.08), transparent);
+    transform: skewX(-15deg);
+    transition: left .8s var(--ease);
+    pointer-events: none;
+  }
+  .card:hover { transform: translateY(-6px); box-shadow: 0 20px 50px rgba(0,0,0,.6); }
+  .card:hover::before { opacity: 1; }
+  .card:hover::after { left: 120%; }
+
+  .card h2 {
+    font-family: "Bebas Neue", Impact, sans-serif;
+    font-weight: 400;
+    font-size: clamp(36px, 6vw, 80px);
+    line-height: .95;
+    transition: transform .4s var(--ease), letter-spacing .4s var(--ease);
+  }
+  .card:hover h2 { transform: translateX(8px); letter-spacing: .02em; }
+  .card p { color: var(--muted); font-size: 13px; margin-top: 6px; transition: transform .4s var(--ease); }
+  .card:hover p { transform: translateX(8px); }
+
+  .arrow {
+    flex: none;
+    width: 44px; height: 44px;
+    border: 1px solid rgba(255,255,255,.25);
+    border-radius: 50%;
+    display: grid; place-items: center;
+    background: rgba(0,0,0,.45);
+    overflow: hidden;
+    transition: background .3s, color .3s, border-color .3s, transform .4s var(--ease);
+  }
+  .arrow svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+  .card:hover .arrow { background: var(--text); color: #0a0a0a; border-color: var(--text); transform: scale(1.1) rotate(-45deg); }
+
+  /* ---------- Mobil ---------- */
+  @media (max-width: 640px) {
+    .grid { grid-template-columns: 1fr; }
+    .card { min-height: 240px; border-radius: 16px; }
+  }
+  @media (hover: none) {
+    .card:hover { transform: none; box-shadow: none; }
+    .card:hover .bg { transform: scale(1.02); filter: brightness(.75); }
+    .card:active { transform: scale(.98); }
+    .card:active .arrow { background: var(--text); color: #0a0a0a; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation: none !important; transition: none !important; }
+    h1 span, .socials a, .card { opacity: 1; transform: none; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1 aria-label="KRAIIILEFX">
+    <span style="--i:0">K</span><span style="--i:1">R</span><span style="--i:2">A</span><span style="--i:3">I</span><span style="--i:4">I</span><span style="--i:5">I</span><span style="--i:6">L</span><span style="--i:7">E</span><span style="--i:8">F</span><span style="--i:9">X</span>
+  </h1>
+  <nav class="socials" aria-label="Sosyal medya">
+    <a href="https://www.instagram.com/" target="_blank" rel="noopener" aria-label="Instagram" style="--i:0">
+      <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r=".5"/></svg>
+    </a>
+    <a href="https://www.tiktok.com/" target="_blank" rel="noopener" aria-label="TikTok" style="--i:1">
+      <svg viewBox="0 0 24 24"><path d="M14 3v11.5a3.5 3.5 0 1 1-3.5-3.5"/><path d="M14 3c.3 2.4 1.9 4 4.5 4.2"/></svg>
+    </a>
+    <a href="https://github.com/" target="_blank" rel="noopener" aria-label="Link" style="--i:2">
+      <svg viewBox="0 0 24 24"><path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1"/><path d="M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"/></svg>
+    </a>
+  </nav>
+</header>
+
+<main class="grid">
+  <!-- href kısmına kendi sayfa adını yaz -->
+  <a class="card" href="call-of-duty.html" style="--i:0">
+    <img class="bg" src="gifs/call-of-duty.gif" alt="" loading="lazy">
+    <span class="shade"></span>
+    <div>
+      <h2>Call of Duty</h2>
+      <p>3 scenepacks</p>
+    </div>
+    <span class="arrow"><svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+  </a>
+
+  <a class="card" href="jon-bernthal.html" style="--i:1">
+    <img class="bg" src="gifs/jon-bernthal.gif" alt="" loading="lazy">
+    <span class="shade"></span>
+    <div>
+      <h2>Jon Bernthal</h2>
+      <p>9 scenepacks</p>
+    </div>
+    <span class="arrow"><svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+  </a>
+</main>
+
+<script>
+  document.querySelectorAll('.card').forEach(card => {
+    card.addEventListener('pointermove', e => {
+      const r = card.getBoundingClientRect();
+      card.style.setProperty('--mx', (e.clientX - r.left) + 'px');
+      card.style.setProperty('--my', (e.clientY - r.top) + 'px');
+    });
+  });
+</script>
+
+</body>
+</html>
