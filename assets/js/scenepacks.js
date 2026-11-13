@@ -109,32 +109,6 @@
     return true;
   }
 
-  /* aranan sey baska klasordeyse: "Wrong folder! Go to the X folder." (tiklanabilir) */
-  function wrongFolderMessage(q, r) {
-    var targets = [], seen = {};
-    packs.forEach(function (p) {
-      if (inScope(p, r) || !matches(p, q)) return;
-      var name, href;
-      if (p.folder !== r.folder) {
-        name = p.folder;
-        href = '#/' + enc(p.folder);
-      } else if (p.subfolder) {
-        name = p.subfolder;
-        href = '#/' + enc(p.folder) + '/' + enc(p.subfolder);
-      } else {
-        name = p.folder;
-        href = '#/' + enc(p.folder);
-      }
-      if (!seen[href]) { seen[href] = 1; targets.push({ name: name, href: href }); }
-    });
-    if (!targets.length) return '';
-
-    var links = targets.map(function (t) {
-      return '<a href="' + t.href + '" style="color:#fff;border-bottom:1px solid rgba(255,255,255,.4)">' + esc(t.name) + '</a>';
-    }).join(' or ');
-    return 'Wrong folder! Go to the ' + links + ' folder' + (targets.length > 1 ? 's' : '') + '.';
-  }
-
   function render() {
     var r = route();
     var q = search.value.trim().toLowerCase();
@@ -150,8 +124,11 @@
       if (list.length) {
         html = list.map(packCard).join('');
       } else {
-        var msg = (r.folder || r.sub) ? wrongFolderMessage(q, r) : '';
-        html = '<p class="kx-empty">' + (msg || 'No results.') + '</p>';
+        /* bu klasorde yok; baska klasorde varsa sadece "Wrong folder" */
+        var elsewhere = (r.folder || r.sub) && packs.some(function (p) {
+          return !inScope(p, r) && matches(p, q);
+        });
+        html = '<p class="kx-empty">' + (elsewhere ? 'Wrong folder' : 'No results.') + '</p>';
       }
     } else {
       var items, key, base;
