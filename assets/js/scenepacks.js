@@ -1,10 +1,9 @@
 /* KRAIIILEFX scenepacks: Folder > Subfolder > Pack
-   Data fields used: folder, subfolder, folderCover, subfolderCover, locked, mega, key
-   Opsiyonel video alanlari: video, poster, folderVideo, folderPoster, subfolderVideo, subfolderPoster */
+   Data fields used: folder, subfolder, folderCover, subfolderCover, locked, mega, key */
 (function () {
   'use strict';
 
-  var DATA_URL = 'data/scenepacks.json';
+  var DATA_URL = 'data/scenepacks.json'; // GitHub'daki data klasoru
 
   var grid = document.getElementById('grid');
   var search = document.getElementById('search');
@@ -24,6 +23,23 @@
   function enc(s) { return encodeURIComponent(s); }
   function newest(a, b) { return (b.date || '').localeCompare(a.date || ''); }
 
+  /* "Call of Duty: Modern Warfare 2" -> "codmw2" (bas harfler, kisaltma aramasi icin) */
+  function initials(s) {
+    return String(s || '').split(/[^A-Za-z0-9]+/).filter(Boolean).map(function (w) {
+      return /^\d+$/.test(w) ? w : w.charAt(0);
+    }).join('');
+  }
+
+  /* bir pack'in aranabilir metni: isimler + kisaltmalar */
+  function haystack(p) {
+    return [
+      p.name, p.production, p.character, p.folder, p.subfolder,
+      initials(p.folder), initials(p.production), initials(p.name)
+    ].join(' ').toLowerCase();
+  }
+
+  function matches(p, q) { return haystack(p).indexOf(q) > -1; }
+
   /* ---------- routing: #/Call%20of%20Duty/Ghost ---------- */
   function route() {
     var h = location.hash.replace(/^#\/?/, '');
@@ -31,54 +47,27 @@
     return { folder: p[0] || '', sub: p[1] || '' };
   }
 
-  /* ---------- video: sadece ekrana yakinken iner ve oynar ---------- */
-  var saver = navigator.connection && navigator.connection.saveData;
-  var reduce = window.matchMedia && matchMedia('(prefers-reduced-motion:reduce)').matches;
-  var vio = ('IntersectionObserver' in window) ? new IntersectionObserver(function (es) {
-    es.forEach(function (en) {
-      var v = en.target;
-      if (en.isIntersecting) {
-        if (!v.getAttribute('src')) v.setAttribute('src', v.getAttribute('data-src'));
-        var pr = v.play(); if (pr && pr.catch) pr.catch(function () {});
-      } else { v.pause(); }
-    });
-  }, { rootMargin: '200px', threshold: 0.2 }) : null;
-
-  function watchVideos(root) {
-    if (!vio || saver || reduce) return;
-    root.querySelectorAll('video[data-src]').forEach(function (v) { v.muted = true; vio.observe(v); });
-  }
-
   /* ---------- cards ---------- */
-  function art(src, pos, video, poster) {
-    var style = pos ? ' style="object-position:' + esc(pos) + '"' : '';
-    if (video) {
-      return '<div class="kx-art"><video data-src="' + esc(video) + '"' +
-        (poster ? ' poster="' + esc(poster) + '"' : '') +
-        ' muted loop playsinline preload="none"' + style + '></video></div>';
-    }
+  function art(src, pos) {
     if (!src) return '<div class="kx-art"></div>';
-    return '<div class="kx-art"><img src="' + esc(src) + '" alt="" loading="lazy" decoding="async"' + style + '></div>';
+    return '<div class="kx-art"><img src="' + esc(src) + '" alt="" loading="lazy"' +
+      (pos ? ' style="object-position:' + esc(pos) + '"' : '') + '></div>';
   }
 
   function packCard(p, i) {
     var lock = p.locked || !p.mega;
     return '<a class="kx-card' + (lock ? ' is-locked' : '') + '" href="#" data-pack="' + esc(p.id) +
-      '" style="--i:' + i + '">' + art(p.cover, p.coverPos, p.video, p.poster) + (lock ? ICON_LOCK : '') +
+      '" style="--i:' + i + '">' + art(p.cover, p.coverPos) + (lock ? ICON_LOCK : '') +
       '<div class="kx-info"><div class="kx-t">' + esc(p.name) + '</div><div class="kx-c">' +
       esc(lock ? 'Coming Soon' : p.character) + '</div></div></a>';
   }
 
   function folderCard(name, group, key, href, i) {
-    var isTop = key === 'folder';
-    var coverKey = isTop ? 'folderCover' : 'subfolderCover';
-    var videoKey = isTop ? 'folderVideo' : 'subfolderVideo';
-    var posterKey = isTop ? 'folderPoster' : 'subfolderPoster';
-    var withCover = group.filter(function (g) { return g[coverKey] || g[videoKey]; })[0] || group[0];
+    var coverKey = key === 'folder' ? 'folderCover' : 'subfolderCover';
+    var withCover = group.filter(function (g) { return g[coverKey]; })[0] || group[0];
     var cover = withCover[coverKey] || withCover.cover;
     var n = group.length;
-    return '<a class="kx-card kx-folder" href="' + href + '" style="--i:' + i + '">' +
-      art(cover, withCover.coverPos, withCover[videoKey], withCover[posterKey]) +
+    return '<a class="kx-card kx-folder" href="' + href + '" style="--i:' + i + '">' + art(cover, withCover.coverPos) +
       ICON_FOLDER + '<div class="kx-info"><div class="kx-t">' + esc(name) + '</div><div class="kx-c">' +
       n + ' scenepack' + (n === 1 ? '' : 's') + '</div></div></a>';
   }
@@ -100,8 +89,7 @@
 
   /* ---------- render ---------- */
   function setCrumbs(r) {
-    /* Soldaki "Scenepacks" yazisi direkt ana sayfaya (index.html) gider */
-    var h = '<a href="index.html">Scenepacks</a>';
+    var h = '<a href="#/">Scenepacks</a>';
     if (r.folder) {
       h += '<span>/</span>' + (r.sub ? '<a href="#/' + enc(r.folder) + '">' + esc(r.folder) + '</a>' : '<b>' + esc(r.folder) + '</b>');
     }
@@ -110,20 +98,62 @@
     crumbs.style.display = r.folder ? '' : 'none';
   }
 
+  function setPlaceholder(r) {
+    var where = r.sub || r.folder;
+    search.placeholder = where ? 'Search in ' + where : 'Search movie, series or character';
+  }
+
+  function inScope(p, r) {
+    if (r.folder && p.folder !== r.folder) return false;
+    if (r.sub && p.subfolder !== r.sub) return false;
+    return true;
+  }
+
+  /* aranan sey baska klasordeyse: "Wrong folder! Go to the X folder." (tiklanabilir) */
+  function wrongFolderMessage(q, r) {
+    var targets = [], seen = {};
+    packs.forEach(function (p) {
+      if (inScope(p, r) || !matches(p, q)) return;
+      var name, href;
+      if (p.folder !== r.folder) {
+        name = p.folder;
+        href = '#/' + enc(p.folder);
+      } else if (p.subfolder) {
+        name = p.subfolder;
+        href = '#/' + enc(p.folder) + '/' + enc(p.subfolder);
+      } else {
+        name = p.folder;
+        href = '#/' + enc(p.folder);
+      }
+      if (!seen[href]) { seen[href] = 1; targets.push({ name: name, href: href }); }
+    });
+    if (!targets.length) return '';
+
+    var links = targets.map(function (t) {
+      return '<a href="' + t.href + '" style="color:#fff;border-bottom:1px solid rgba(255,255,255,.4)">' + esc(t.name) + '</a>';
+    }).join(' or ');
+    return 'Wrong folder! Go to the ' + links + ' folder' + (targets.length > 1 ? 's' : '') + '.';
+  }
+
   function render() {
     var r = route();
     var q = search.value.trim().toLowerCase();
     var html = '', list;
-    if (vio) vio.disconnect();
+
+    setCrumbs(r);
+    setPlaceholder(r);
 
     if (q) {
-      setCrumbs({ folder: '', sub: '' });
-      list = packs.filter(function (p) {
-        return [p.name, p.production, p.character, p.folder, p.subfolder].join(' ').toLowerCase().indexOf(q) > -1;
-      }).sort(newest);
-      html = list.map(packCard).join('');
+      /* arama sadece bulunulan klasorde / alt klasorde yapilir */
+      list = packs.filter(function (p) { return inScope(p, r) && matches(p, q); }).sort(newest);
+
+      if (list.length) {
+        html = list.map(packCard).join('');
+      } else {
+        var msg = (r.folder || r.sub) ? wrongFolderMessage(q, r) : '';
+        html = '<p class="kx-empty">' + (msg || 'No results.') + '</p>';
+      }
     } else {
-      setCrumbs(r);
       var items, key, base;
       if (!r.folder) {
         items = level(packs, 'folder'); key = 'folder'; base = '#/';
@@ -137,21 +167,19 @@
       html = items.map(function (o, i) {
         return o.g ? folderCard(o.k, o.g, key, base + enc(o.k), i) : packCard(o.p, i);
       }).join('');
+      if (!html) html = '<p class="kx-empty">Nothing here yet.</p>';
     }
 
-    grid.innerHTML = html || '<p class="kx-empty">Nothing here yet.</p>';
-    watchVideos(grid);
+    grid.innerHTML = html;
   }
 
   /* ---------- pack modal ---------- */
-  var closing = false;
   function openPack(id) {
-    if (closing) return;
     var p = packs.filter(function (x) { return x.id === id; })[0];
     if (!p || p.locked || !p.mega) return;
     var link = p.mega + (p.key ? '#' + p.key : '');
     modalBody.innerHTML =
-      '<div class="kx-m-art">' + art(p.cover, p.coverPos, p.video, p.poster) + '</div>' +
+      '<div class="kx-m-art">' + art(p.cover, p.coverPos) + '</div>' +
       '<div class="kx-m-txt"><h3>' + esc(p.name) + '</h3>' +
       '<p class="kx-m-sub">' + esc(p.character) + '</p>' +
       '<div class="kx-chips"><span>' + esc(p.resolution) + '</span><span>' + esc(p.fps) + '</span></div>' +
@@ -161,18 +189,8 @@
       '<a class="kx-btn kx-main" href="' + esc(link) + '" target="_blank" rel="noopener noreferrer">Download</a>' +
       '</div></div>';
     modal.classList.add('open');
-    watchVideos(modalBody);
   }
-  function closePack() {
-    if (!modal.classList.contains('open') || closing) return;
-    closing = true;
-    modal.classList.add('closing');
-    setTimeout(function () {
-      modal.classList.remove('open', 'closing');
-      modalBody.innerHTML = '';
-      closing = false;
-    }, 260);
-  }
+  function closePack() { modal.classList.remove('open'); }
 
   /* ---------- events ---------- */
   grid.addEventListener('click', function (e) {
@@ -187,28 +205,6 @@
   document.addEventListener('keydown', function (e) { if (e.key === 'Escape') closePack(); });
   window.addEventListener('hashchange', function () { search.value = ''; render(); window.scrollTo(0, 0); });
   search.addEventListener('input', render);
-
-  /* ---------- imlec efektleri: 3D egilme + isik (sadece fare olan cihazlarda) ---------- */
-  if (window.matchMedia && matchMedia('(hover:hover) and (pointer:fine)').matches && !reduce) {
-    var cur = null, raf = 0;
-    var reset = function (el) { el.style.setProperty('--rx', '0deg'); el.style.setProperty('--ry', '0deg'); };
-    document.addEventListener('pointermove', function (e) {
-      var el = e.target.closest ? e.target.closest('.kx-card, .kx-m-art') : null;
-      if (cur && cur !== el) reset(cur);
-      cur = el;
-      if (!el) return;
-      cancelAnimationFrame(raf);
-      raf = requestAnimationFrame(function () {
-        var r = el.getBoundingClientRect();
-        var x = (e.clientX - r.left) / r.width, y = (e.clientY - r.top) / r.height;
-        var max = el.classList.contains('is-locked') ? 0 : 7;
-        el.style.setProperty('--ry', ((x - 0.5) * max) + 'deg');
-        el.style.setProperty('--rx', ((0.5 - y) * max) + 'deg');
-        el.style.setProperty('--mx', (x * 100) + '%');
-        el.style.setProperty('--my', (y * 100) + '%');
-      });
-    });
-  }
 
   /* ---------- load ---------- */
   fetch(DATA_URL + '?v=' + Date.now())
