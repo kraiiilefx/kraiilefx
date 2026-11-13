@@ -165,4 +165,117 @@
     font-weight: 400;
     font-size: clamp(36px, 6vw, 80px);
     line-height: .95;
-    transition: transform .4s var(--ease),
+    transition: transform .4s var(--ease), letter-spacing .4s var(--ease);
+  }
+  .card:hover h2 { transform: translateX(8px); letter-spacing: .02em; }
+  .card p { color: var(--muted); font-size: 13px; margin-top: 6px; transition: transform .4s var(--ease); }
+  .card:hover p { transform: translateX(8px); }
+
+  .arrow {
+    flex: none;
+    width: 44px; height: 44px;
+    border: 1px solid rgba(255,255,255,.25);
+    border-radius: 50%;
+    display: grid; place-items: center;
+    background: rgba(0,0,0,.45);
+    overflow: hidden;
+    transition: background .3s, color .3s, border-color .3s, transform .4s var(--ease);
+  }
+  .arrow svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+  .card:hover .arrow { background: var(--text); color: #0a0a0a; border-color: var(--text); transform: scale(1.1) rotate(-45deg); }
+
+  /* ---------- Alt satır ---------- */
+  footer { margin-top: auto; padding-top: 28px; font-size: 12px; color: #6f6f6f; }
+  footer a { color: inherit; text-decoration: none; transition: color .25s; }
+  footer a:hover { color: #fff; }
+
+  /* ---------- Mobil ---------- */
+  @media (max-width: 640px) {
+    .grid { grid-template-columns: 1fr; }
+    .card { min-height: 240px; border-radius: 16px; }
+  }
+  @media (hover: none) {
+    .card:hover { transform: none; box-shadow: none; }
+    .card:hover .bg { transform: scale(1.02); filter: brightness(.8); }
+    .card:active { transform: scale(.98); }
+    .card:active .arrow { background: var(--text); color: #0a0a0a; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation: none !important; transition: none !important; }
+    h1 span, .socials a, .card { opacity: 1; transform: none; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1 aria-label="KRAIIILEFX">
+    <span style="--i:0">K</span><span style="--i:1">R</span><span style="--i:2">A</span><span style="--i:3">I</span><span style="--i:4">I</span><span style="--i:5">I</span><span style="--i:6">L</span><span style="--i:7">E</span><span style="--i:8">F</span><span style="--i:9">X</span>
+  </h1>
+  <nav class="socials" aria-label="Socials">
+    <a href="https://www.instagram.com/kraiiilefx/" target="_blank" rel="noopener noreferrer" aria-label="Instagram" style="--i:0">
+      <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r=".5"/></svg>
+    </a>
+    <a href="https://www.tiktok.com/@kraiiilefx?lang=tr-TR" target="_blank" rel="noopener noreferrer" aria-label="TikTok" style="--i:1">
+      <svg class="fill" viewBox="0 0 24 24"><path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z"/></svg>
+    </a>
+    <a href="https://guns.lol/kraiiilefx" target="_blank" rel="noopener noreferrer" aria-label="guns.lol" style="--i:2">
+      <svg viewBox="0 0 24 24"><path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1"/><path d="M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"/></svg>
+    </a>
+  </nav>
+</header>
+
+<main class="grid">
+  <a class="card" href="scenepacks.html#/Call%20of%20Duty" data-folder="Call of Duty" style="--i:0">
+    <img class="bg" src="assets/covers/call-of-duty.jpg" alt="" decoding="async">
+    <span class="shade"></span>
+    <div>
+      <h2>Call of Duty</h2>
+      <p class="count">3 scenepacks</p>
+    </div>
+    <span class="arrow"><svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+  </a>
+
+  <a class="card" href="scenepacks.html#/Jon%20Bernthal" data-folder="Jon Bernthal" style="--i:1">
+    <img class="bg" src="assets/covers/jon-bernthal.jpg" alt="" decoding="async">
+    <span class="shade"></span>
+    <div>
+      <h2>Jon Bernthal</h2>
+      <p class="count">9 scenepacks</p>
+    </div>
+    <span class="arrow"><svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+  </a>
+</main>
+
+<footer>
+  KRAIIILEFX &copy; <span id="year">2026</span> &nbsp;&middot;&nbsp; <a href="legal.html">Legal / DMCA</a>
+</footer>
+
+<script>
+  // Fareyi takip eden ışık
+  document.querySelectorAll('.card').forEach(function (card) {
+    card.addEventListener('pointermove', function (e) {
+      var r = card.getBoundingClientRect();
+      card.style.setProperty('--mx', (e.clientX - r.left) + 'px');
+      card.style.setProperty('--my', (e.clientY - r.top) + 'px');
+    });
+  });
+
+  // Yıl
+  document.getElementById('year').textContent = new Date().getFullYear();
+
+  // Scenepack sayılarını data/scenepacks.json'dan otomatik güncelle
+  fetch('data/scenepacks.json?v=' + Date.now())
+    .then(function (r) { return r.json(); })
+    .then(function (data) {
+      document.querySelectorAll('[data-folder]').forEach(function (card) {
+        var n = data.filter(function (p) { return p.folder === card.dataset.folder; }).length;
+        if (n) card.querySelector('.count').textContent = n + ' scenepack' + (n === 1 ? '' : 's');
+      });
+    })
+    .catch(function () {});
+</script>
+
+</body>
+</html>
