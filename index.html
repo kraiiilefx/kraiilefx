@@ -27,9 +27,18 @@ h1{margin:0;font-family:'Unbounded','Manrope',system-ui,sans-serif;font-weight:2
 .cards{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;padding-top:30px;opacity:0;transition:opacity .4s .1s}
 .stage:hover .cards,.stage:focus-within .cards,.stage.open .cards{opacity:1}
 .card{aspect-ratio:4/5;background:none;border:1px solid var(--line);padding:0;cursor:pointer;position:relative;overflow:hidden;transition:border-color .25s}
+.card{display:block;color:#fff;text-decoration:none;text-align:left}
 .card i{position:absolute;inset:0;opacity:0;transition:opacity .35s}
+.card img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
 .card:hover i,.card:focus-visible i{opacity:1}
 .card:hover,.card:focus-visible{border-color:var(--fg)}
+.card .lb{position:absolute;left:0;right:0;bottom:0;padding:40px 14px 14px;background:linear-gradient(to top,rgba(0,0,0,.78),transparent);display:flex;flex-direction:column;gap:3px}
+.card .lb b{font-weight:500;font-size:13px;letter-spacing:.04em}
+.card .lb small{font-size:11px;opacity:.7;letter-spacing:.06em}
+.card .lk{position:absolute;top:12px;right:12px;width:18px;height:18px;fill:none;stroke:#fff;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round;filter:drop-shadow(0 1px 3px rgba(0,0,0,.6))}
+.card.locked{cursor:default}
+.card.locked img{filter:grayscale(.6) brightness(.6)}
+@media (hover:none){.card i{opacity:1}}
 .soc{display:flex;gap:12px;justify-content:center;margin-top:34px}
 .soc a{width:44px;height:44px;border:1px solid var(--line);border-radius:50%;display:grid;place-items:center;color:var(--mute);transition:color .2s,border-color .2s}
 .soc a:hover{color:var(--fg);border-color:var(--mute)}
@@ -60,13 +69,26 @@ footer a:hover{color:var(--fg)}
 
 <footer><span>KRAIIILEFX © 2026</span><span><a href="#">Legal</a><a href="#">DMCA</a></span></footer>
 <script>
-const g=[['#4a6a73','#9dbcc5'],['#7a4a58','#d9a6b4'],['#7a7340','#dcd29a'],['#5a5080','#b8aee0']];
+/* Her kare bir scenepack önizlemesi. Düzenlemek için sadece bu listeyi değiştir.
+   img: önizleme görseli yolu (boş bırakırsan renkli gradient görünür)
+   href: tıklayınca açılacak sayfa
+   locked: true ise kilit ikonu gösterir ("Coming soon") */
+const packs=[
+  {title:'Jon Bernthal',sub:'9 scenepacks',img:'',href:'scenepacks.html',locked:false,g:['#4a6a73','#9dbcc5']},
+  {title:'Call of Duty',sub:'Coming soon',img:'',href:'scenepacks.html',locked:true,g:['#7a4a58','#d9a6b4']},
+  {title:'Coming soon',sub:'',img:'',href:'scenepacks.html',locked:true,g:['#7a7340','#dcd29a']},
+  {title:'Coming soon',sub:'',img:'',href:'scenepacks.html',locked:true,g:['#5a5080','#b8aee0']}
+];
 const cards=document.getElementById('cards'),stage=document.getElementById('stage');
-g.forEach((c,i)=>{
-  const b=document.createElement('button');
-  b.className='card';b.setAttribute('aria-label','Scenepack preview '+(i+1));
-  b.innerHTML=`<i style="background:linear-gradient(160deg,${c[0]},${c[1]})"></i>`;
-  cards.appendChild(b);
+const lock='<svg class="lk" viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>';
+packs.forEach(p=>{
+  const a=document.createElement('a');
+  a.className='card'+(p.locked?' locked':'');
+  a.href=p.href;
+  a.setAttribute('aria-label','Scenepack: '+p.title);
+  const bg=p.img?`<img src="${p.img}" alt="" loading="lazy">`:`<span style="position:absolute;inset:0;background:linear-gradient(160deg,${p.g[0]},${p.g[1]})"></span>`;
+  a.innerHTML=`<i>${bg}<span class="lb"><b>${p.title}</b>${p.sub?`<small>${p.sub}</small>`:''}</span>${p.locked?lock:''}</i>`;
+  cards.appendChild(a);
 });
 document.getElementById('btn').onclick=()=>stage.classList.toggle('open');
 </script>
