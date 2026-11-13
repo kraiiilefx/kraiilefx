@@ -20,6 +20,7 @@ main{flex:1;display:flex;align-items:center;justify-content:center;padding:24px}
 h1{margin:0;font-family:'Unbounded','Manrope',system-ui,sans-serif;font-weight:200;font-size:clamp(28px,8.2vw,92px);letter-spacing:.05em;line-height:1.1;color:var(--fg);white-space:nowrap}
 .tag{margin:28px 0 0;font-size:18px;color:var(--mute)}
 .btn{display:inline-block;margin-top:26px;padding:13px 28px;border:1px solid var(--mute);border-radius:999px;background:none;color:var(--fg);font:inherit;font-weight:500;font-size:14px;letter-spacing:.06em;cursor:pointer;transition:background .2s,color .2s}
+@media (hover:hover){.btn{cursor:default}}
 .btn:hover,.btn:focus-visible{background:var(--fg);color:var(--bg)}
 .tray{display:grid;grid-template-rows:0fr;transition:grid-template-rows .5s cubic-bezier(.3,.7,.2,1)}
 .tray>div{overflow:hidden;min-height:0}
@@ -28,9 +29,8 @@ h1{margin:0;font-family:'Unbounded','Manrope',system-ui,sans-serif;font-weight:2
 .stage:hover .cards,.stage:focus-within .cards,.stage.open .cards{opacity:1}
 .card{aspect-ratio:4/5;background:none;border:1px solid var(--line);padding:0;cursor:pointer;position:relative;overflow:hidden;transition:border-color .25s}
 .card{display:block;color:#fff;text-decoration:none;text-align:left}
-.card i{position:absolute;inset:0;opacity:0;transition:opacity .35s}
+.card i{position:absolute;inset:0;opacity:1}
 .card img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
-.card:hover i,.card:focus-visible i{opacity:1}
 .card:hover,.card:focus-visible{border-color:var(--fg)}
 .card .lb{position:absolute;left:0;right:0;bottom:0;padding:40px 14px 14px;background:linear-gradient(to top,rgba(0,0,0,.78),transparent);display:flex;flex-direction:column;gap:3px}
 .card .lb b{font-weight:500;font-size:13px;letter-spacing:.04em}
@@ -44,12 +44,17 @@ h1{margin:0;font-family:'Unbounded','Manrope',system-ui,sans-serif;font-weight:2
   transition:opacity .55s calc(.15s + var(--i,0)*.12s) ease,translate .7s calc(.15s + var(--i,0)*.12s) cubic-bezier(.2,.8,.2,1),scale .45s cubic-bezier(.2,.8,.2,1),border-color .25s,box-shadow .45s}
 .stage:hover .card,.stage:focus-within .card,.stage.open .card{opacity:1;translate:0 0}
 .card:hover,.card:focus-visible{scale:1.04;box-shadow:0 18px 40px -12px rgba(0,0,0,.7)}
-.card img{transform:scale(1.14);transition:transform 1.1s cubic-bezier(.2,.8,.2,1)}
-.card:hover img,.card:focus-visible img{transform:scale(1)}
-.card .lb{transform:translateY(12px);opacity:0;transition:transform .45s .05s cubic-bezier(.2,.8,.2,1),opacity .45s .05s}
-.card:hover .lb,.card:focus-visible .lb{transform:none;opacity:1}
-@media (hover:none){.card .lb{transform:none;opacity:1}.card img{transform:none}}
-@media (prefers-reduced-motion:reduce){.card{opacity:1;translate:none}.card img,.card .lb{transform:none}}
+.card img{transform:scale(1.04);transition:transform 1.1s cubic-bezier(.2,.8,.2,1)}
+.card:hover img,.card:focus-visible img{transform:scale(1.12)}
+.card .lb{transition:transform .45s cubic-bezier(.2,.8,.2,1)}
+.card:hover .lb,.card:focus-visible .lb{transform:translateY(-4px)}
+/* surekli yumusak yuzme + hover'da isik cizgisi */
+@keyframes kx-float{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+.card{animation:kx-float 5s ease-in-out calc(var(--i,0)*-1.6s) infinite}
+.card:hover,.card:focus-visible{animation-play-state:paused}
+.card::after{content:"";position:absolute;inset:0;background:linear-gradient(105deg,transparent 35%,rgba(255,255,255,.22) 50%,transparent 65%);transform:translateX(-120%);pointer-events:none}
+.card:hover::after,.card:focus-visible::after{transform:translateX(120%);transition:transform .9s ease}
+@media (prefers-reduced-motion:reduce){.card{opacity:1;translate:none;animation:none}.card img,.card .lb{transform:none}.card::after{display:none}}
 
 .soc{display:flex;gap:12px;justify-content:center;margin-top:34px}
 .soc a{width:44px;height:44px;border:1px solid var(--line);border-radius:50%;display:grid;place-items:center;color:var(--mute);transition:color .2s,border-color .2s}
@@ -64,7 +69,7 @@ footer a:hover{color:var(--fg)}
 </style>
 </head>
 <body>
-<header><span class="m">KRAIIILEFX</span><nav><a class="on" href="#">Home</a><a href="scenepacks.html">Scenepacks</a></nav></header>
+<header><span class="m">KRAIIILEFX</span><nav><a class="on" href="#">Home</a></nav></header>
 
 <main>
 <div class="stage" id="stage">
@@ -86,8 +91,8 @@ footer a:hover{color:var(--fg)}
    href: tıklayınca açılacak sayfa
    locked: true ise kilit ikonu gösterir ("Coming soon") */
 const packs=[
-  {title:'Call of Duty',sub:'3 scenepacks',img:'assets/covers/call-of-duty.webp',href:'scenepacks.html#/Call%20of%20Duty',locked:false,g:['#7a4a58','#d9a6b4']},
-  {title:'Jon Bernthal',sub:'9 scenepacks',img:'assets/covers/jon-bernthal.webp',href:'scenepacks.html#/Jon%20Bernthal',locked:false,g:['#4a6a73','#9dbcc5']}
+  {title:'Call of Duty',sub:'3 scenepacks',img:'assets/covers/call-of-duty.gif',href:'scenepacks.html#/Call%20of%20Duty',locked:false,g:['#7a4a58','#d9a6b4']},
+  {title:'Jon Bernthal',sub:'9 scenepacks',img:'assets/covers/jon-bernthal.gif',href:'scenepacks.html#/Jon%20Bernthal',locked:false,g:['#4a6a73','#9dbcc5']}
 ];
 const cards=document.getElementById('cards'),stage=document.getElementById('stage');
 const lock='<svg class="lk" viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>';
@@ -101,7 +106,8 @@ packs.forEach((p,idx)=>{
   a.innerHTML=`<i>${bg}<span class="lb"><b>${p.title}</b>${p.sub?`<small>${p.sub}</small>`:''}</span>${p.locked?lock:''}</i>`;
   cards.appendChild(a);
 });
-document.getElementById('btn').onclick=()=>stage.classList.toggle('open');
+/* Masaustunde basmaya gerek yok: uzerine gelince kartlar acilir. Sadece dokunmatik ekranda dokununca acilir. */
+document.getElementById('btn').onclick=()=>{if(matchMedia('(hover:none)').matches)stage.classList.toggle('open')};
 </script>
 </body>
 </html>
