@@ -42,6 +42,20 @@
     { match: /modern warfare 4/i, src: 'assets/codmw4-logo.png', w: 200 },
     { match: /modern warfare (2019|2\b)/i, src: 'assets/codmw2019-logo.png', w: 150 }
   ];
+  /* Klasor kartlarinda baslik yerine logo (klasor adi -> logo dosyasi) */
+  var FOLDER_LOGOS = [
+    { match: /captain john price/i, src: 'assets/john-price-logo.png', w: 170 }
+  ];
+  function folderTitle(name) {
+    for (var k = 0; k < FOLDER_LOGOS.length; k++) {
+      if (FOLDER_LOGOS[k].match.test(name || '')) {
+        return '<img src="' + esc(FOLDER_LOGOS[k].src) + '" alt="' + esc(name) +
+          '" style="display:block;width:82%;max-width:' + FOLDER_LOGOS[k].w + 'px;height:auto">';
+      }
+    }
+    return esc(name);
+  }
+
   /* Basligi logo olan pack mi? */
   function hasLogo(p) {
     if (p.logo) return true;
@@ -78,7 +92,7 @@
     var cover = withCover[coverKey] || withCover.cover;
     var n = group.length;
     return '<a class="kx-card kx-folder" href="' + href + '" style="--i:' + i + '">' + art(cover, withCover.coverPos) +
-      ICON_FOLDER + '<div class="kx-info"><div class="kx-t">' + esc(name) + '</div><div class="kx-c">' +
+      ICON_FOLDER + '<div class="kx-info"><div class="kx-t">' + folderTitle(name) + '</div><div class="kx-c">' +
       n + ' scenepack' + (n === 1 ? '' : 's') + '</div></div></a>';
   }
 
