@@ -1,9 +1,14 @@
-/* KRAIIILEFX scenepacks: Folder > Subfolder > Pack
-   Data fields used: folder, subfolder, folderCover, subfolderCover, locked, mega, key */
+/* KRAIIILEFX scenepacks: Folder > Subfolder > Subfolder2 > Pack
+   Data fields used: folder, subfolder, subfolder2, folderCover, subfolderCover, subfolder2Cover, locked, mega, key */
 (function () {
   'use strict';
+  console.log('KX folder v4 (logo sabit)');
 
   var DATA_URL = 'data/scenepacks.json'; // GitHub'daki data klasoru
+
+  var LEVELS = ['folder', 'subfolder', 'subfolder2'];
+  var COVERS = ['folderCover', 'subfolderCover', 'subfolder2Cover'];
+  var TITLES = ['folderTitle', 'subfolderTitle', 'subfolder2Title']; // yazi yerine logo gorseli
 
   var grid = document.getElementById('grid');
   var search = document.getElementById('search');
@@ -23,11 +28,11 @@
   function enc(s) { return encodeURIComponent(s); }
   function newest(a, b) { return (b.date || '').localeCompare(a.date || ''); }
 
-  /* ---------- routing: #/Call%20of%20Duty/Ghost ---------- */
+  /* ---------- routing: #/Call%20of%20Duty/Call%20of%20Duty%20Modern%20Warfare%204/Ghost ---------- */
   function route() {
     var h = location.hash.replace(/^#\/?/, '');
     var p = h ? h.split('/').map(decodeURIComponent) : [];
-    return { folder: p[0] || '', sub: p[1] || '' };
+    return p.slice(0, LEVELS.length);
   }
 
   /* ---------- cards ---------- */
@@ -37,63 +42,31 @@
       (pos ? ' style="object-position:' + esc(pos) + '"' : '') + '></div>';
   }
 
-  /* Baslik yerine logo (isimde gecen yazi -> logo dosyasi)
-     h: sabit yukseklik (tek satirlik isimlerin hepsi ayni boyda durur)
-     w: sabit genislik (iki satirlik buyuk logolar)
-     noSub: true -> kilitli kartta logonun ustune karakter adi yazma */
-  var LOGOS = [
-    { match: /modern warfare 4/i, src: 'assets/codmw4-logo.png', w: 200 },
-    { match: /modern warfare (2019|2\b)/i, src: 'assets/codmw2019-logo.png', w: 150 },
-    { match: /phil+ip graves/i, src: 'assets/phillip-graves-logo.png', h: 34, noSub: true }
-  ];
-  /* Klasor kartlarinda baslik yerine logo (klasor adi -> logo dosyasi) */
-  var FOLDER_LOGOS = [
-    { match: /captain john price/i, src: 'assets/john-price-logo.png', h: 34 },
-    { match: /phil+ip graves/i, src: 'assets/phillip-graves-logo.png', h: 34 },
-    { match: /ghost/i, src: 'assets/ghost-logo.png', h: 34 }
-  ];
-  function pick(list, name) {
-    for (var k = 0; k < list.length; k++) {
-      if (list[k].match.test(name || '')) return list[k];
-    }
-    return null;
-  }
-  function logoTag(o, alt, maxW) {
-    var st = o.h
-      ? 'display:block;height:' + o.h + 'px;width:auto;max-width:100%;object-fit:contain;object-position:left bottom'
-      : 'display:block;width:82%;max-width:' + (maxW || o.w || 200) + 'px;height:auto';
-    return '<img src="' + esc(o.src) + '" alt="' + esc(alt) + '" style="' + st + '">';
-  }
-  function folderTitle(name) {
-    var o = pick(FOLDER_LOGOS, name);
-    return o ? logoTag(o, name) : esc(name);
-  }
-  function logoOf(p) {
-    return p.logo ? { src: p.logo, w: 200 } : pick(LOGOS, p.name);
-  }
-  function title(p, maxW) {
-    var o = logoOf(p);
-    return o ? logoTag(o, p.name, maxW) : esc(p.name);
-  }
-
   function packCard(p, i) {
     var lock = p.locked || !p.mega;
-    var o = logoOf(p);
+    var logo = p.titleImage || (p.subfolder === MW4_NAME ? MW4_LOGO : '');
     return '<a class="kx-card' + (lock ? ' is-locked' : '') + '" href="#" data-pack="' + esc(p.id) +
       '" style="--i:' + i + '">' + art(p.cover, p.coverPos) + (lock ? ICON_LOCK : '') +
-      '<div class="kx-info"><div class="kx-t">' + title(p) + '</div>' +
-      (lock && o && !o.noSub && p.character ? '<div class="kx-c">' + esc(p.character) + '</div>' : '') +
-      '<div class="kx-c">' + esc(lock ? 'Coming Soon' : p.character) + '</div>' +
+      '<div class="kx-info">' +
+      (logo
+        ? '<img src="' + esc(logo) + '" alt="' + esc(p.production) + '" style="display:block;max-width:100%;max-height:64px;object-fit:contain;object-position:left center">' +
+          '<div class="kx-c">' + esc(p.character) + '</div>' + (lock ? '<div class="kx-c">Coming Soon</div>' : '')
+        : '<div class="kx-t">' + esc(p.name) + '</div><div class="kx-c">' + esc(lock ? 'Coming Soon' : p.character) + '</div>') +
       '</div></a>';
   }
 
-  function folderCard(name, group, key, href, i) {
-    var coverKey = key === 'folder' ? 'folderCover' : 'subfolderCover';
+  function folderCard(name, group, depth, href, i) {
+    var coverKey = COVERS[depth];
     var withCover = group.filter(function (g) { return g[coverKey]; })[0] || group[0];
     var cover = withCover[coverKey] || withCover.cover;
     var n = group.length;
+    var titleSrc = (group.filter(function (g) { return g[TITLES[depth]]; })[0] || {})[TITLES[depth]] ||
+      (name === MW4_NAME ? MW4_LOGO : '');
+    var title = titleSrc
+      ? '<img src="' + esc(titleSrc) + '" alt="' + esc(name) + '" style="display:block;max-width:100%;max-height:64px;object-fit:contain;object-position:left center">'
+      : '<div class="kx-t">' + esc(name) + '</div>';
     return '<a class="kx-card kx-folder" href="' + href + '" style="--i:' + i + '">' + art(cover, withCover.coverPos) +
-      ICON_FOLDER + '<div class="kx-info"><div class="kx-t">' + folderTitle(name) + '</div><div class="kx-c">' +
+      ICON_FOLDER + '<div class="kx-info">' + title + '<div class="kx-c">' +
       n + ' scenepack' + (n === 1 ? '' : 's') + '</div></div></a>';
   }
 
@@ -113,41 +86,47 @@
   }
 
   /* ---------- render ---------- */
-  function setCrumbs(r) {
+  function setCrumbs(path) {
     var h = '<a href="#/">Scenepacks</a>';
-    if (r.folder) {
-      h += '<span>/</span>' + (r.sub ? '<a href="#/' + enc(r.folder) + '">' + esc(r.folder) + '</a>' : '<b>' + esc(r.folder) + '</b>');
-    }
-    if (r.sub) h += '<span>/</span><b>' + esc(r.sub) + '</b>';
+    path.forEach(function (name, i) {
+      var last = i === path.length - 1;
+      h += '<span>/</span>';
+      if (last) {
+        h += '<b>' + esc(name) + '</b>';
+      } else {
+        h += '<a href="#/' + path.slice(0, i + 1).map(enc).join('/') + '">' + esc(name) + '</a>';
+      }
+    });
     crumbs.innerHTML = h;
-    crumbs.style.display = r.folder ? '' : 'none';
+    crumbs.style.display = path.length ? '' : 'none';
   }
 
   function render() {
-    var r = route();
+    var path = route();
     var q = search.value.trim().toLowerCase();
     var html = '', list;
 
     if (q) {
-      setCrumbs({ folder: '', sub: '' });
+      setCrumbs([]);
       list = packs.filter(function (p) {
-        return [p.name, p.production, p.character, p.folder, p.subfolder].join(' ').toLowerCase().indexOf(q) > -1;
+        return [p.name, p.production, p.character, p.folder, p.subfolder, p.subfolder2].join(' ').toLowerCase().indexOf(q) > -1;
       }).sort(newest);
       html = list.map(packCard).join('');
     } else {
-      setCrumbs(r);
-      var items, key, base;
-      if (!r.folder) {
-        items = level(packs, 'folder'); key = 'folder'; base = '#/';
-      } else if (!r.sub) {
-        list = packs.filter(function (p) { return p.folder === r.folder; });
-        items = level(list, 'subfolder'); key = 'subfolder'; base = '#/' + enc(r.folder) + '/';
+      setCrumbs(path);
+      var depth = path.length;
+      list = packs.filter(function (p) {
+        for (var i = 0; i < depth; i++) { if (p[LEVELS[i]] !== path[i]) return false; }
+        return true;
+      });
+      var items, base = '#/' + path.map(enc).concat('').join('/');
+      if (depth < LEVELS.length) {
+        items = level(list, LEVELS[depth]);
       } else {
-        list = packs.filter(function (p) { return p.folder === r.folder && p.subfolder === r.sub; }).sort(newest);
-        items = list.map(function (p) { return { p: p }; });
+        items = list.sort(newest).map(function (p) { return { p: p }; });
       }
       html = items.map(function (o, i) {
-        return o.g ? folderCard(o.k, o.g, key, base + enc(o.k), i) : packCard(o.p, i);
+        return o.g ? folderCard(o.k, o.g, depth, base + enc(o.k), i) : packCard(o.p, i);
       }).join('');
     }
 
@@ -161,7 +140,7 @@
     var link = p.mega + (p.key ? '#' + p.key : '');
     modalBody.innerHTML =
       '<div class="kx-m-art">' + art(p.cover, p.coverPos) + '</div>' +
-      '<div class="kx-m-txt"><h3>' + title(p, 320) + '</h3>' +
+      '<div class="kx-m-txt"><h3>' + esc(p.name) + '</h3>' +
       '<p class="kx-m-sub">' + esc(p.character) + '</p>' +
       '<div class="kx-chips"><span>' + esc(p.resolution) + '</span><span>' + esc(p.fps) + '</span></div>' +
       '<p class="kx-m-note">' + esc(p.instructions) + '</p>' +
