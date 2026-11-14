@@ -41,7 +41,7 @@
   var LOGOS = [
     { match: /modern warfare 4/i, src: 'assets/codmw4-logo.png' }
   ];
-  function title(p) {
+  function title(p, maxW) {
     var src = p.logo;
     if (!src) {
       for (var k = 0; k < LOGOS.length; k++) {
@@ -50,7 +50,7 @@
     }
     if (!src) return esc(p.name);
     return '<img src="' + esc(src) + '" alt="' + esc(p.name) +
-      '" style="display:block;width:82%;max-width:200px;height:auto">';
+      '" style="display:block;width:82%;max-width:' + (maxW || 200) + 'px;height:auto">';
   }
 
   function packCard(p, i) {
@@ -135,7 +135,7 @@
     var link = p.mega + (p.key ? '#' + p.key : '');
     modalBody.innerHTML =
       '<div class="kx-m-art">' + art(p.cover, p.coverPos) + '</div>' +
-      '<div class="kx-m-txt"><h3>' + esc(p.name) + '</h3>' +
+      '<div class="kx-m-txt"><h3>' + title(p, 320) + '</h3>' +
       '<p class="kx-m-sub">' + esc(p.character) + '</p>' +
       '<div class="kx-chips"><span>' + esc(p.resolution) + '</span><span>' + esc(p.fps) + '</span></div>' +
       '<p class="kx-m-note">' + esc(p.instructions) + '</p>' +
