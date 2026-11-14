@@ -142,7 +142,7 @@
     "folder": "Call of Duty",
     "subfolder": "Call of Duty Modern Warfare 4",
     "date": "2026-11-12",
-    "subfolderTitle": "assets/covers/mw4-title.png"
+    "subfolderTitle": "assets/codmw4-logo.png"
   },
   {
     "id": "Pricemodernwarfare4",
@@ -159,7 +159,7 @@
     "folder": "Call of Duty",
     "subfolder": "Call of Duty Modern Warfare 4",
     "date": "2026-11-14",
-    "subfolderTitle": "assets/covers/mw4-title.png"
+    "subfolderTitle": "assets/codmw4-logo.png"
   },
   {
     "id": "KoJinHyukMW4",
@@ -168,7 +168,7 @@
     "character": "Ko Jin-Hyuk",
     "resolution": "1080p",
     "fps": "60 FPS",
-    "cover": "assets/covers/kojinhyuk.gif",
+    "cover": "assets/kojinhyuk.gif",
     "instructions": "follow @kraiiilefx on instagram to get the download password.",
     "instagram": "https://www.instagram.com/kraiiilefx/",
     "mega": "BURAYA_MEGA_LINKI",
@@ -177,8 +177,8 @@
     "subfolder": "Call of Duty Modern Warfare 4",
     "subfolderCover": "assets/covers/mw4klasor.gif",
     "date": "2026-11-14",
-    "subfolderTitle": "assets/covers/mw4-title.png",
-    "titleImage": "assets/covers/mw4-title.png"
+    "subfolderTitle": "assets/codmw4-logo.png",
+    "titleImage": "assets/codmw4-logo.png"
   },
   {
     "id": "ValeriaGarzaMW4",
@@ -187,7 +187,7 @@
     "character": "Valeria Garza",
     "resolution": "",
     "fps": "",
-    "cover": "assets/covers/valeriagarza.gif",
+    "cover": "assets/valeriagarza.gif",
     "instructions": "follow @kraiiilefx on instagram to get the download password.",
     "instagram": "https://www.instagram.com/kraiiilefx/",
     "mega": "",
@@ -196,8 +196,8 @@
     "subfolder": "Call of Duty Modern Warfare 4",
     "subfolderCover": "assets/covers/mw4klasor.gif",
     "date": "2026-11-14",
-    "subfolderTitle": "assets/covers/mw4-title.png",
-    "titleImage": "assets/covers/mw4-title.png"
+    "subfolderTitle": "assets/codmw4-logo.png",
+    "titleImage": "assets/codmw4-logo.png"
   },
   {
     "id": "PhillipGraves",
@@ -216,6 +216,6 @@
     "folder": "Call of Duty",
     "subfolder": "Call of Duty Modern Warfare 4",
     "date": "2026-11-10",
-    "subfolderTitle": "assets/covers/mw4-title.png"
+    "subfolderTitle": "assets/codmw4-logo.png"
   }
 ]
