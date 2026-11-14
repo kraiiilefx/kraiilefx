@@ -23,23 +23,6 @@
   function enc(s) { return encodeURIComponent(s); }
   function newest(a, b) { return (b.date || '').localeCompare(a.date || ''); }
 
-  /* "Call of Duty: Modern Warfare 2" -> "codmw2" (bas harfler, kisaltma aramasi icin) */
-  function initials(s) {
-    return String(s || '').split(/[^A-Za-z0-9]+/).filter(Boolean).map(function (w) {
-      return /^\d+$/.test(w) ? w : w.charAt(0);
-    }).join('');
-  }
-
-  /* bir pack'in aranabilir metni: isimler + kisaltmalar */
-  function haystack(p) {
-    return [
-      p.name, p.production, p.character, p.folder, p.subfolder,
-      initials(p.folder), initials(p.production), initials(p.name)
-    ].join(' ').toLowerCase();
-  }
-
-  function matches(p, q) { return haystack(p).indexOf(q) > -1; }
-
   /* ---------- routing: #/Call%20of%20Duty/Ghost ---------- */
   function route() {
     var h = location.hash.replace(/^#\/?/, '');
@@ -54,11 +37,27 @@
       (pos ? ' style="object-position:' + esc(pos) + '"' : '') + '></div>';
   }
 
+  /* Basligin yerine logo gosterilecek packler (isimde gecen yazi -> logo dosyasi) */
+  var LOGOS = [
+    { match: /modern warfare 4/i, src: 'assets/codmw4-logo.png' }
+  ];
+  function title(p) {
+    var src = p.logo;
+    if (!src) {
+      for (var k = 0; k < LOGOS.length; k++) {
+        if (LOGOS[k].match.test(p.name || '')) { src = LOGOS[k].src; break; }
+      }
+    }
+    if (!src) return esc(p.name);
+    return '<img src="' + esc(src) + '" alt="' + esc(p.name) +
+      '" style="display:block;width:82%;max-width:200px;height:auto">';
+  }
+
   function packCard(p, i) {
     var lock = p.locked || !p.mega;
     return '<a class="kx-card' + (lock ? ' is-locked' : '') + '" href="#" data-pack="' + esc(p.id) +
       '" style="--i:' + i + '">' + art(p.cover, p.coverPos) + (lock ? ICON_LOCK : '') +
-      '<div class="kx-info"><div class="kx-t">' + esc(p.name) + '</div><div class="kx-c">' +
+      '<div class="kx-info"><div class="kx-t">' + title(p) + '</div><div class="kx-c">' +
       esc(lock ? 'Coming Soon' : p.character) + '</div></div></a>';
   }
 
@@ -98,39 +97,19 @@
     crumbs.style.display = r.folder ? '' : 'none';
   }
 
-  function setPlaceholder(r) {
-    var where = r.sub || r.folder;
-    search.placeholder = where ? 'Search in ' + where : 'Search movie, series or character';
-  }
-
-  function inScope(p, r) {
-    if (r.folder && p.folder !== r.folder) return false;
-    if (r.sub && p.subfolder !== r.sub) return false;
-    return true;
-  }
-
   function render() {
     var r = route();
     var q = search.value.trim().toLowerCase();
     var html = '', list;
 
-    setCrumbs(r);
-    setPlaceholder(r);
-
     if (q) {
-      /* arama sadece bulunulan klasorde / alt klasorde yapilir */
-      list = packs.filter(function (p) { return inScope(p, r) && matches(p, q); }).sort(newest);
-
-      if (list.length) {
-        html = list.map(packCard).join('');
-      } else {
-        /* bu klasorde yok; baska klasorde varsa sadece "Wrong folder" */
-        var elsewhere = (r.folder || r.sub) && packs.some(function (p) {
-          return !inScope(p, r) && matches(p, q);
-        });
-        html = '<p class="kx-empty">' + (elsewhere ? 'Wrong folder' : 'No results.') + '</p>';
-      }
+      setCrumbs({ folder: '', sub: '' });
+      list = packs.filter(function (p) {
+        return [p.name, p.production, p.character, p.folder, p.subfolder].join(' ').toLowerCase().indexOf(q) > -1;
+      }).sort(newest);
+      html = list.map(packCard).join('');
     } else {
+      setCrumbs(r);
       var items, key, base;
       if (!r.folder) {
         items = level(packs, 'folder'); key = 'folder'; base = '#/';
@@ -144,10 +123,9 @@
       html = items.map(function (o, i) {
         return o.g ? folderCard(o.k, o.g, key, base + enc(o.k), i) : packCard(o.p, i);
       }).join('');
-      if (!html) html = '<p class="kx-empty">Nothing here yet.</p>';
     }
 
-    grid.innerHTML = html;
+    grid.innerHTML = html || '<p class="kx-empty">Nothing here yet.</p>';
   }
 
   /* ---------- pack modal ---------- */
