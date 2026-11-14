@@ -37,53 +37,52 @@
       (pos ? ' style="object-position:' + esc(pos) + '"' : '') + '></div>';
   }
 
-  /* Basligin yerine logo gosterilecek packler (isimde gecen yazi -> logo dosyasi) */
+  /* Baslik yerine logo (isimde gecen yazi -> logo dosyasi)
+     h: sabit yukseklik (tek satirlik isimlerin hepsi ayni boyda durur)
+     w: sabit genislik (iki satirlik buyuk logolar)
+     noSub: true -> kilitli kartta logonun ustune karakter adi yazma */
   var LOGOS = [
     { match: /modern warfare 4/i, src: 'assets/codmw4-logo.png', w: 200 },
-    { match: /modern warfare (2019|2\b)/i, src: 'assets/codmw2019-logo.png', w: 150 }
+    { match: /modern warfare (2019|2\b)/i, src: 'assets/codmw2019-logo.png', w: 150 },
+    { match: /phil+ip graves/i, src: 'assets/phillip-graves-logo.png', h: 34, noSub: true }
   ];
   /* Klasor kartlarinda baslik yerine logo (klasor adi -> logo dosyasi) */
   var FOLDER_LOGOS = [
-    { match: /captain john price/i, src: 'assets/john-price-logo.png', w: 170 },
-    { match: /phil+ip graves/i, src: 'assets/phillip-graves-logo.png', w: 220, pw: 100 },
-    { match: /ghost/i, src: 'assets/ghost-logo.png', w: 140 }
+    { match: /captain john price/i, src: 'assets/john-price-logo.png', h: 34 },
+    { match: /phil+ip graves/i, src: 'assets/phillip-graves-logo.png', h: 34 },
+    { match: /ghost/i, src: 'assets/ghost-logo.png', h: 34 }
   ];
-  function folderTitle(name) {
-    for (var k = 0; k < FOLDER_LOGOS.length; k++) {
-      if (FOLDER_LOGOS[k].match.test(name || '')) {
-        return '<img src="' + esc(FOLDER_LOGOS[k].src) + '" alt="' + esc(name) +
-          '" style="display:block;width:' + (FOLDER_LOGOS[k].pw || 82) + '%;max-width:' + FOLDER_LOGOS[k].w + 'px;height:auto">';
-      }
+  function pick(list, name) {
+    for (var k = 0; k < list.length; k++) {
+      if (list[k].match.test(name || '')) return list[k];
     }
-    return esc(name);
+    return null;
   }
-
-  /* Basligi logo olan pack mi? */
-  function hasLogo(p) {
-    if (p.logo) return true;
-    for (var k = 0; k < LOGOS.length; k++) {
-      if (LOGOS[k].match.test(p.name || '')) return true;
-    }
-    return false;
+  function logoTag(o, alt, maxW) {
+    var st = o.h
+      ? 'display:block;height:' + o.h + 'px;width:auto;max-width:100%;object-fit:contain;object-position:left bottom'
+      : 'display:block;width:82%;max-width:' + (maxW || o.w || 200) + 'px;height:auto';
+    return '<img src="' + esc(o.src) + '" alt="' + esc(alt) + '" style="' + st + '">';
+  }
+  function folderTitle(name) {
+    var o = pick(FOLDER_LOGOS, name);
+    return o ? logoTag(o, name) : esc(name);
+  }
+  function logoOf(p) {
+    return p.logo ? { src: p.logo, w: 200 } : pick(LOGOS, p.name);
   }
   function title(p, maxW) {
-    var src = p.logo, lw = 0;
-    if (!src) {
-      for (var k = 0; k < LOGOS.length; k++) {
-        if (LOGOS[k].match.test(p.name || '')) { src = LOGOS[k].src; lw = LOGOS[k].w; break; }
-      }
-    }
-    if (!src) return esc(p.name);
-    return '<img src="' + esc(src) + '" alt="' + esc(p.name) +
-      '" style="display:block;width:82%;max-width:' + (maxW || lw || 200) + 'px;height:auto">';
+    var o = logoOf(p);
+    return o ? logoTag(o, p.name, maxW) : esc(p.name);
   }
 
   function packCard(p, i) {
     var lock = p.locked || !p.mega;
+    var o = logoOf(p);
     return '<a class="kx-card' + (lock ? ' is-locked' : '') + '" href="#" data-pack="' + esc(p.id) +
       '" style="--i:' + i + '">' + art(p.cover, p.coverPos) + (lock ? ICON_LOCK : '') +
       '<div class="kx-info"><div class="kx-t">' + title(p) + '</div>' +
-      (lock && hasLogo(p) && p.character ? '<div class="kx-c">' + esc(p.character) + '</div>' : '') +
+      (lock && o && !o.noSub && p.character ? '<div class="kx-c">' + esc(p.character) + '</div>' : '') +
       '<div class="kx-c">' + esc(lock ? 'Coming Soon' : p.character) + '</div>' +
       '</div></a>';
   }
