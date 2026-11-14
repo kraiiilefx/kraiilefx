@@ -142,7 +142,8 @@
     "folder": "Call of Duty",
     "subfolder": "Call of Duty Modern Warfare 4",
     "date": "2026-11-12",
-    "subfolderTitle": "assets/codmw4-logo.png"
+    "subfolderTitle": "assets/codmw4-logo.png",
+    "titleImage": "assets/codmw4-logo.png"
   },
   {
     "id": "Pricemodernwarfare4",
@@ -159,14 +160,15 @@
     "folder": "Call of Duty",
     "subfolder": "Call of Duty Modern Warfare 4",
     "date": "2026-11-14",
-    "subfolderTitle": "assets/codmw4-logo.png"
+    "subfolderTitle": "assets/codmw4-logo.png",
+    "titleImage": "assets/codmw4-logo.png"
   },
   {
     "id": "KoJinHyukMW4",
     "name": "Ko Jin-Hyuk",
     "production": "Call of Duty: MW4",
     "character": "Ko Jin-Hyuk",
-    "resolution": "4k",
+    "resolution": "1080p",
     "fps": "60 FPS",
     "cover": "assets/kojinhyuk.gif",
     "instructions": "follow @kraiiilefx on instagram to get the download password.",
@@ -216,6 +218,7 @@
     "folder": "Call of Duty",
     "subfolder": "Call of Duty Modern Warfare 4",
     "date": "2026-11-10",
-    "subfolderTitle": "assets/codmw4-logo.png"
+    "subfolderTitle": "assets/codmw4-logo.png",
+    "titleImage": "assets/codmw4-logo.png"
   }
 ]
