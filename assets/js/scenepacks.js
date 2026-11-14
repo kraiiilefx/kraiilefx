@@ -42,6 +42,14 @@
     { match: /modern warfare 4/i, src: 'assets/codmw4-logo.png', w: 200 },
     { match: /modern warfare (2019|2\b)/i, src: 'assets/codmw2019-logo.png', w: 150 }
   ];
+  /* Basligi logo olan pack mi? */
+  function hasLogo(p) {
+    if (p.logo) return true;
+    for (var k = 0; k < LOGOS.length; k++) {
+      if (LOGOS[k].match.test(p.name || '')) return true;
+    }
+    return false;
+  }
   function title(p, maxW) {
     var src = p.logo, lw = 0;
     if (!src) {
@@ -58,8 +66,10 @@
     var lock = p.locked || !p.mega;
     return '<a class="kx-card' + (lock ? ' is-locked' : '') + '" href="#" data-pack="' + esc(p.id) +
       '" style="--i:' + i + '">' + art(p.cover, p.coverPos) + (lock ? ICON_LOCK : '') +
-      '<div class="kx-info"><div class="kx-t">' + title(p) + '</div><div class="kx-c">' +
-      esc(lock ? 'Coming Soon' : p.character) + '</div></div></a>';
+      '<div class="kx-info"><div class="kx-t">' + title(p) + '</div>' +
+      (lock && hasLogo(p) && p.character ? '<div class="kx-c">' + esc(p.character) + '</div>' : '') +
+      '<div class="kx-c">' + esc(lock ? 'Coming Soon' : p.character) + '</div>' +
+      '</div></a>';
   }
 
   function folderCard(name, group, key, href, i) {
