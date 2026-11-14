@@ -169,6 +169,13 @@
     transition: transform .4s var(--ease), letter-spacing .4s var(--ease);
   }
   .card:hover h2 { transform: translateX(8px); letter-spacing: .02em; }
+  .card h2.logo-title { line-height: 0; }
+  .card h2.logo-title img {
+    display: block;
+    height: clamp(26px, 4.2vw, 56px);
+    width: auto;
+    max-width: 100%;
+  }
   .card p { color: var(--muted); font-size: 13px; margin-top: 6px; transition: transform .4s var(--ease); }
   .card:hover p { transform: translateX(8px); }
 
@@ -232,7 +239,7 @@
     <img class="bg" src="assets/covers/call-of-duty.jpg" alt="" decoding="async">
     <span class="shade"></span>
     <div>
-      <h2>Call of Duty</h2>
+      <h2 class="logo-title"><img src="assets/call-of-duty-logo.png" alt="Call of Duty"></h2>
       <p class="count">3 scenepacks</p>
     </div>
     <span class="arrow"><svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
