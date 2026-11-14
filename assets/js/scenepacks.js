@@ -44,13 +44,14 @@
   ];
   /* Klasor kartlarinda baslik yerine logo (klasor adi -> logo dosyasi) */
   var FOLDER_LOGOS = [
-    { match: /captain john price/i, src: 'assets/john-price-logo.png', w: 170 }
+    { match: /captain john price/i, src: 'assets/john-price-logo.png', w: 170 },
+    { match: /phil+ip graves/i, src: 'assets/phillip-graves-logo.png', w: 220, pw: 100 }
   ];
   function folderTitle(name) {
     for (var k = 0; k < FOLDER_LOGOS.length; k++) {
       if (FOLDER_LOGOS[k].match.test(name || '')) {
         return '<img src="' + esc(FOLDER_LOGOS[k].src) + '" alt="' + esc(name) +
-          '" style="display:block;width:82%;max-width:' + FOLDER_LOGOS[k].w + 'px;height:auto">';
+          '" style="display:block;width:' + (FOLDER_LOGOS[k].pw || 82) + '%;max-width:' + FOLDER_LOGOS[k].w + 'px;height:auto">';
       }
     }
     return esc(name);
