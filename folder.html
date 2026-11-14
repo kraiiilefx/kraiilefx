@@ -1,13 +1,13 @@
-/* KRAIIILEFX scenepacks: Folder > Subfolder > Subfolder2 > Pack
-   Data fields used: folder, subfolder, subfolder2, folderCover, subfolderCover, subfolder2Cover, locked, mega, key */
+/* KRAIIILEFX scenepacks: Folder > Subfolder > Subfolder2 > Pack */
 (function () {
   'use strict';
+  console.log('KX folder v3 (logo destekli)');
 
-  var DATA_URL = 'data/scenepacks.json'; // GitHub'daki data klasoru
+  var DATA_URL = 'data/scenepacks.json';
 
   var LEVELS = ['folder', 'subfolder', 'subfolder2'];
   var COVERS = ['folderCover', 'subfolderCover', 'subfolder2Cover'];
-  var TITLES = ['folderTitle', 'subfolderTitle', 'subfolder2Title']; // yazi yerine logo gorseli
+  var TITLES = ['folderTitle', 'subfolderTitle', 'subfolder2Title'];
 
   var grid = document.getElementById('grid');
   var search = document.getElementById('search');
@@ -27,14 +27,12 @@
   function enc(s) { return encodeURIComponent(s); }
   function newest(a, b) { return (b.date || '').localeCompare(a.date || ''); }
 
-  /* ---------- routing: #/Call%20of%20Duty/Call%20of%20Duty%20Modern%20Warfare%204/Ghost ---------- */
   function route() {
     var h = location.hash.replace(/^#\/?/, '');
     var p = h ? h.split('/').map(decodeURIComponent) : [];
     return p.slice(0, LEVELS.length);
   }
 
-  /* ---------- cards ---------- */
   function art(src, pos) {
     if (!src) return '<div class="kx-art"></div>';
     return '<div class="kx-art"><img src="' + esc(src) + '" alt="" loading="lazy"' +
@@ -67,7 +65,6 @@
       n + ' scenepack' + (n === 1 ? '' : 's') + '</div></div></a>';
   }
 
-  /* bir seviyedeki ogeleri (klasor + tekil pack) tarihe gore sirala */
   function level(list, key) {
     var groups = {}, out = [];
     list.forEach(function (p) {
@@ -82,7 +79,6 @@
     return out.sort(function (a, b) { return b.d.localeCompare(a.d); });
   }
 
-  /* ---------- render ---------- */
   function setCrumbs(path) {
     var h = '<a href="#/">Scenepacks</a>';
     path.forEach(function (name, i) {
@@ -130,7 +126,6 @@
     grid.innerHTML = html || '<p class="kx-empty">Nothing here yet.</p>';
   }
 
-  /* ---------- pack modal ---------- */
   function openPack(id) {
     var p = packs.filter(function (x) { return x.id === id; })[0];
     if (!p || p.locked || !p.mega) return;
@@ -149,7 +144,6 @@
   }
   function closePack() { modal.classList.remove('open'); }
 
-  /* ---------- events ---------- */
   grid.addEventListener('click', function (e) {
     var a = e.target.closest('[data-pack]');
     if (!a) return;
@@ -163,7 +157,6 @@
   window.addEventListener('hashchange', function () { search.value = ''; render(); window.scrollTo(0, 0); });
   search.addEventListener('input', render);
 
-  /* ---------- load ---------- */
   fetch(DATA_URL + '?v=' + Date.now())
     .then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); })
     .then(function (data) { packs = data; render(); })
