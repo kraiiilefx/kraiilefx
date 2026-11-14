@@ -45,7 +45,8 @@
   /* Klasor kartlarinda baslik yerine logo (klasor adi -> logo dosyasi) */
   var FOLDER_LOGOS = [
     { match: /captain john price/i, src: 'assets/john-price-logo.png', w: 170 },
-    { match: /phil+ip graves/i, src: 'assets/phillip-graves-logo.png', w: 220, pw: 100 }
+    { match: /phil+ip graves/i, src: 'assets/phillip-graves-logo.png', w: 220, pw: 100 },
+    { match: /ghost/i, src: 'assets/ghost-logo.png', w: 140 }
   ];
   function folderTitle(name) {
     for (var k = 0; k < FOLDER_LOGOS.length; k++) {
