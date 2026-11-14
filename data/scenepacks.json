@@ -177,7 +177,8 @@
     "subfolder": "Call of Duty Modern Warfare 4",
     "subfolderCover": "assets/covers/mw4klasor.gif",
     "date": "2026-11-14",
-    "subfolderTitle": "assets/covers/mw4-title.png"
+    "subfolderTitle": "assets/covers/mw4-title.png",
+    "titleImage": "assets/covers/mw4-title.png"
   },
   {
     "id": "ValeriaGarzaMW4",
@@ -195,7 +196,8 @@
     "subfolder": "Call of Duty Modern Warfare 4",
     "subfolderCover": "assets/covers/mw4klasor.gif",
     "date": "2026-11-14",
-    "subfolderTitle": "assets/covers/mw4-title.png"
+    "subfolderTitle": "assets/covers/mw4-title.png",
+    "titleImage": "assets/covers/mw4-title.png"
   },
   {
     "id": "PhillipGraves",
