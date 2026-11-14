@@ -39,18 +39,19 @@
 
   /* Basligin yerine logo gosterilecek packler (isimde gecen yazi -> logo dosyasi) */
   var LOGOS = [
-    { match: /modern warfare 4/i, src: 'assets/codmw4-logo.png' }
+    { match: /modern warfare 4/i, src: 'assets/codmw4-logo.png', w: 200 },
+    { match: /modern warfare (2019|2\b)/i, src: 'assets/codmw2019-logo.png', w: 150 }
   ];
   function title(p, maxW) {
-    var src = p.logo;
+    var src = p.logo, lw = 0;
     if (!src) {
       for (var k = 0; k < LOGOS.length; k++) {
-        if (LOGOS[k].match.test(p.name || '')) { src = LOGOS[k].src; break; }
+        if (LOGOS[k].match.test(p.name || '')) { src = LOGOS[k].src; lw = LOGOS[k].w; break; }
       }
     }
     if (!src) return esc(p.name);
     return '<img src="' + esc(src) + '" alt="' + esc(p.name) +
-      '" style="display:block;width:82%;max-width:' + (maxW || 200) + 'px;height:auto">';
+      '" style="display:block;width:82%;max-width:' + (maxW || lw || 200) + 'px;height:auto">';
   }
 
   function packCard(p, i) {
