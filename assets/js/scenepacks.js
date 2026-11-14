@@ -9,7 +9,8 @@
   var LEVELS = ['folder', 'subfolder', 'subfolder2'];
   var COVERS = ['folderCover', 'subfolderCover', 'subfolder2Cover'];
   var TITLES = ['folderTitle', 'subfolderTitle', 'subfolder2Title']; // yazi yerine logo gorseli
-
+  var MW4_NAME = 'Call of Duty Modern Warfare 4';
+  var MW4_LOGO = 'assets/codmw4-logo.png';
   var grid = document.getElementById('grid');
   var search = document.getElementById('search');
   var crumbs = document.getElementById('crumbs');
