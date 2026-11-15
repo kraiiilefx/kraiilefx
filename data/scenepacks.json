@@ -177,7 +177,7 @@
     "locked": false,
     "folder": "Call of Duty",
     "subfolder": "Call of Duty Modern Warfare 4",
-    "subfolderCover": "assets/covers/cod.jpg",
+    "subfolderCover": "assets/covers/mw4-klasor.jpg",
     "date": "2026-11-14",
     "subfolderTitle": "assets/codmw4-logo.png",
     "titleImage": "assets/codmw4-logo.png"
@@ -196,7 +196,6 @@
     "locked": true,
     "folder": "Call of Duty",
     "subfolder": "Call of Duty Modern Warfare 4",
-    "subfolderCover": "assets/covers/cod.jpg",
     "date": "2026-11-14",
     "subfolderTitle": "assets/codmw4-logo.png",
     "titleImage": "assets/codmw4-logo.png"
@@ -220,5 +219,24 @@
     "date": "2026-11-10",
     "subfolderTitle": "assets/codmw4-logo.png",
     "titleImage": "assets/codmw4-logo.png"
+  },
+  {
+    "id": "YeniPack1",
+    "name": "Yeni Pack",
+    "production": "Call of Duty: Modern Warfare 2",
+    "character": "Karakter Adı",
+    "resolution": "",
+    "fps": "",
+    "cover": "assets/covers/yenipack.gif",
+    "instructions": "follow @kraiiilefx on instagram to get the download password.",
+    "instagram": "https://www.instagram.com/kraiiilefx/",
+    "mega": "",
+    "locked": true,
+    "folder": "Call of Duty",
+    "subfolder": "Call of Duty Modern Warfare 2",
+    "subfolderCover": "assets/covers/mw2-klasor.jpg",
+    "date": "2026-11-16",
+    "subfolderTitle": "assets/codmw2-logo.png",
+    "titleImage": "assets/codmw2-logo.png"
   }
 ]
