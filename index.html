@@ -50,7 +50,7 @@
     font-weight: 600;
     line-height: 1.05;
     letter-spacing: -.04em;
-    font-size: clamp(30px, 8vw, 118px);
+    font-size: clamp(24px, 5vw, 72px);
     display: flex;
     flex-wrap: wrap;
     overflow: hidden;           /* harfler maskenin ardından yukarı kayar */
@@ -118,9 +118,9 @@
     display: flex;
     align-items: flex-end;
     justify-content: space-between;
-    min-height: clamp(220px, 48vw, 540px);
-    padding: clamp(16px, 2.5vw, 28px);
-    border-radius: 20px;
+    min-height: clamp(200px, 30vw, 380px);
+    padding: clamp(14px, 2vw, 22px);
+    border-radius: 18px;
     background: #111;
     color: var(--text);
     text-decoration: none;
@@ -187,7 +187,7 @@
   .card h2 {
     font-family: "Bebas Neue", Impact, sans-serif;
     font-weight: 400;
-    font-size: clamp(36px, 6vw, 80px);
+    font-size: clamp(28px, 4vw, 52px);
     line-height: .95;
     transition: transform .4s var(--ease), letter-spacing .4s var(--ease);
   }
@@ -195,7 +195,7 @@
   .card h2.logo-title { line-height: 0; }
   .card h2.logo-title img {
     display: block;
-    height: clamp(26px, 4.2vw, 56px);
+    height: clamp(20px, 3vw, 38px);
     width: auto;
     max-width: 100%;
   }
@@ -206,7 +206,7 @@
   .arrow {
     position: relative;
     flex: none;
-    width: 44px; height: 44px;
+    width: 38px; height: 38px;
     border: 1px solid rgba(255,255,255,.25);
     border-radius: 50%;
     background: rgba(0,0,0,.45);
@@ -238,7 +238,7 @@
   /* ---------- Mobil ---------- */
   @media (max-width: 640px) {
     .grid { grid-template-columns: 1fr; }
-    .card { min-height: 240px; border-radius: 16px; }
+    .card { min-height: 200px; border-radius: 16px; }
   }
   @media (hover: none) {
     .card:hover { transform: none; box-shadow: none; }
