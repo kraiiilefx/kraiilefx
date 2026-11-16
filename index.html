@@ -9,7 +9,7 @@
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%230a0a0a'/%3E%3Cpath d='M22 14V50M22 33L44 14M22 33L44 50' stroke='%23f0ede6' stroke-width='8' stroke-linecap='square' fill='none'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Unbounded:wght@600&family=Inter:wght@400;500&display=swap" rel="stylesheet">
 <script data-goatcounter="https://kraiiilefx.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
 <style>
   :root {
@@ -42,25 +42,38 @@
     align-items: flex-start;
     gap: 16px;
     flex-wrap: wrap;
-    margin-bottom: clamp(20px, 3vw, 36px);
+    margin-bottom: clamp(16px, 2.5vw, 28px);
   }
+  .brand { min-width: 0; }
   h1 {
-    font-family: "Bebas Neue", Impact, sans-serif;
-    font-weight: 400;
-    line-height: .85;
-    letter-spacing: .01em;
-    font-size: clamp(56px, 15vw, 190px);
+    font-family: "Unbounded", "Bebas Neue", sans-serif;
+    font-weight: 600;
+    line-height: 1.05;
+    letter-spacing: -.04em;
+    font-size: clamp(30px, 8vw, 118px);
     display: flex;
     flex-wrap: wrap;
+    overflow: hidden;           /* harfler maskenin ardından yukarı kayar */
+    padding-bottom: .06em;
   }
   h1 span {
     display: inline-block;
-    opacity: 0;
-    transform: translateY(40%) rotate(4deg);
-    animation: letterIn .8s var(--ease) forwards;
-    animation-delay: calc(var(--i) * 60ms);
+    animation: letterIn 1s var(--ease) backwards, wave 6s ease-in-out infinite;
+    animation-delay: calc(var(--i) * 60ms + 100ms), calc(var(--i) * 120ms + 2400ms);
   }
-  @keyframes letterIn { to { opacity: 1; transform: none; } }
+  @keyframes letterIn { from { transform: translateY(110%); } }
+  @keyframes wave { 0%, 50%, 100% { opacity: 1; } 25% { opacity: .28; } }
+
+  .tag {
+    margin-top: 12px;
+    color: #8b8882;
+    font-size: 13px;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    animation: fade .9s var(--ease) backwards;
+    animation-delay: .9s;
+  }
+  @keyframes fade { from { opacity: 0; transform: translateY(10px); } }
 
   .socials { display: flex; gap: 8px; }
   .socials a {
@@ -80,6 +93,18 @@
   .socials svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
   .socials svg.fill { fill: currentColor; stroke: none; }
   @keyframes pop { to { opacity: 1; transform: scale(1); } }
+
+  .meta {
+    display: flex;
+    justify-content: space-between;
+    border-top: 1px solid #1e1e1e;
+    padding: 14px 0 18px;
+    color: #8b8882;
+    font-size: 13px;
+    animation: fade .9s var(--ease) backwards;
+    animation-delay: 1s;
+  }
+  .meta b { font-weight: 500; color: var(--text); }
 
   /* ---------- Kartlar ---------- */
   .grid {
@@ -101,14 +126,12 @@
     text-decoration: none;
     overflow: hidden;
     cursor: pointer;
-    opacity: 0;
-    transform: translateY(40px);
-    animation: cardIn .9s var(--ease) forwards;
-    animation-delay: calc(.5s + var(--i) * 150ms);
+    animation: cardIn 1s var(--ease) backwards;
+    animation-delay: calc(1s + var(--i) * 180ms);
     transition: transform .4s var(--ease), box-shadow .4s;
     -webkit-tap-highlight-color: transparent;
   }
-  @keyframes cardIn { to { opacity: 1; transform: none; } }
+  @keyframes cardIn { from { opacity: 0; transform: translateY(48px) scale(.97); } }
 
   /* Fotoğraf arka plan */
   .card .bg {
@@ -179,21 +202,36 @@
   .card p { color: var(--muted); font-size: 13px; margin-top: 6px; transition: transform .4s var(--ease); }
   .card:hover p { transform: translateX(8px); }
 
+  /* ---------- Animasyonlu ok ---------- */
   .arrow {
+    position: relative;
     flex: none;
     width: 44px; height: 44px;
     border: 1px solid rgba(255,255,255,.25);
     border-radius: 50%;
-    display: grid; place-items: center;
     background: rgba(0,0,0,.45);
     overflow: hidden;
     transition: background .3s, color .3s, border-color .3s, transform .4s var(--ease);
   }
-  .arrow svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
-  .card:hover .arrow { background: var(--text); color: #0a0a0a; border-color: var(--text); transform: scale(1.1) rotate(-45deg); }
+  .arrow svg {
+    position: absolute; top: 50%; left: 50%;
+    width: 16px; height: 16px; margin: -8px 0 0 -8px;
+    fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;
+  }
+  .arrow .a1 { animation: nudge 1.8s ease-in-out infinite; }   /* normalde hafifçe nefes alır */
+  .arrow .a2 { transform: translateX(-32px); }
+  @keyframes nudge { 0%, 100% { transform: none; } 50% { transform: translateX(3px); } }
+  @keyframes outR  { from { transform: none; } to { transform: translateX(32px); } }
+  @keyframes inR   { from { transform: translateX(-32px); } to { transform: none; } }
+  .card:hover .arrow { transform: scale(1.1); }
+  .card:hover .arrow .a1 { animation: outR 1s cubic-bezier(.65,0,.35,1) infinite; }
+  .card:hover .arrow .a2 { animation: inR 1s cubic-bezier(.65,0,.35,1) infinite; }
+  /* Call of Duty: sarı — Jon Bernthal: beyaz */
+  .card.cod:hover .arrow { background: #ffd400; border-color: #ffd400; color: #0a0a0a; }
+  .card.jon:hover .arrow { background: #fff; border-color: #fff; color: #0a0a0a; }
 
   /* ---------- Alt satır ---------- */
-  footer { margin-top: auto; padding-top: 28px; font-size: 12px; color: #6f6f6f; }
+  footer { margin-top: auto; padding-top: 28px; font-size: 12px; color: #6f6f6f; animation: fade 1s var(--ease) backwards; animation-delay: 1.6s; }
   footer a { color: inherit; text-decoration: none; transition: color .25s; }
   footer a:hover { color: #fff; }
 
@@ -206,21 +244,25 @@
     .card:hover { transform: none; box-shadow: none; }
     .card:hover .bg { transform: scale(1.02); filter: brightness(.8); }
     .card:active { transform: scale(.98); }
-    .card:active .arrow { background: var(--text); color: #0a0a0a; }
+    .card.cod:active .arrow { background: #ffd400; border-color: #ffd400; color: #0a0a0a; }
+    .card.jon:active .arrow { background: #fff; border-color: #fff; color: #0a0a0a; }
   }
 
   @media (prefers-reduced-motion: reduce) {
     *, *::before, *::after { animation: none !important; transition: none !important; }
-    h1 span, .socials a, .card { opacity: 1; transform: none; }
+    .socials a { opacity: 1; transform: none; }
   }
 </style>
 </head>
 <body>
 
 <header>
-  <h1 aria-label="KRAIIILEFX">
-    <span style="--i:0">K</span><span style="--i:1">R</span><span style="--i:2">A</span><span style="--i:3">I</span><span style="--i:4">I</span><span style="--i:5">I</span><span style="--i:6">L</span><span style="--i:7">E</span><span style="--i:8">F</span><span style="--i:9">X</span>
-  </h1>
+  <div class="brand">
+    <h1 aria-label="KRAIIILEFX">
+      <span style="--i:0">K</span><span style="--i:1">R</span><span style="--i:2">A</span><span style="--i:3">I</span><span style="--i:4">I</span><span style="--i:5">I</span><span style="--i:6">L</span><span style="--i:7">E</span><span style="--i:8">F</span><span style="--i:9">X</span>
+    </h1>
+    <div class="tag">Scenepacks</div>
+  </div>
   <nav class="socials" aria-label="Socials">
     <a href="https://www.instagram.com/kraiiilefx/" target="_blank" rel="noopener noreferrer" aria-label="Instagram" style="--i:0">
       <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r=".5"/></svg>
@@ -234,25 +276,33 @@
   </nav>
 </header>
 
+<div class="meta"><span>Collections</span><span><b id="total">0</b> scenepacks</span></div>
+
 <main class="grid">
-  <a class="card" href="scenepacks.html#/Call%20of%20Duty" data-folder="Call of Duty" style="--i:0">
+  <a class="card cod" href="scenepacks.html#/Call%20of%20Duty" data-folder="Call of Duty" style="--i:0">
     <img class="bg" src="assets/covers/call-of-duty.jpg" alt="" decoding="async">
     <span class="shade"></span>
     <div>
       <h2 class="logo-title"><img src="assets/call-of-duty.png" alt="Call of Duty"></h2>
       <p class="count">3 scenepacks</p>
     </div>
-    <span class="arrow"><svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+    <span class="arrow">
+      <svg class="a1" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+      <svg class="a2" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+    </span>
   </a>
 
-  <a class="card" href="scenepacks.html#/Jon%20Bernthal" data-folder="Jon Bernthal" style="--i:1">
+  <a class="card jon" href="scenepacks.html#/Jon%20Bernthal" data-folder="Jon Bernthal" style="--i:1">
     <img class="bg" src="assets/covers/jon-bernthal.jpg" alt="" decoding="async">
     <span class="shade"></span>
     <div>
       <h2>Jon Bernthal</h2>
       <p class="count">9 scenepacks</p>
     </div>
-    <span class="arrow"><svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+    <span class="arrow">
+      <svg class="a1" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+      <svg class="a2" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+    </span>
   </a>
 </main>
 
@@ -273,6 +323,20 @@
   // Yıl
   document.getElementById('year').textContent = new Date().getFullYear();
 
+  // Toplam sayacı (0'dan sayar)
+  var total = 12;
+  function countUp() {
+    var el = document.getElementById('total');
+    if (matchMedia('(prefers-reduced-motion: reduce)').matches) { el.textContent = total; return; }
+    var st = null;
+    requestAnimationFrame(function f(ts) {
+      st = st || ts;
+      var p = Math.min((ts - st) / 1400, 1);
+      el.textContent = Math.round(total * (1 - Math.pow(1 - p, 3)));
+      if (p < 1) requestAnimationFrame(f);
+    });
+  }
+
   // Scenepack sayılarını data/scenepacks.json'dan otomatik güncelle
   fetch('data/scenepacks.json?v=' + Date.now())
     .then(function (r) { return r.json(); })
@@ -281,8 +345,10 @@
         var n = data.filter(function (p) { return p.folder === card.dataset.folder; }).length;
         if (n) card.querySelector('.count').textContent = n + ' scenepack' + (n === 1 ? '' : 's');
       });
+      if (data.length) total = data.length;
     })
-    .catch(function () {});
+    .catch(function () {})
+    .then(function () { setTimeout(countUp, 1000); });
 </script>
 
 </body>
