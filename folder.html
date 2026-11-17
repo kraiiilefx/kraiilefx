@@ -1,14 +1,13 @@
 /* KRAIIILEFX scenepacks: Folder > Subfolder > Subfolder2 > Pack */
 (function () {
   'use strict';
-  console.log('KX folder v4 (1080p | 2k | 4k)');
+  console.log('KX folder v3 (logo destekli)');
 
   var DATA_URL = 'data/scenepacks.json';
 
   var LEVELS = ['folder', 'subfolder', 'subfolder2'];
   var COVERS = ['folderCover', 'subfolderCover', 'subfolder2Cover'];
   var TITLES = ['folderTitle', 'subfolderTitle', 'subfolder2Title'];
-  var RES = ['1080p', '2k', '4k'];
 
   var grid = document.getElementById('grid');
   var search = document.getElementById('search');
@@ -130,43 +129,17 @@
   function openPack(id) {
     var p = packs.filter(function (x) { return x.id === id; })[0];
     if (!p || p.locked || !p.mega) return;
-
-    var defaultLink = p.mega + (p.key ? '#' + p.key : '');
-    var links = p.links || null; // opsiyonel: {"1080p": "...", "2k": "...", "4k": "..."}
-    var cur = String(p.resolution || '4k').toLowerCase();
-
-    function linkFor(r) {
-      return (links && links[r]) ? links[r] : defaultLink;
-    }
-
-    var resHtml = '<div class="kx-res' + (links ? ' has-links' : '') + '">' +
-      RES.map(function (r) {
-        return '<b data-res="' + r + '" class="' + (r === cur ? 'on' : '') + '">' + r + '</b>';
-      }).join('') + '</div>';
-
+    var link = p.mega + (p.key ? '#' + p.key : '');
     modalBody.innerHTML =
       '<div class="kx-m-art">' + art(p.cover, p.coverPos) + '</div>' +
       '<div class="kx-m-txt"><h3>' + esc(p.name) + '</h3>' +
       '<p class="kx-m-sub">' + esc(p.character) + '</p>' +
-      '<div class="kx-chips">' + resHtml + '<span>' + esc(p.fps) + '</span></div>' +
+      '<div class="kx-chips"><span>' + esc(p.resolution) + '</span><span>' + esc(p.fps) + '</span></div>' +
       '<p class="kx-m-note">' + esc(p.instructions) + '</p>' +
       '<div class="kx-btns">' +
       '<a class="kx-btn" href="' + esc(p.instagram) + '" target="_blank" rel="noopener noreferrer">Instagram</a>' +
-      '<a class="kx-btn kx-main" id="kxDl" href="' + esc(linkFor(cur)) + '" target="_blank" rel="noopener noreferrer">Download</a>' +
+      '<a class="kx-btn kx-main" href="' + esc(link) + '" target="_blank" rel="noopener noreferrer">Download</a>' +
       '</div></div>';
-
-    // JSON'da "links" varsa çözünürlük seçilince indirme linki değişir
-    if (links) {
-      var dl = modalBody.querySelector('#kxDl');
-      modalBody.querySelectorAll('.kx-res b').forEach(function (b) {
-        b.addEventListener('click', function () {
-          modalBody.querySelectorAll('.kx-res b').forEach(function (x) { x.classList.remove('on'); });
-          b.classList.add('on');
-          dl.href = linkFor(b.getAttribute('data-res'));
-        });
-      });
-    }
-
     modal.classList.add('open');
   }
   function closePack() { modal.classList.remove('open'); }
@@ -189,3 +162,4 @@
     .then(function (data) { packs = data; render(); })
     .catch(function () { grid.innerHTML = '<p class="kx-empty">Could not load scenepacks.</p>'; });
 })();
+      
