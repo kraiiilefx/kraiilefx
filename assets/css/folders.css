@@ -1,4 +1,4 @@
-/* KRAIIILEFX folder + pack cards (kx-*) — v2 */
+/* KRAIIILEFX folder + pack cards (kx-*) — v3 */
 .searchbox .search,
 .searchbox .search:focus,
 .searchbox .search:focus-visible { outline: none !important; box-shadow: none !important; }
@@ -151,8 +151,17 @@
 
 .kx-m-txt h3 { margin: 0 0 6px; font-family: 'Unbounded', sans-serif; font-size: 19px; font-weight: 500; letter-spacing: -.01em; }
 .kx-m-sub { margin: 0 0 14px; color: #b5b5b5; }
-.kx-chips { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px; }
+.kx-chips { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; margin-bottom: 16px; }
 .kx-chips span { padding: 5px 12px; border-radius: 99px; border: 1px solid rgba(255,255,255,.18); font-size: 12px; background: rgba(255,255,255,.03); }
+
+/* Çözünürlük seçici: 1080p | 2k | 4k */
+.kx-res { display: inline-flex; border-radius: 99px; border: 1px solid rgba(255,255,255,.18); background: rgba(255,255,255,.03); overflow: hidden; }
+.kx-res b { padding: 5px 12px; font-size: 12px; font-weight: 500; color: rgba(255,255,255,.5); transition: background .3s ease, color .3s ease; }
+.kx-res b + b { border-left: 1px solid rgba(255,255,255,.18); }
+.kx-res b.on { background: #f5f3ee; color: #0a0a0a; }
+.kx-res.has-links b { cursor: pointer; }
+.kx-res.has-links b:hover:not(.on) { color: #fff; }
+
 .kx-m-note { margin: 0 0 20px; font-size: 14px; color: #cfcfcf; line-height: 1.55; }
 .kx-btns { display: flex; gap: 10px; flex-wrap: wrap; }
 
