@@ -221,23 +221,25 @@
     "titleImage": "assets/codmw4-logo.png"
   },
   {
-    "id": "YeniPack1",
-    "name": "Yeni Pack",
-    "production": "Call of Duty: Modern Warfare 2",
-    "character": "Alex Keller",
-    "resolution": "4k",
-    "fps": "60",
-    "cover": "assets/covers/alexkeller.gif",
-    "instructions": "follow @kraiiilefx on instagram to get the download password.",
-    "instagram": "https://www.instagram.com/kraiiilefx/",
-    "mega": "",
-    "locked": true,
-    "folder": "Call of Duty",
-    "subfolder": "Call of Duty Modern Warfare 2",
-    "subfolderCover": "assets/covers/codmw2%20kapak.jpeg",
-    "date": "2026-11-16",
-    "subfolderTitle": "assets/codmw2019-logo.png",
-    "titleImage": "assets/codmw2019-logo.png"
+   {
+  "id": "YeniPack1",
+  "name": "Alex Keller",
+  "production": "Call of Duty: Modern Warfare 2",
+  "character": "Alex Keller",
+  "resolution": "4k",
+  "fps": "60 FPS",
+  "cover": "assets/covers/alexkeller.gif",
+  "instructions": "follow @kraiiilefx on instagram to get the download password.",
+  "instagram": "https://www.instagram.com/kraiiilefx/",
+  "mega": "https://mega.nz/file/BURAYA_LINK",
+  "locked": false,
+  "folder": "Call of Duty",
+  "subfolder": "Call of Duty Modern Warfare 2",
+  "subfolderCover": "assets/covers/codmw2%20kapak.jpeg",
+  "date": "2026-11-16",
+  "subfolderTitle": "assets/codmw2019-logo.png",
+  "titleImage": "assets/codmw2019-logo.png"
+}
   },
   {
     "id": "FarahKarimMW2",
