@@ -1,8 +1,8 @@
 /* KRAIIILEFX scenepacks: Folder > Subfolder > Subfolder2 > Pack
-   Data fields used: folder, subfolder, subfolder2, folderCover, subfolderCover, subfolder2Cover, locked, mega, key */
+   Data fields used: folder, subfolder, subfolder2, folderCover, subfolderCover, subfolder2Cover, locked, links, mega, key */
 (function () {
   'use strict';
-  console.log('KX folder v4 (logo sabit)');
+  console.log('KX folder v5 (coklu indirme)');
 
   var DATA_URL = 'data/scenepacks.json'; // GitHub'daki data klasoru
 
@@ -11,6 +11,8 @@
   var TITLES = ['folderTitle', 'subfolderTitle', 'subfolder2Title']; // yazi yerine logo gorseli
   var MW4_NAME = 'Call of Duty Modern Warfare 4';
   var MW4_LOGO = 'assets/codmw4-logo.png';
+  var RES = ['1080p', '2k', '4k'];
+  var DIVIDER = '<i style="display:inline-block;width:1px;height:12px;background:rgba(255,255,255,.4)"></i>';
   var grid = document.getElementById('grid');
   var search = document.getElementById('search');
   var crumbs = document.getElementById('crumbs');
@@ -18,13 +20,9 @@
   var modalBody = document.getElementById('packBody');
   var packs = [];
 
-  /* Popup çözünürlük çipi: 1080p | 2k | 4k */
-  var RES_HTML = ['1080p', '2k', '4k'].join(
-    '<i style="display:inline-block;width:1px;height:12px;background:rgba(255,255,255,.4)"></i>'
-  );
-
   var ICON_LOCK = '<span class="kx-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="10" rx="2.5"/><path d="M8 11V7.5a4 4 0 0 1 8 0V11"/></svg></span>';
   var ICON_FOLDER = '<span class="kx-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg></span>';
+  var ICON_DL = '<svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11"/><path d="M7 11l5 5 5-5"/><path d="M5 20h14"/></svg>';
 
   function esc(s) {
     return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) {
@@ -33,6 +31,14 @@
   }
   function enc(s) { return encodeURIComponent(s); }
   function newest(a, b) { return (b.date || '').localeCompare(a.date || ''); }
+
+  /* ---------- indirme linkleri ----------
+     Yeni yontem: "links": { "1080p": "...", "2k": "...", "4k": "..." }
+     Eski yontem (tek link): "mega" (+ "key") hala calisir */
+  function hasLinks(p) {
+    var L = p.links || {};
+    return !!(L['1080p'] || L['2k'] || L['4k'] || p.mega);
+  }
 
   /* ---------- routing: #/Call%20of%20Duty/Call%20of%20Duty%20Modern%20Warfare%204/Ghost ---------- */
   function route() {
@@ -49,7 +55,7 @@
   }
 
   function packCard(p, i) {
-    var lock = p.locked || !p.mega;
+    var lock = p.locked || !hasLinks(p);
     var logo = p.titleImage || (p.subfolder === MW4_NAME ? MW4_LOGO : '');
     return '<a class="kx-card' + (lock ? ' is-locked' : '') + '" href="#" data-pack="' + esc(p.id) +
       '" style="--i:' + i + '">' + art(p.cover, p.coverPos) + (lock ? ICON_LOCK : '') +
@@ -140,20 +146,46 @@
   }
 
   /* ---------- pack modal ---------- */
+  function dlPanel(p) {
+    var L = p.links || {};
+    var multi = !!(L['1080p'] || L['2k'] || L['4k']);
+    var h = '<div class="kx-dl" id="kxDl">';
+    if (multi) {
+      RES.forEach(function (r) {
+        if (L[r]) {
+          h += '<a class="kx-dl-item" href="' + esc(L[r]) + '" target="_blank" rel="noopener noreferrer">' +
+            ICON_DL + '<span>' + r + '</span></a>';
+        } else {
+          h += '<span class="kx-dl-item is-off"><span>' + r + '</span><small>Soon</small></span>';
+        }
+      });
+    } else {
+      var link = p.mega + (p.key ? '#' + p.key : '');
+      h += '<a class="kx-dl-item" href="' + esc(link) + '" target="_blank" rel="noopener noreferrer">' +
+        ICON_DL + '<span>' + esc(p.resolution || 'Download') + '</span></a>';
+    }
+    return h + '</div>';
+  }
+
   function openPack(id) {
     var p = packs.filter(function (x) { return x.id === id; })[0];
-    if (!p || p.locked || !p.mega) return;
-    var link = p.mega + (p.key ? '#' + p.key : '');
+    if (!p || p.locked || !hasLinks(p)) return;
+
+    // Cip: linki olan cozunurluklar 1080p | 2k | 4k seklinde
+    var L = p.links || {};
+    var avail = RES.filter(function (r) { return L[r]; });
+    var resChip = avail.length ? avail.join(DIVIDER) : esc(p.resolution);
+
     modalBody.innerHTML =
       '<div class="kx-m-art">' + art(p.cover, p.coverPos) + '</div>' +
       '<div class="kx-m-txt"><h3>' + esc(p.name) + '</h3>' +
       '<p class="kx-m-sub">' + esc(p.character) + '</p>' +
-      '<div class="kx-chips"><span style="display:inline-flex;align-items:center;gap:10px">' + RES_HTML + '</span><span>' + esc(p.fps) + '</span></div>' +
+      '<div class="kx-chips"><span style="display:inline-flex;align-items:center;gap:10px">' + resChip + '</span><span>' + esc(p.fps) + '</span></div>' +
       '<p class="kx-m-note">' + esc(p.instructions) + '</p>' +
       '<div class="kx-btns">' +
       '<a class="kx-btn" href="' + esc(p.instagram) + '" target="_blank" rel="noopener noreferrer">Instagram</a>' +
-      '<a class="kx-btn kx-main" href="' + esc(link) + '" target="_blank" rel="noopener noreferrer">Download</a>' +
-      '</div></div>';
+      '<button type="button" class="kx-btn kx-main" data-dl aria-expanded="false" aria-controls="kxDl">Download</button>' +
+      '</div>' + dlPanel(p) + '</div>';
     modal.classList.add('open');
   }
   function closePack() { modal.classList.remove('open'); }
@@ -166,6 +198,16 @@
     openPack(a.getAttribute('data-pack'));
   });
   modal.addEventListener('click', function (e) {
+    var dl = e.target.closest('[data-dl]');
+    if (dl) {
+      var panel = document.getElementById('kxDl');
+      if (panel) {
+        var open = panel.classList.toggle('open');
+        dl.setAttribute('aria-expanded', open ? 'true' : 'false');
+        dl.classList.toggle('is-open', open);
+      }
+      return;
+    }
     if (e.target === modal || e.target.closest('.kx-close')) closePack();
   });
   document.addEventListener('keydown', function (e) { if (e.key === 'Escape') closePack(); });
