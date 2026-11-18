@@ -1,0 +1,70 @@
+/* ===== KRAIIILEFX extra animations (folders.css'e dokunmaz) ===== */
+:root { --ease2: cubic-bezier(.22, 1, .36, 1); }
+
+/* ---------- Sayfa girişi ---------- */
+@keyframes kxpUp {
+  from { opacity: 0; transform: translateY(18px); }
+  to   { opacity: 1; transform: none; }
+}
+@keyframes kxpDown {
+  from { opacity: 0; transform: translateY(-14px); }
+  to   { opacity: 1; transform: none; }
+}
+@keyframes kxpFade {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+header.top   { animation: kxpDown .8s var(--ease2) both; }
+.sec-head h2 { animation: kxpUp .8s var(--ease2) both; }
+.sec-head p  { animation: kxpUp .8s var(--ease2) .08s both; }
+.searchbox   { animation: kxpUp .8s var(--ease2) .16s both; }
+.kx-crumbs   { animation: kxpUp .6s var(--ease2) both; }
+footer       { animation: kxpFade 1s ease .5s both; }
+
+/* ---------- Logo: hover'da harf aralığı açılır ---------- */
+.logo { transition: letter-spacing .5s var(--ease2), opacity .3s ease; }
+.logo:hover { letter-spacing: .08em; }
+
+/* ---------- Arama kutusu: odaklanınca alt çizgi soldan sağa dolar ---------- */
+.searchbox { position: relative; }
+.searchbox::after {
+  content: ""; position: absolute; left: 0; bottom: -1px;
+  width: 100%; height: 1px; background: #fff;
+  transform: scaleX(0); transform-origin: left;
+  transition: transform .5s var(--ease2);
+}
+.searchbox:focus-within::after { transform: scaleX(1); }
+.searchbox svg { transition: transform .4s var(--ease2), color .3s ease; }
+.searchbox:focus-within svg { transform: scale(1.12); color: #fff; }
+
+/* ---------- Nav: hover'da alt çizgi kayar (aktif sayfaya dokunmaz) ---------- */
+.nav a:not([aria-current]) { position: relative; }
+.nav a:not([aria-current])::after {
+  content: ""; position: absolute; left: 0; right: 0; bottom: -6px;
+  height: 1px; background: currentColor;
+  transform: scaleX(0); transform-origin: left;
+  transition: transform .35s var(--ease2);
+}
+.nav a:not([aria-current]):hover::after { transform: scaleX(1); }
+
+/* ---------- Footer sosyal ikonlar ---------- */
+.social-links a, .socials-icons a {
+  transition: transform .4s var(--ease2), background .3s ease, color .3s ease;
+}
+.social-links a:hover, .socials-icons a:hover { transform: translateY(-3px) scale(1.08); }
+
+/* ---------- Socials penceresi ---------- */
+@keyframes kxpPop {
+  from { opacity: 0; transform: translateY(16px) scale(.96); }
+  to   { opacity: 1; transform: none; }
+}
+.socials-modal.open .socials-box { animation: kxpPop .45s var(--ease2) both; }
+
+/* ---------- Hareketi azaltmak isteyenler ---------- */
+@media (prefers-reduced-motion: reduce) {
+  header.top, .sec-head h2, .sec-head p, .searchbox, .kx-crumbs, footer,
+  .socials-modal.open .socials-box { animation: none !important; }
+  .searchbox::after, .nav a::after, .logo, .searchbox svg,
+  .social-links a, .socials-icons a { transition: none !important; }
+}
