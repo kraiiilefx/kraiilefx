@@ -11,7 +11,7 @@
   var TITLES = ['folderTitle', 'subfolderTitle', 'subfolder2Title']; // yazi yerine logo gorseli
   var MW4_NAME = 'Call of Duty Modern Warfare 4';
   var MW4_LOGO = 'assets/codmw4-logo.png';
-  var RES = ['1080p', '2k', '4k'];
+  var RES = ['1080P', '2k', '4K'];
   var RES_SUB = { '1080p': 'Full HD', '2k': 'QHD', '4k': 'Ultra HD' };
   var DIVIDER = '<i style="display:inline-block;width:1px;height:12px;background:rgba(255,255,255,.4)"></i>';
   var grid = document.getElementById('grid');
