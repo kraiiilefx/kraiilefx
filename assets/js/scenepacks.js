@@ -18,6 +18,11 @@
   var modalBody = document.getElementById('packBody');
   var packs = [];
 
+  /* Popup çözünürlük çipi: 1080p | 2k | 4k */
+  var RES_HTML = ['1080p', '2k', '4k'].join(
+    '<i style="display:inline-block;width:1px;height:12px;background:rgba(255,255,255,.4)"></i>'
+  );
+
   var ICON_LOCK = '<span class="kx-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="10" rx="2.5"/><path d="M8 11V7.5a4 4 0 0 1 8 0V11"/></svg></span>';
   var ICON_FOLDER = '<span class="kx-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg></span>';
 
@@ -143,7 +148,7 @@
       '<div class="kx-m-art">' + art(p.cover, p.coverPos) + '</div>' +
       '<div class="kx-m-txt"><h3>' + esc(p.name) + '</h3>' +
       '<p class="kx-m-sub">' + esc(p.character) + '</p>' +
-      '<div class="kx-chips"><span>' + esc(p.resolution) + '</span><span>' + esc(p.fps) + '</span></div>' +
+      '<div class="kx-chips"><span style="display:inline-flex;align-items:center;gap:10px">' + RES_HTML + '</span><span>' + esc(p.fps) + '</span></div>' +
       '<p class="kx-m-note">' + esc(p.instructions) + '</p>' +
       '<div class="kx-btns">' +
       '<a class="kx-btn" href="' + esc(p.instagram) + '" target="_blank" rel="noopener noreferrer">Instagram</a>' +
