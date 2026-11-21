@@ -2,7 +2,7 @@
    Data fields used: folder, subfolder, subfolder2, folderCover, subfolderCover, subfolder2Cover, locked, links, mega, key */
 (function () {
   'use strict';
-  console.log('KX folder v6 (estetik indirme paneli)');
+  console.log('KX folder v7 (estetik indirme paneli)');
 
   var DATA_URL = 'data/scenepacks.json'; // GitHub'daki data klasoru
 
@@ -86,10 +86,11 @@
     return !!(L['1080p'] || L['2k'] || L['4k'] || p.mega);
   }
   function linkFor(p, r) {
+    var k = String(r).toLowerCase();
     var L = p.links || {};
-    if (L[r]) return L[r];
+    if (L[k]) return L[k];
     var hasNew = !!(L['1080p'] || L['2k'] || L['4k']);
-    if (!hasNew && p.mega && String(p.resolution || '').toLowerCase().indexOf(r) === 0) {
+    if (!hasNew && p.mega && String(p.resolution || '').toLowerCase().indexOf(k) === 0) {
       return p.mega + (p.key ? '#' + p.key : '');
     }
     return '';
@@ -205,7 +206,7 @@
     var h = '<div class="kx-dp" id="kxDl"><div class="kx-dp-in">';
     RES.forEach(function (r) {
       var url = linkFor(p, r);
-      var left = '<span class="kx-dr-l"><span class="kx-dr-r">' + r + '</span><span class="kx-dr-s">' + RES_SUB[r] + '</span></span>';
+      var left = '<span class="kx-dr-l"><span class="kx-dr-r">' + r + '</span><span class="kx-dr-s">' + RES_SUB[r.toLowerCase()] + '</span></span>';
       if (url) {
         h += '<a class="kx-dr" href="' + esc(url) + '" target="_blank" rel="noopener noreferrer">' + left +
           '<span class="kx-dr-a">' + ICON_DL + 'Download</span></a>';
