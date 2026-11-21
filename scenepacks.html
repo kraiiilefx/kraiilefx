@@ -4,99 +4,61 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Scenepacks | KRAIIILEFX</title>
-<meta name="description" content="All KRAIIILEFX scenepacks.">
-<meta name="theme-color" content="#000000">
+<meta name="description" content="Game, series and film scenepacks by KRAIIILEFX.">
+<meta name="theme-color" content="#060608">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%230a0a0a'/%3E%3Cpath d='M22 14V50M22 33L44 14M22 33L44 50' stroke='%23f0ede6' stroke-width='8' stroke-linecap='square' fill='none'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600&family=Unbounded:wght@300;400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/css/style.css?v=3">
-<link rel="stylesheet" href="assets/css/custom.css?v=5">
-<link rel="stylesheet" href="assets/css/folders.css?v=1">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600&family=Unbounded:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/home.css?v=2">
+<link rel="stylesheet" href="assets/css/folders.css?v=10">
+<link rel="stylesheet" href="assets/css/packs.css?v=1">
 <script data-goatcounter="https://kraiiilefx.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
 </head>
 <body>
 
-<svg width="0" height="0" style="position:absolute" aria-hidden="true">
-  <symbol id="i-ig" viewBox="0 0 24 24">
-    <g fill="none" stroke="currentColor" stroke-width="1.8">
-      <rect x="3" y="3" width="18" height="18" rx="5"/>
-      <circle cx="12" cy="12" r="4"/>
-    </g>
-    <circle cx="17.5" cy="6.5" r="1.1" fill="currentColor"/>
-  </symbol>
-  <symbol id="i-tt" viewBox="0 0 24 24">
-    <path fill="currentColor" d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z"/>
-  </symbol>
-  <symbol id="i-gl" viewBox="0 0 24 24">
-    <g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-      <rect x="3" y="3" width="18" height="18" rx="5"/>
-      <path d="M15.5 9.8A4 4 0 1 0 16 12h-3.5"/>
-    </g>
-  </symbol>
-</svg>
+<header class="top">
+  <a class="logo" href="index.html" aria-label="KRAIIILEFX home">KRAIIILEFX</a>
+  <nav class="nav" aria-label="Main">
+    <a href="index.html">Home</a>
+    <a href="scenepacks.html" aria-current="page">Scenepacks</a>
+    <a href="index.html#socials">Socials</a>
+  </nav>
+</header>
 
-<header class="top"><div class="wrap">
-<a class="logo" href="index.html">KRAIIILEFX</a>
-<nav class="nav" aria-label="Main"><a href="index.html">Home</a><a href="scenepacks.html" aria-current="page">Scenepacks</a><a href="#" id="socialsBtn">Socials</a></nav>
-</div></header>
+<main class="page">
 
-<main>
-<section class="section" style="padding-top:clamp(36px,7vw,72px)"><div class="wrap">
-  <div class="sec-head" style="flex-direction:column;align-items:flex-start;gap:10px;margin-bottom:28px">
-    <h2 id="pageTitle">Scenepacks</h2>
-    <p style="color:var(--muted);font-size:15px">Don&rsquo;t forget to give credit.</p>
-  </div>
-  <div class="searchbox">
-    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
-    <input type="search" id="search" class="search" placeholder="Search movie, series or character" autocomplete="off" aria-label="Search scenepacks">
-  </div>
-  <nav class="kx-crumbs" id="crumbs" aria-label="Folders" style="display:none;margin-top:22px"></nav>
-  <div class="kx-grid" id="grid"></div>
-  <noscript><p class="state">JavaScript is required to show scenepacks.</p></noscript>
-</div></section>
+  <section class="tile phead" aria-labelledby="page-title">
+    <span class="kicker">Collections</span>
+    <h1 id="page-title">Scenepacks</h1>
+    <p>Don’t forget to give credit.</p>
+    <label class="searchbox">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+      <input id="search" class="search" type="search" placeholder="Search movie, series or character" autocomplete="off" aria-label="Search scenepacks">
+    </label>
+  </section>
+
+  <nav id="crumbs" class="kx-crumbs" aria-label="Breadcrumb"></nav>
+
+  <div id="grid" class="kx-grid" aria-live="polite"></div>
+
+  <noscript><p class="kx-empty">JavaScript is required to browse scenepacks.</p></noscript>
 </main>
 
-<footer><div class="wrap"><span>KRAIIILEFX &copy; <span id="year">2026</span> &nbsp;&middot;&nbsp; <a class="legal-link" href="legal.html">Legal / DMCA</a></span>
-<span class="social-links">
-  <a href="https://www.instagram.com/kraiiilefx/" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><svg aria-hidden="true"><use href="#i-ig"/></svg></a>
-  <a href="https://www.tiktok.com/@kraiiilefx?lang=tr-TR" target="_blank" rel="noopener noreferrer" aria-label="TikTok"><svg aria-hidden="true"><use href="#i-tt"/></svg></a>
-  <a href="https://guns.lol/kraiiilefx" target="_blank" rel="noopener noreferrer" aria-label="guns.lol"><svg aria-hidden="true"><use href="#i-gl"/></svg></a>
-</span></div></footer>
-
-<div class="socials-modal" id="socialsModal" aria-hidden="true">
-  <div class="socials-box" role="dialog" aria-label="kraiiilefx socials">
-    <div class="socials-title">kraiiilefx socials
-      <button class="socials-close" id="socialsClose" aria-label="Close">&times;</button>
-    </div>
-    <div class="socials-icons">
-      <a href="https://www.instagram.com/kraiiilefx/" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><svg aria-hidden="true"><use href="#i-ig"/></svg></a>
-      <a href="https://www.tiktok.com/@kraiiilefx?lang=tr-TR" target="_blank" rel="noopener noreferrer" aria-label="TikTok"><svg aria-hidden="true"><use href="#i-tt"/></svg></a>
-      <a href="https://guns.lol/kraiiilefx" target="_blank" rel="noopener noreferrer" aria-label="guns.lol"><svg aria-hidden="true"><use href="#i-gl"/></svg></a>
-    </div>
-  </div>
-</div>
-
-<!-- Scenepack detay penceresi -->
-<div class="kx-modal" id="packModal">
-  <div class="kx-box" role="dialog" aria-label="Scenepack details">
-    <button class="kx-close" aria-label="Close">&times;</button>
+<!-- Pack penceresi: scenepacks.js burayı doldurur -->
+<div class="kx-modal" id="packModal" role="dialog" aria-modal="true" aria-label="Scenepack details">
+  <div class="kx-box">
+    <button class="kx-close" type="button" aria-label="Close">&times;</button>
     <div id="packBody" style="display:contents"></div>
   </div>
 </div>
 
-<script src="assets/js/scenepacks.js?v=5" defer></script>
-<script>
-(function () {
-  var modal = document.getElementById('socialsModal');
-  var openBtn = document.getElementById('socialsBtn');
-  var closeBtn = document.getElementById('socialsClose');
-  function open(e) { if (e) e.preventDefault(); modal.classList.add('open'); modal.setAttribute('aria-hidden', 'false'); }
-  function close() { modal.classList.remove('open'); modal.setAttribute('aria-hidden', 'true'); }
-  openBtn.addEventListener('click', open);
-  closeBtn.addEventListener('click', close);
-  modal.addEventListener('click', function (e) { if (e.target === modal) close(); });
-  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') close(); });
-})();
-</script>
+<footer class="foot">
+  <span>KRAIIILEFX © <span id="year">2026</span></span>
+  <a href="legal.html">Legal / DMCA</a>
+</footer>
+
+<script>document.getElementById("year").textContent = new Date().getFullYear();</script>
+<script src="assets/js/scenepacks.js?v=11"></script>
 </body>
 </html>
