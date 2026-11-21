@@ -2,7 +2,7 @@
    Data fields used: folder, subfolder, subfolder2, folderCover, subfolderCover, subfolder2Cover, locked, links, mega, key */
 (function () {
   'use strict';
-  console.log('KX folder v9 (ortada instagram bildirimi)');
+  console.log('KX folder v10 (ortada instagram bildirimi)');
 
   var DATA_URL = 'data/scenepacks.json'; // GitHub'daki data klasoru
   var DEFAULT_IG = 'https://www.instagram.com/kraiiilefx/';
@@ -251,7 +251,7 @@
       '<button type="button" class="kx-nt-x" data-nt-close aria-label="Close">&times;</button>' +
       '<div class="kx-nt-ic">' + ICON_IG + '</div>' +
       '<h4>Download password</h4>' +
-      '<p>To get the download password, follow @kraiiilefx on Instagram and send a message.</p>' +
+      '<p>To get the download password, follow @kraiiilefx on Instagram.</p>' +
       '<div class="kx-nt-btns">' +
       '<a class="kx-nt-ig" href="' + esc(ig || DEFAULT_IG) + '" target="_blank" rel="noopener noreferrer">' + ICON_IG + 'Open Instagram</a>' +
       '<button type="button" class="kx-nt-go" data-nt-go>Continue</button>' +
