@@ -2,7 +2,7 @@
    Data fields used: folder, subfolder, subfolder2, folderCover, subfolderCover, subfolder2Cover, locked, links, mega, key */
 (function () {
   'use strict';
-  console.log('KX folder v8 (instagram bildirimi)');
+  console.log('KX folder v9 (ortada instagram bildirimi)');
 
   var DATA_URL = 'data/scenepacks.json'; // GitHub'daki data klasoru
   var DEFAULT_IG = 'https://www.instagram.com/kraiiilefx/';
@@ -69,23 +69,32 @@
     '.kx-dr.is-off .kx-dr-r{color:#6f6f74}.kx-dr.is-off .kx-dr-s{color:#55555a}' +
     '.kx-dr.is-off .kx-dr-a{background:transparent;border-color:rgba(255,255,255,.08);color:#6f6f74}' +
 
-    /* instagram sifre bildirimi */
-    '.kx-toast{position:fixed;left:50%;bottom:28px;z-index:2147483000;display:flex;align-items:center;gap:14px;' +
-      'width:min(440px,calc(100vw - 28px));padding:14px 16px;border-radius:18px;color:#fff;text-decoration:none;' +
-      'background:rgba(24,24,26,.94);border:1px solid rgba(255,255,255,.16);' +
-      '-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);box-shadow:0 18px 50px rgba(0,0,0,.6);' +
-      'opacity:0;transform:translate(-50%,24px) scale(.97);pointer-events:none;' +
-      'transition:opacity .4s ease,transform .55s cubic-bezier(.22,1,.36,1),border-color .3s ease}' +
-    '.kx-toast.show{opacity:1;transform:translate(-50%,0) scale(1);pointer-events:auto}' +
-    '.kx-toast:hover{border-color:rgba(255,255,255,.4)}' +
-    '.kx-toast-ic{flex:none;display:flex;align-items:center;justify-content:center;width:42px;height:42px;border-radius:12px;color:#fff;' +
+    /* instagram sifre bildirimi (ortada, Continue ile devam) */
+    '.kx-nt{position:fixed;top:0;right:0;bottom:0;left:0;z-index:2147483000;display:flex;align-items:center;justify-content:center;padding:18px;' +
+      'background:rgba(0,0,0,.62);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);' +
+      'opacity:0;pointer-events:none;transition:opacity .4s ease}' +
+    '.kx-nt.show{opacity:1;pointer-events:auto}' +
+    '.kx-nt-box{position:relative;width:min(400px,100%);padding:30px 26px 24px;border-radius:24px;text-align:center;color:#fff;' +
+      'background:#18181a;border:1px solid rgba(255,255,255,.16);box-shadow:0 30px 80px rgba(0,0,0,.7);' +
+      'transform:translateY(22px) scale(.96);transition:transform .6s cubic-bezier(.22,1,.36,1)}' +
+    '.kx-nt.show .kx-nt-box{transform:none}' +
+    '.kx-nt-ic{display:flex;align-items:center;justify-content:center;width:60px;height:60px;margin:0 auto 18px;border-radius:18px;color:#fff;' +
       'background:linear-gradient(45deg,#f09433 0%,#e6683c 25%,#dc2743 50%,#cc2366 75%,#bc1888 100%)}' +
-    '.kx-toast-t{display:flex;flex-direction:column;gap:3px;min-width:0;flex:1}' +
-    '.kx-toast-t b{font-family:Unbounded,sans-serif;font-size:12.5px;font-weight:500;letter-spacing:-.01em}' +
-    '.kx-toast-t span{font-size:12.5px;line-height:1.4;color:#c9c9ce}' +
-    '.kx-toast-go{flex:none;padding:7px 12px;border-radius:99px;font-size:12px;font-weight:600;color:#0a0a0a;background:#f5f3ee;white-space:nowrap}' +
+    '.kx-nt-ic svg{width:30px;height:30px}' +
+    '.kx-nt-box h4{margin:0 0 8px;font-family:Unbounded,sans-serif;font-size:16px;font-weight:500;letter-spacing:-.01em}' +
+    '.kx-nt-box p{margin:0 0 22px;font-size:14px;line-height:1.5;color:#c9c9ce}' +
+    '.kx-nt-btns{display:flex;flex-direction:column;gap:10px}' +
+    '.kx-nt-ig,.kx-nt-go{display:flex;align-items:center;justify-content:center;gap:9px;padding:13px 18px;border-radius:14px;font:inherit;font-size:14px;font-weight:600;text-decoration:none;cursor:pointer;' +
+      'transition:background .3s ease,border-color .3s ease,transform .3s ease}' +
+    '.kx-nt-ig{color:#fff;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.2)}' +
+    '.kx-nt-ig:hover{background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.4)}' +
+    '.kx-nt-ig svg{width:18px;height:18px}' +
+    '.kx-nt-go{color:#0a0a0a;background:#f5f3ee;border:1px solid #f5f3ee}' +
+    '.kx-nt-go:hover{background:#fff;transform:translateY(-1px)}' +
+    '.kx-nt-x{position:absolute;top:12px;right:12px;width:32px;height:32px;border-radius:50%;border:0;color:#fff;font-size:20px;line-height:1;cursor:pointer;background:rgba(255,255,255,.08)}' +
+    '.kx-nt-x:hover{background:rgba(255,255,255,.16)}' +
 
-    '@media (prefers-reduced-motion:reduce){.kx-dp,.kx-dr,.kx-dr-a svg,.kx-arr,.kx-toast{transition-duration:.01s!important;transition-delay:0s!important}}';
+    '@media (prefers-reduced-motion:reduce){.kx-dp,.kx-dr,.kx-dr-a svg,.kx-arr,.kx-nt,.kx-nt-box{transition-duration:.01s!important;transition-delay:0s!important}}';
   document.head.appendChild(css);
 
   function esc(s) {
@@ -219,36 +228,45 @@
     grid.innerHTML = html || '<p class="kx-empty">Nothing here yet.</p>';
   }
 
-  /* ---------- instagram sifre bildirimi ---------- */
-  var toastEl = null, toastTimer = null;
+  /* ---------- instagram sifre bildirimi (ortada, Continue ile devam) ---------- */
+  var noticeEl = null;
 
-  function hideToast() {
-    clearTimeout(toastTimer);
-    if (!toastEl) return;
-    var t = toastEl;
-    toastEl = null;
-    t.classList.remove('show');
-    setTimeout(function () { if (t.parentNode) t.parentNode.removeChild(t); }, 600);
+  function hideNotice() {
+    if (!noticeEl) return;
+    var n = noticeEl;
+    noticeEl = null;
+    n.classList.remove('show');
+    setTimeout(function () { if (n.parentNode) n.parentNode.removeChild(n); }, 450);
   }
 
-  function showToast(ig) {
-    hideToast();
-    var a = document.createElement('a');
-    a.className = 'kx-toast';
-    a.href = ig || DEFAULT_IG;
-    a.target = '_blank';
-    a.rel = 'noopener noreferrer';
-    a.setAttribute('role', 'status');
-    a.innerHTML =
-      '<span class="kx-toast-ic">' + ICON_IG + '</span>' +
-      '<span class="kx-toast-t"><b>Download password</b>' +
-      '<span>Follow @kraiiilefx on Instagram and send a message to get the download password.</span></span>' +
-      '<span class="kx-toast-go">Open Instagram</span>';
-    a.addEventListener('click', function () { setTimeout(hideToast, 150); });
-    document.body.appendChild(a);
-    toastEl = a;
-    requestAnimationFrame(function () { requestAnimationFrame(function () { a.classList.add('show'); }); });
-    toastTimer = setTimeout(hideToast, 9000);
+  function showNotice(url, ig) {
+    hideNotice();
+    var n = document.createElement('div');
+    n.className = 'kx-nt';
+    n.setAttribute('role', 'dialog');
+    n.setAttribute('aria-modal', 'true');
+    n.setAttribute('aria-label', 'Download password');
+    n.innerHTML =
+      '<div class="kx-nt-box">' +
+      '<button type="button" class="kx-nt-x" data-nt-close aria-label="Close">&times;</button>' +
+      '<div class="kx-nt-ic">' + ICON_IG + '</div>' +
+      '<h4>Download password</h4>' +
+      '<p>To get the download password, follow @kraiiilefx on Instagram and send a message.</p>' +
+      '<div class="kx-nt-btns">' +
+      '<a class="kx-nt-ig" href="' + esc(ig || DEFAULT_IG) + '" target="_blank" rel="noopener noreferrer">' + ICON_IG + 'Open Instagram</a>' +
+      '<button type="button" class="kx-nt-go" data-nt-go>Continue</button>' +
+      '</div></div>';
+    n.addEventListener('click', function (e) {
+      if (e.target.closest('[data-nt-go]')) {
+        window.open(url, '_blank', 'noopener,noreferrer');
+        hideNotice();
+        return;
+      }
+      if (e.target === n || e.target.closest('[data-nt-close]')) hideNotice();
+    });
+    document.body.appendChild(n);
+    noticeEl = n;
+    requestAnimationFrame(function () { requestAnimationFrame(function () { n.classList.add('show'); }); });
   }
 
   /* ---------- pack modal ---------- */
@@ -283,7 +301,7 @@
       '</div>' + dlPanel(p) + '</div>';
     modal.classList.add('open');
   }
-  function closePack() { modal.classList.remove('open'); hideToast(); }
+  function closePack() { modal.classList.remove('open'); hideNotice(); }
 
   /* ---------- events ---------- */
   grid.addEventListener('click', function (e) {
@@ -293,10 +311,11 @@
     openPack(a.getAttribute('data-pack'));
   });
   modal.addEventListener('click', function (e) {
-    /* 1080P / 2k / 4K Download satirlari: indirme normal acilir, ustune instagram bildirimi cikar */
+    /* 1080P / 2k / 4K Download satirlari: once ortada instagram bildirimi cikar, Continue'ya basinca indirme acilir */
     var row = e.target.closest('a.kx-dr');
     if (row) {
-      showToast(row.getAttribute('data-ig'));
+      e.preventDefault();
+      showNotice(row.getAttribute('href'), row.getAttribute('data-ig'));
       return;
     }
     var dl = e.target.closest('[data-dl]');
@@ -311,7 +330,7 @@
     }
     if (e.target === modal || e.target.closest('.kx-close')) closePack();
   });
-  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') closePack(); });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') { if (noticeEl) hideNotice(); else closePack(); } });
   window.addEventListener('hashchange', function () { search.value = ''; render(); window.scrollTo(0, 0); });
   search.addEventListener('input', render);
 
