@@ -2,9 +2,10 @@
    Data fields used: folder, subfolder, subfolder2, folderCover, subfolderCover, subfolder2Cover, locked, links, mega, key */
 (function () {
   'use strict';
-  console.log('KX folder v7 (estetik indirme paneli)');
+  console.log('KX folder v8 (instagram bildirimi)');
 
   var DATA_URL = 'data/scenepacks.json'; // GitHub'daki data klasoru
+  var DEFAULT_IG = 'https://www.instagram.com/kraiiilefx/';
 
   var LEVELS = ['folder', 'subfolder', 'subfolder2'];
   var COVERS = ['folderCover', 'subfolderCover', 'subfolder2Cover'];
@@ -24,8 +25,9 @@
   var ICON_LOCK = '<span class="kx-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="10" rx="2.5"/><path d="M8 11V7.5a4 4 0 0 1 8 0V11"/></svg></span>';
   var ICON_FOLDER = '<span class="kx-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg></span>';
   var ICON_DL = '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11"/><path d="M7 11l5 5 5-5"/><path d="M5 20h14"/></svg>';
+  var ICON_IG = '<svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.9"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/></g><circle cx="17.5" cy="6.5" r="1.2" fill="currentColor"/></svg>';
 
-  /* ---------- indirme paneli stilleri (folders.css'e bagli degil) ---------- */
+  /* ---------- indirme paneli + bildirim stilleri (folders.css'e bagli degil) ---------- */
   var css = document.createElement('style');
   css.textContent =
     'button.kx-btn{font:inherit;font-size:14px;font-weight:600;cursor:pointer;background:transparent}' +
@@ -67,7 +69,23 @@
     '.kx-dr.is-off .kx-dr-r{color:#6f6f74}.kx-dr.is-off .kx-dr-s{color:#55555a}' +
     '.kx-dr.is-off .kx-dr-a{background:transparent;border-color:rgba(255,255,255,.08);color:#6f6f74}' +
 
-    '@media (prefers-reduced-motion:reduce){.kx-dp,.kx-dr,.kx-dr-a svg,.kx-arr{transition-duration:.01s!important;transition-delay:0s!important}}';
+    /* instagram sifre bildirimi */
+    '.kx-toast{position:fixed;left:50%;bottom:28px;z-index:2147483000;display:flex;align-items:center;gap:14px;' +
+      'width:min(440px,calc(100vw - 28px));padding:14px 16px;border-radius:18px;color:#fff;text-decoration:none;' +
+      'background:rgba(24,24,26,.94);border:1px solid rgba(255,255,255,.16);' +
+      '-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);box-shadow:0 18px 50px rgba(0,0,0,.6);' +
+      'opacity:0;transform:translate(-50%,24px) scale(.97);pointer-events:none;' +
+      'transition:opacity .4s ease,transform .55s cubic-bezier(.22,1,.36,1),border-color .3s ease}' +
+    '.kx-toast.show{opacity:1;transform:translate(-50%,0) scale(1);pointer-events:auto}' +
+    '.kx-toast:hover{border-color:rgba(255,255,255,.4)}' +
+    '.kx-toast-ic{flex:none;display:flex;align-items:center;justify-content:center;width:42px;height:42px;border-radius:12px;color:#fff;' +
+      'background:linear-gradient(45deg,#f09433 0%,#e6683c 25%,#dc2743 50%,#cc2366 75%,#bc1888 100%)}' +
+    '.kx-toast-t{display:flex;flex-direction:column;gap:3px;min-width:0;flex:1}' +
+    '.kx-toast-t b{font-family:Unbounded,sans-serif;font-size:12.5px;font-weight:500;letter-spacing:-.01em}' +
+    '.kx-toast-t span{font-size:12.5px;line-height:1.4;color:#c9c9ce}' +
+    '.kx-toast-go{flex:none;padding:7px 12px;border-radius:99px;font-size:12px;font-weight:600;color:#0a0a0a;background:#f5f3ee;white-space:nowrap}' +
+
+    '@media (prefers-reduced-motion:reduce){.kx-dp,.kx-dr,.kx-dr-a svg,.kx-arr,.kx-toast{transition-duration:.01s!important;transition-delay:0s!important}}';
   document.head.appendChild(css);
 
   function esc(s) {
@@ -201,6 +219,38 @@
     grid.innerHTML = html || '<p class="kx-empty">Nothing here yet.</p>';
   }
 
+  /* ---------- instagram sifre bildirimi ---------- */
+  var toastEl = null, toastTimer = null;
+
+  function hideToast() {
+    clearTimeout(toastTimer);
+    if (!toastEl) return;
+    var t = toastEl;
+    toastEl = null;
+    t.classList.remove('show');
+    setTimeout(function () { if (t.parentNode) t.parentNode.removeChild(t); }, 600);
+  }
+
+  function showToast(ig) {
+    hideToast();
+    var a = document.createElement('a');
+    a.className = 'kx-toast';
+    a.href = ig || DEFAULT_IG;
+    a.target = '_blank';
+    a.rel = 'noopener noreferrer';
+    a.setAttribute('role', 'status');
+    a.innerHTML =
+      '<span class="kx-toast-ic">' + ICON_IG + '</span>' +
+      '<span class="kx-toast-t"><b>Download password</b>' +
+      '<span>Follow @kraiiilefx on Instagram and send a message to get the download password.</span></span>' +
+      '<span class="kx-toast-go">Open Instagram</span>';
+    a.addEventListener('click', function () { setTimeout(hideToast, 150); });
+    document.body.appendChild(a);
+    toastEl = a;
+    requestAnimationFrame(function () { requestAnimationFrame(function () { a.classList.add('show'); }); });
+    toastTimer = setTimeout(hideToast, 9000);
+  }
+
   /* ---------- pack modal ---------- */
   function dlPanel(p) {
     var h = '<div class="kx-dp" id="kxDl"><div class="kx-dp-in">';
@@ -208,7 +258,7 @@
       var url = linkFor(p, r);
       var left = '<span class="kx-dr-l"><span class="kx-dr-r">' + r + '</span><span class="kx-dr-s">' + RES_SUB[r.toLowerCase()] + '</span></span>';
       if (url) {
-        h += '<a class="kx-dr" href="' + esc(url) + '" target="_blank" rel="noopener noreferrer">' + left +
+        h += '<a class="kx-dr" href="' + esc(url) + '" target="_blank" rel="noopener noreferrer" data-ig="' + esc(p.instagram || DEFAULT_IG) + '">' + left +
           '<span class="kx-dr-a">' + ICON_DL + 'Download</span></a>';
       } else {
         h += '<div class="kx-dr is-off" aria-disabled="true">' + left + '<span class="kx-dr-a">Soon</span></div>';
@@ -233,7 +283,7 @@
       '</div>' + dlPanel(p) + '</div>';
     modal.classList.add('open');
   }
-  function closePack() { modal.classList.remove('open'); }
+  function closePack() { modal.classList.remove('open'); hideToast(); }
 
   /* ---------- events ---------- */
   grid.addEventListener('click', function (e) {
@@ -243,6 +293,12 @@
     openPack(a.getAttribute('data-pack'));
   });
   modal.addEventListener('click', function (e) {
+    /* 1080P / 2k / 4K Download satirlari: indirme normal acilir, ustune instagram bildirimi cikar */
+    var row = e.target.closest('a.kx-dr');
+    if (row) {
+      showToast(row.getAttribute('data-ig'));
+      return;
+    }
     var dl = e.target.closest('[data-dl]');
     if (dl) {
       var panel = document.getElementById('kxDl');
